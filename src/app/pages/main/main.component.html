@@ -1,0 +1,19 @@
+<div class="main-background">
+  <app-pc-nav-panel></app-pc-nav-panel>
+  <div
+    appResizeHeight
+    [size]="innerWidth > 970 ? 0 : 70" style="position: relative" class="main-block">
+    <div
+      appResizeHeight
+      [size]="innerWidth > 970 ? 0.1 : 70"
+      class="scroll_box">
+      <div class="box">
+        <app-news-block style="width: 100%"></app-news-block>
+        <div title="cat" class="profile">
+          <img src="assets/images/medium.webp">
+        </div>
+      </div>
+      <app-playlists-block></app-playlists-block>
+    </div>
+  </div>
+</div>

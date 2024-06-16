@@ -1,0 +1,68 @@
+.main_block {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.account_block {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.account_block > h2 {
+  color: white;
+  font-family: "Nunito", sans-serif;
+  font-size: 30px;
+}
+
+.account {
+  width: 70px;
+  height: 70px;
+  background-color: #232323;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.account > img {
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.list_block {
+  width: 100%;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #232323;
+  border-radius: 20px;
+  margin-top: 30px;
+}
+
+.favorites {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.favorites > div > h3 {
+  color: white;
+  font-family: "Nunito", sans-serif;
+}
+
+.favorites > div > p {
+  color: #6e6e6e;
+  font-family: "Nunito", sans-serif;
+}
+
+.favorites > img {
+  width: 60px;
+  height: 60px;
+  border-radius: 5px;
+}

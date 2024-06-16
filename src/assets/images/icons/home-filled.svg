@@ -1,0 +1,9 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+	<title>libary-svg</title>
+	<defs>
+		<image  width="19" height="19" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAMAAABFjsb+AAAAAXNSR0IB2cksfwAAARRQTFRFAAAA////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////rH78GQAAAFx0Uk5TAAQJBU/C1HkLCorz/7EkNdNYXPf1Wghxyh8AJ9j8qBcjx4ECnOlNU+fkVviSBs6tDiIP3IOmEFFLUEYdTkol2xsr1RhMR0mz+SjPq9Z4P4y8DYb+gH/94S4MtMn1r5wyAAAA6ElEQVR4nGXPP0tCURjH8d8XU7wo1UUxHLKgoSEkCuoFpJMOQdDQO2wLGmoKx8YoJKFBsULEFrFAb1yzc27n0gWf4fz5nIfnOQ+KA37ik9tT2JglzTNgUyf/tka4yECQhdGfpYphkDd5MPahb22bDz/N1DyGq0OVmaNd3jcHOddqfTTbgirdHVvExUYvFIcwUCIK2Q7H85W3pKnSNpbpL9tjyfR+iu77PWde19pBNMeLs88va0ct6YSOM/952dKv0t59ZEFcr9CWqnArNXiIzKvZ6e/qXEln8K1FC51zIzW5NF+54Nqsp7/n7UxCtJg1xgAAAABJRU5ErkJggg=="/>
+	</defs>
+	<style>
+	</style>
+	<use id="home-white" href="#img1" x="2" y="2"/>
+</svg>

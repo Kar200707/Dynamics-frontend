@@ -1,0 +1,112 @@
+@if (!isLoaded && trackList) {
+  <div class="loader_box">
+    <div class="loader"></div>
+  </div>
+}
+<div
+  [style.padding]="!isOpenedMobilePlayer ? '12px' : '0'"
+  [style.height]="isOpenedMobilePlayer ? innerHeight - 70 + 'px' : '110px'"
+  [style.bottom]="!isLoaded && !isOpenedMobilePlayer ? '-100px' : '0'"
+  class="main_block">
+  <div
+    [style.background-image]="'url(' + backgroundImage + ')'"
+    [style.border-radius]="!isOpenedMobilePlayer ? '20px' : '0'" class="layer">
+    <div
+      [style.padding]="isOpenedMobilePlayer ? '0' : '10px 20px 10px 10px'"
+      class="layer_2">
+      @if (!isOpenedMobilePlayer) {
+        <div (click)="openMobilePlayer()" class="track_info_box">
+          <div class="track_image_box">
+            <img [src]="audio_info.track_image" alt="track image">
+          </div>
+          <div class="track_name_artist_box">
+            <h2 class="track_name">{{ audio_info.track_name }}</h2>
+            <h4 class="track_artist">{{ audio_info.track_artist }}</h4>
+          </div>
+        </div>
+        <div class="player_controller_box">
+          <div class="player_controller_line">
+            <div class="slider_box">
+              <span style="margin-right: 25px">{{ currentTime }}</span>
+              <div
+                #seekBarContainer
+                class="slider-1"
+                (mousedown)="isClickUp = false; this.pause()"
+                (mouseup)="this.play()"
+                (touchend)="this.play(); seekBarContainer.style.scale = '1'; seekBarContainer.style.height = '10px'"
+                (touchstart)="isClickUp = false; this.pause();
+        seekBarContainer.style.scale = '1.07'; seekBarContainer.style.height = '20px'"
+                (touchmove)="!isClickUp ? seekMove($event, 'touch') : false; $event.preventDefault()"
+                (mousemove)="!isClickUp ? seekMove($event, 'mouse') : false">
+                <div class="track">
+                  <div #seekBarProgress class="swapper"></div>
+                </div>
+              </div>
+              <span style="margin-left: 25px">{{ duration }}</span>
+            </div>
+            <div class="track_controller">
+              <div (click)="prev()" class="prev">
+                <mat-icon>skip_previous</mat-icon>
+              </div>
+              <button style="color: black" (click)="playPause()" title="play" class="play_pause_button">
+                <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+              </button>
+              <div (click)="next()" class="next">
+                <mat-icon>skip_next</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="mobile_player_block">
+          <div (click)="closeMobilePlayer()" class="close">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </div>
+          <div class="track_block">
+            <img class="open_player_track_image" [src]="audio_info.track_image" alt="track image">
+            <h2
+              style="margin-top: 20px; font-size: 30px"
+              class="track_name">{{ audio_info.track_name }}</h2>
+            <h4
+              style="font-size: 22px; font-weight: lighter"
+              class="track_artist">{{ audio_info.track_artist }}</h4>
+            <div class="slider_box_open_player">
+              <div
+                #seekBarContainerOpenPlayer
+                class="slider-1"
+                (mousedown)="isClickUp = false; this.pause()"
+                (mouseup)="this.play()"
+                (touchend)="this.play();
+                seekBarContainerOpenPlayer.style.scale = '1';
+                seekBarContainerOpenPlayer.style.height = '10px'"
+                (touchstart)="isClickUp = false; this.pause();
+                seekMoveOpenPlayer($event, 'touch');
+                seekBarContainerOpenPlayer.style.scale = '1.05'; seekBarContainerOpenPlayer.style.height = '20px'"
+                (touchmove)="!isClickUp ? seekMoveOpenPlayer($event, 'touch') : false; $event.preventDefault()"
+                (mousemove)="!isClickUp ? seekMoveOpenPlayer($event, 'mouse') : false">
+                <div class="track">
+                  <div #seekBarProgressOpenPlayer class="swapper"></div>
+                </div>
+              </div>
+            </div>
+            <div class="track_time_info_block">
+              <span style="margin-right: 25px">{{ currentTime }}</span>
+              <span style="margin-left: 25px">{{ duration }}</span>
+            </div>
+            <div class="track_controller_open_player">
+              <div (click)="prev()" class="prev_open_player">
+                <mat-icon>skip_previous</mat-icon>
+              </div>
+              <button style="color: black" (click)="playPause()" title="play" class="play_pause_button_open_player">
+                <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+              </button>
+              <div (click)="next()" class="next_open_player">
+                <mat-icon>skip_next</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

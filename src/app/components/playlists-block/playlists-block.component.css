@@ -1,0 +1,265 @@
+.main-block {
+  margin-top: 20px;
+  display: flex;
+}
+
+.playlist {
+  width: 200px;
+  height: 200px;
+  background-color: #333333;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.playlist > div {
+  display: flex;
+}
+
+.playlist > div > img {
+  width: 50%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.playlists_box {
+  width: 47%;
+  display: flex;
+  flex-direction: column;
+}
+
+.playlist > .layer {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 187, 68, 0.6);
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playlist_name {
+  font-size: 50px;
+}
+
+.playlists_box > .box {
+  display: flex;
+}
+
+h2 {
+  font-family: "Nunito", sans-serif;
+  color: white;
+}
+
+.right_block {
+  width: 50%;
+  margin-left: 30px;
+}
+
+.categories {
+   margin-top: 8px;
+}
+
+.categories > .block {
+  display: flex;
+  justify-content: space-between;
+}
+
+.categories > .block > .box {
+  width: 48%;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  overflow: hidden;
+  position: relative;
+}
+
+.categories > .block > .box:hover > img {
+  scale: 1.2;
+  right: 5px;
+}
+
+.categories > .block > .box > h5 {
+  color: white;
+  font-family: "Nunito", sans-serif;
+  font-size: 20px;
+}
+
+.categories > .block > .box > img {
+  width: 70px;
+  height: 70px;
+  position: absolute;
+  right: -5px;
+  top: -10px;
+  rotate: -35deg;
+  display: block;
+  box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+  border-radius: 10px;
+  transition: .2s;
+}
+
+.rock {
+  background-color: #d09607;
+}
+
+.pop-hiphop {
+  background-color: #4e067e;
+}
+
+.rap {
+  background-color: #434459;
+}
+
+.jazz {
+  background-color: #312817;
+}
+
+.artists {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 20px;
+  background-color: #1f1f1f;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.artists > .artist_block {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #333333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.artists > .artist_block > img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.category_title,
+.artist_title {
+  text-align: end;
+}
+
+/* media */
+
+@media screen and (max-width: 1270px) {
+  .artists > .artist_block {
+    width: 100px;
+    height: 100px;
+  }
+
+  .artists > .artist_block > img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .artists > .artist_block {
+    width: 80px;
+    height: 80px;
+  }
+
+  .artists > .artist_block > img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+
+@media screen and (max-width: 850px) {
+  .main-block {
+    flex-direction: column-reverse;
+  }
+
+  .right_block {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .category_title,
+  .artist_title {
+    text-align: start;
+  }
+
+  .title_playlists {
+    margin-top: 20px;
+  }
+
+  .artists > .artist_block {
+    width: 130px;
+    height: 130px;
+  }
+
+  .artists > .artist_block > img {
+    width: 110px;
+    height: 110px;
+  }
+
+  .playlists_box {
+    width: 100%;
+  }
+
+  .playlist {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .artists > .artist_block {
+    width: 120px;
+    height: 120px;
+  }
+
+  .artists > .artist_block > img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .artists > .artist_block {
+    width: 100px;
+    height: 100px;
+  }
+
+  .artists > .artist_block > img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .artists > .artist_block {
+    width: 80px;
+    height: 80px;
+  }
+
+  .artists > .artist_block > img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .artists > .artist_block {
+    width: 70px;
+    height: 70px;
+  }
+
+  .artists > .artist_block > img {
+    width: 50px;
+    height: 50px;
+  }
+}

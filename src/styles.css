@@ -1,1 +1,49 @@
-/* You can add global styles to this file, and also import other style files */
+@import "https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css";
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-focus: ignore;
+  -ms-user-select: none;
+  zoom: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family:
+    Roboto, "Helvetica Neue", sans-serif;
+  background-color: #1a1a1a;
+  overflow: hidden;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(203, 203, 203, 0.63);
+  border-radius: 16px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+
+@media screen and (max-width: 970px) {
+  ::-webkit-scrollbar {
+    width: 0;
+  }
+}

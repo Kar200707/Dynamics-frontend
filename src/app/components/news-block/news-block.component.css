@@ -1,0 +1,40 @@
+.main-block {
+  width: 100%;
+}
+
+.splide {
+  width: 85%;
+  border-radius: 15px;
+  background-color: #1f1f1f;
+  overflow: hidden;
+}
+
+.news-images {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+/* media */
+
+@media screen and (max-width: 970px) {
+  .splide {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .news-images {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .news-images {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+}

@@ -1,0 +1,13 @@
+app-mobile-nav-panel {
+  display: none;
+}
+
+app-player {
+  transition: .25s cubic-bezier(0,-0.4,0,1.20);
+}
+
+@media screen and (max-width: 970px) {
+  app-mobile-nav-panel {
+    display: block;
+  }
+}

@@ -1,15 +1,18 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
+import {Component, ViewChild, ElementRef, Renderer2} from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { PlayerControllerService } from "../../services/player-controller.service";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
 import {NavigationEnd, Router} from "@angular/router";
+import {ChangeMetaThemeColorService} from "../../services/change-meta-theme-color.service";
+import {MatIconButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-player',
   standalone: true,
   imports: [
     MatIcon,
-    ResizeHeightDirective
+    ResizeHeightDirective,
+    MatIconButton
   ],
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
@@ -24,8 +27,10 @@ export class PlayerComponent {
   isOpenedMobilePlayer: boolean = false;
   isLoaded: boolean = false;
   isPlaying: boolean = false;
+  isSetFavorite: boolean = false;
   trackList: any;
   trackInterval: any;
+  replay: boolean = false;
   trackIndex:number = 0;
   isClickUp: boolean = true;
   currentTime: string = '--:--';
@@ -39,6 +44,8 @@ export class PlayerComponent {
   };
 
   constructor(
+    private renderer: Renderer2,
+    private setMetaThemeColor: ChangeMetaThemeColorService,
     private router: Router,
     private playerController: PlayerControllerService) {
     this.router.events.subscribe(event => {
@@ -119,7 +126,25 @@ export class PlayerComponent {
     this.audio.addEventListener('timeupdate', () => {
       this.currentTime = this.formatTime(this.audio.currentTime);
     });
+    if (this.isOpenedMobilePlayer) {
+      this.playerController.color$.subscribe(rgb => {
+        if (rgb && rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined) {
+          const blendedColor = this.blendWithBlack(rgb, 0.5);
+          const trackThemeColor = `rgb(${blendedColor.r}, ${blendedColor.g}, ${blendedColor.b})`;
+          this.setMetaThemeColor.setThemeColor(trackThemeColor, this.renderer);
+        }
+      })
+    }
     this.playerController.setBackground(this.audio_info.track_image);
+  }
+
+  blendWithBlack(rgb: { r: number, g: number, b: number }, factor: number): { r: number, g: number, b: number } {
+    const blend = (color: number) => Math.round(color * (1 - factor));
+    return {
+      r: blend(rgb.r),
+      g: blend(rgb.g),
+      b: blend(rgb.b)
+    };
   }
 
   play() {
@@ -137,7 +162,12 @@ export class PlayerComponent {
     this.isPlaying = true;
     this.trackInterval = setInterval(() => {
       if (this.audio.ended) {
-        this.next();
+        if (this.replay) {
+          this.audio.currentTime = 0;
+          this.play();
+        } else {
+          this.next();
+        }
       }
       this.currentTime = this.formatTime(this.audio.currentTime);
       this.updateSeekBar();
@@ -263,18 +293,57 @@ export class PlayerComponent {
 
   openMobilePlayer() {
     if (innerWidth < 500 && !this.isOpenedMobilePlayer) {
+      this.playerController.setIsOpenedPlayer(true);
+      this.playerController.color$.subscribe(rgb => {
+        if (rgb && rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined) {
+          const blendedColor = this.blendWithBlack(rgb, 0.5);
+          const trackThemeColor = `rgb(${blendedColor.r}, ${blendedColor.g}, ${blendedColor.b})`;
+          this.setMetaThemeColor.setThemeColor(trackThemeColor, this.renderer);
+        }
+      })
       this.isOpenedMobilePlayer = true;
     }
   }
 
   closeMobilePlayer() {
     setTimeout(() => {
+      this.playerController.setIsOpenedPlayer(false);
+      this.setMetaThemeColor.setThemeColor('#1a1a1a', this.renderer);
       if (innerWidth < 500) {
         this.isOpenedMobilePlayer = false;
       }
     })
   }
 
-  protected readonly innerWidth = innerWidth;
-  protected readonly innerHeight = innerHeight;
+  replayOnOff() {
+    this.replay = !this.replay;
+  }
+
+  setFavorite() {
+    this.isSetFavorite = !this.isSetFavorite;
+  }
+
+  previous_10s() {
+    this.audio.currentTime = this.audio.currentTime - 10;
+    this.updateSeekBarOpenPlayer();
+  }
+
+  next_10s() {
+    this.audio.currentTime = this.audio.currentTime + 10;
+    this.updateSeekBarOpenPlayer();
+  }
+
+  share() {
+    const shareData = {
+      title: "Music",
+      text: "Dynamics",
+      url: "https://dynamics-9080b.web.app/home",
+    };
+
+    navigator.share(shareData);
+  }
+
+  openTimerBottomSheet() {
+    this.playerController.setTimer('open');
+  }
 }

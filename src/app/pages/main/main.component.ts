@@ -6,6 +6,7 @@ import {PlaylistsBlockComponent} from "../../components/playlists-block/playlist
 import {PlayerComponent} from "../../components/player/player.component";
 import {PlayerControllerService} from "../../services/player-controller.service";
 import {MobileNavPanelComponent} from "../../components/mobile-nav-panel/mobile-nav-panel.component";
+import {TimerBottomSheetComponent} from "../../components/timer-bottom-sheet/timer-bottom-sheet.component";
 
 @Component({
   selector: 'app-main',
@@ -17,15 +18,24 @@ import {MobileNavPanelComponent} from "../../components/mobile-nav-panel/mobile-
     PlaylistsBlockComponent,
     PlayerComponent,
     MobileNavPanelComponent,
+    TimerBottomSheetComponent,
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
 export class MainComponent {
+  isOpenedTimerBottomSheet: boolean = false;
 
   constructor(private playerController: PlayerControllerService) {
-
+    this.playerController.timer$.subscribe((timer) => {
+      if (!timer) {
+        this.isOpenedTimerBottomSheet = false;
+      } else if (timer === 'open') {
+        this.isOpenedTimerBottomSheet = true;
+      }
+    })
   }
 
   protected readonly innerWidth = innerWidth;
+  protected readonly innerHeight = innerHeight;
 }

@@ -24,25 +24,25 @@ export class SearchComponent {
       history: 'search3'
     },
     {
-      history: 'search3'
+      history: 'search4'
     },
     {
-      history: 'search3'
+      history: 'search5'
     },
     {
-      history: 'search3'
+      history: 'search6'
     },
     {
-      history: 'search3'
+      history: 'search7'
     },
     {
-      history: 'search3'
+      history: 'search8'
     },
     {
-      history: 'search3'
+      history: 'search9'
     },
     {
-      history: 'search3'
+      history: 'search10'
     },
 
   ]

@@ -48,6 +48,15 @@ app-mobile-nav-panel {
   padding-bottom: 150px;
 }
 
+app-timer-bottom-sheet {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  bottom: 0;
+  z-index: 999;
+  transition: .25s;
+}
+
  /* media */
 
 @media screen and (max-width: 970px) {

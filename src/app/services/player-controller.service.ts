@@ -12,6 +12,10 @@ export class PlayerControllerService {
   backgroundUrl$:Observable<any> = this.backgroundUrl.asObservable();
   private color: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   color$:Observable<any> = this.color.asObservable();
+  private isOpened: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  isOpened$:Observable<any> = this.isOpened.asObservable();
+  private timer: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  timer$:Observable<any> = this.timer.asObservable();
 
   constructor(private imageColor: ImageColorService) {}
 
@@ -27,5 +31,13 @@ export class PlayerControllerService {
     this.imageColor.getAverageRGB(imgUrl).then(rgb => {
       this.color.next(rgb);
     });
+  }
+
+  setIsOpenedPlayer(isOpened: boolean) {
+    this.isOpened.next(isOpened);
+  }
+
+  setTimer(timer: number | null | string) {
+    this.timer.next(timer);
   }
 }

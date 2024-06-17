@@ -5,7 +5,7 @@
 }
 <div
   [style.padding]="!isOpenedMobilePlayer ? '12px' : '0'"
-  [style.height]="isOpenedMobilePlayer ? innerHeight - 70 + 'px' : '110px'"
+  [style.height]="isOpenedMobilePlayer ? '100vh' : '110px'"
   [style.bottom]="!isLoaded && !isOpenedMobilePlayer ? '-100px' : '0'"
   class="main_block">
   <div
@@ -59,8 +59,11 @@
         </div>
       } @else {
         <div class="mobile_player_block">
-          <div (click)="closeMobilePlayer()" class="close">
-            <mat-icon>keyboard_arrow_down</mat-icon>
+          <div class="top_bar">
+            <mat-icon (click)="closeMobilePlayer()">keyboard_arrow_down</mat-icon>
+            <button (click)="openTimerBottomSheet()" mat-icon-button>
+              <img src="assets/images/icons/timer.svg" alt="timer">
+            </button>
           </div>
           <div class="track_block">
             <img class="open_player_track_image" [src]="audio_info.track_image" alt="track image">
@@ -70,6 +73,22 @@
             <h4
               style="font-size: 22px; font-weight: lighter"
               class="track_artist">{{ audio_info.track_artist }}</h4>
+            <div class="media_all_button_block">
+              <div style="display: flex">
+                <button (click)="share()" class="share_button" mat-icon-button>
+                  <img src="assets/images/icons/share.svg">
+                </button>
+              </div>
+              <div style="display: flex">
+                <button (click)="replayOnOff()" class="replay_button" mat-icon-button>
+                  <img [src]="replay ? 'assets/images/icons/replay-blue.svg' : 'assets/images/icons/replay.svg'">
+                </button>
+                <button (click)="setFavorite()" class="favorite_button" mat-icon-button>
+                  <img [src]="isSetFavorite
+                   ? 'assets/images/icons/favorite.png' : 'assets/images/icons/favorite-no-filled.png'">
+                </button>
+              </div>
+            </div>
             <div class="slider_box_open_player">
               <div
                 #seekBarContainerOpenPlayer
@@ -97,9 +116,15 @@
               <div (click)="prev()" class="prev_open_player">
                 <mat-icon>skip_previous</mat-icon>
               </div>
+              <div (click)="previous_10s()" class="change_10s_icon">
+                <img src="assets/images/icons/10s-back.svg">
+              </div>
               <button style="color: black" (click)="playPause()" title="play" class="play_pause_button_open_player">
                 <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
               </button>
+              <div (click)="next_10s()" class="change_10s_icon">
+                <img src="assets/images/icons/10s-next.svg">
+              </div>
               <div (click)="next()" class="next_open_player">
                 <mat-icon>skip_next</mat-icon>
               </div>

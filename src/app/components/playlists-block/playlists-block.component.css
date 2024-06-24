@@ -74,6 +74,7 @@ h2 {
   align-items: center;
   padding: 15px;
   overflow: hidden;
+  transition: 1s;
   position: relative;
 }
 

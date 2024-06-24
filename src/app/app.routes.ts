@@ -20,5 +20,10 @@
       title: 'Dynamics search',
       path: 'search',
       loadComponent: () => import('./pages/search/search.component').then(x => (x.SearchComponent)),
+    },
+    {
+      title: 'Dynamics',
+      path: 'category/:type',
+      loadComponent: () => import('./pages/categories/categories.component').then(x => (x.CategoriesComponent)),
     }
   ];

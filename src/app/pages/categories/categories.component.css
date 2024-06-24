@@ -1,0 +1,21 @@
+.main_block {
+
+}
+
+.top_bar {
+  width: 100%;
+  padding: 20px;
+}
+
+.top_bar > h3 {
+  color: white;
+  font-family: "Nunito", sans-serif;
+  text-align: center;
+  font-size: 45px;
+}
+
+.top_bar > img {
+  border-radius: 14px;
+  width: 100%;
+  object-fit: cover;
+}

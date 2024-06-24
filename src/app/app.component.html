@@ -1,12 +1,14 @@
 <router-outlet></router-outlet>
 <app-player
-  [style.display]="routePath === 'home' ? 'block' : 'none'"
+  [style.display]="routePath !== 'library' && routePath !== 'search' ? 'block' : 'none'"
   [style.bottom]="isOpenedPlayer ? '0' : '70px'"
   style="position: absolute; width: 100%;"></app-player>
-<app-mobile-nav-panel
-  [style.bottom]="isOpenedPlayer ? '-70px' : '0'"
-  style="
+@if (navPanelTimeOff) {
+  <app-mobile-nav-panel
+    [style.bottom]="isOpenedPlayer ? '-70px' : '0'"
+    style="
     transition: .25s cubic-bezier(0,-0.4,0,1.20);
     position: absolute;
     width: 100%;
     bottom: 0; left: 0; z-index: 2"></app-mobile-nav-panel>
+}

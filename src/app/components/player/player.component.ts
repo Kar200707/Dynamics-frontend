@@ -5,6 +5,8 @@ import {ResizeHeightDirective} from "../../directives/resize-height.directive";
 import {NavigationEnd, Router} from "@angular/router";
 import {ChangeMetaThemeColorService} from "../../services/change-meta-theme-color.service";
 import {MatIconButton} from "@angular/material/button";
+import {TimerBottomSheetComponent} from "../timer-bottom-sheet/timer-bottom-sheet.component";
+import {skip} from "rxjs";
 
 @Component({
   selector: 'app-player',
@@ -12,7 +14,8 @@ import {MatIconButton} from "@angular/material/button";
   imports: [
     MatIcon,
     ResizeHeightDirective,
-    MatIconButton
+    MatIconButton,
+    TimerBottomSheetComponent
   ],
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
@@ -22,6 +25,7 @@ export class PlayerComponent {
   @ViewChild('seekBarProgress') seekBarProgress!: ElementRef<HTMLDivElement>;
   @ViewChild('seekBarContainerOpenPlayer') seekBarContainerOpenPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('seekBarProgressOpenPlayer') seekBarProgressOpenPlayer!: ElementRef<HTMLDivElement>;
+  @ViewChild('main_block') mainBlock!: ElementRef<HTMLDivElement>;
   audio: HTMLAudioElement = new Audio();
   backgroundImage: string = '';
   isOpenedMobilePlayer: boolean = false;
@@ -29,12 +33,21 @@ export class PlayerComponent {
   isPlaying: boolean = false;
   isSetFavorite: boolean = false;
   trackList: any;
+  trackThemeColor!: string;
+  isOpenedTimerBottomSheet: boolean = false;
+  startY = 0;
+  moveLimit: number = 0;
+  touchLineCount:number = 0;
+  currentY: number = 0;
+  isDownTouch: boolean = false;
+  touchStart: boolean = false;
   trackInterval: any;
+  touchClinetY: number = 0;
   replay: boolean = false;
   trackIndex:number = 0;
   isClickUp: boolean = true;
   currentTime: string = '--:--';
-  duration: string = '--:--';
+  endOfTrack: string = '--:--';
   audio_info = {
     track_name: '---',
     track_artist: '---',
@@ -48,6 +61,46 @@ export class PlayerComponent {
     private setMetaThemeColor: ChangeMetaThemeColorService,
     private router: Router,
     private playerController: PlayerControllerService) {
+    this.playerController.timer$.subscribe((timer) => {
+      if (!timer) {
+        this.isOpenedTimerBottomSheet = false;
+      }
+    })
+    document.addEventListener('touchmove', (event: TouchEvent) => {
+      if (this.touchStart && this.mainBlock.nativeElement && this.isOpenedMobilePlayer && this.moveLimit > 4 || this.moveLimit < -4) {
+        const touch = event.touches[0];
+        const currentY = touch.clientY;
+        this.isOpenedTimerBottomSheet = false;
+        if (innerHeight - currentY + 70 > 0 && innerHeight - currentY + 70 < innerHeight) {
+          this.touchClinetY = currentY;
+          if (!this.touchStart) {
+            setTimeout(() => {
+              this.mainBlock.nativeElement.style.transition = 'unset';
+            }, 250);
+          } else {
+            this.mainBlock.nativeElement.style.transition = '.25s cubic-bezier(0,-0.4,0,1.20)';
+          }
+          if (this.isOpenedMobilePlayer) {
+            if (this.moveLimit < 0) {
+              if ((currentY - this.startY) > 0 && (currentY - this.startY) < innerHeight && innerHeight - currentY > 50) {
+                this.touchLineCount = currentY - this.startY;
+              }
+              this.mainBlock.nativeElement.style.height = innerHeight - this.touchLineCount + 'px';
+            }
+          }
+        }
+      }
+    })
+    this.playerController.color$.subscribe(rgb => {
+      if (rgb && rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined) {
+        const blendedColor = this.blendWithBlack(rgb, 0.3);
+        const trackThemeColor = `rgb(${blendedColor.r}, ${blendedColor.g}, ${blendedColor.b})`;
+        this.trackThemeColor = trackThemeColor;
+        if (this.isOpenedMobilePlayer) {
+          this.setMetaThemeColor.setThemeColor(trackThemeColor, this.renderer);
+        }
+      }
+    })
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         let routePath:string = event.urlAfterRedirects.split('/')[1];
@@ -60,10 +113,12 @@ export class PlayerComponent {
     if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', () => this.play());
       navigator.mediaSession.setActionHandler('pause', () => this.pause());
-      navigator.mediaSession.setActionHandler('previoustrack', () => this.prev());
-      navigator.mediaSession.setActionHandler('nexttrack', () => this.next());
-      // navigator.mediaSession.setActionHandler('seekforward', details => this.seek(details.seekOffset || 10));
-      // navigator.mediaSession.setActionHandler('seekbackward', details => this.seek(-(details.seekOffset || 10)));
+      navigator.mediaSession.setActionHandler('previoustrack', (details) => {
+        this.prev();
+      });
+      navigator.mediaSession.setActionHandler('nexttrack', (details) => {
+        this.next();
+      });
       navigator.mediaSession.setActionHandler('seekto', details => this.seekTo(details.seekTime!));
     }
 
@@ -88,6 +143,47 @@ export class PlayerComponent {
     });
   }
 
+  onTouchStart(event: TouchEvent): void {
+    this.touchStart = true;
+    const touch = event.touches[0];
+    this.startY = touch.clientY;
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    event.preventDefault();
+
+    const touch = event.touches[0];
+    const currentY = touch.clientY;
+    this.currentY = currentY;
+
+    if (currentY < this.startY) {
+      this.moveLimit++;
+      this.isDownTouch = false;
+    } else if (currentY > this.startY) {
+      this.isDownTouch = true;
+      this.moveLimit--;
+    }
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    this.touchLineCount = 0;
+    this.touchStart = false;
+    if (this.moveLimit > 4) {
+      this.openMobilePlayer();
+    }
+    if (this.moveLimit < -4 && this.currentY > innerHeight / 2.5) {
+      this.closeMobilePlayer();
+    }
+
+    this.moveLimit = 0;
+    if (this.isOpenedMobilePlayer) {
+      if (innerHeight / 2 > (this.currentY - this.startY)) {
+        this.openMobilePlayer();
+        this.mainBlock.nativeElement.style.height = innerHeight + 'px';
+      }
+    }
+  }
+
   seek(offset: number) {
     const newTime = this.audio.currentTime + offset;
     this.audio.currentTime = newTime;
@@ -108,7 +204,7 @@ export class PlayerComponent {
     this.playerController.setImageColor(this.audio_info.track_image);
     this.audio.addEventListener('loadedmetadata', () => {
       this.isLoaded = true;
-      this.duration = this.formatTime(this.audio.duration);
+      this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
       this.currentTime = '00:00';
 
       if ('mediaSession' in navigator) {
@@ -125,12 +221,14 @@ export class PlayerComponent {
     });
     this.audio.addEventListener('timeupdate', () => {
       this.currentTime = this.formatTime(this.audio.currentTime);
+      this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
     });
     if (this.isOpenedMobilePlayer) {
       this.playerController.color$.subscribe(rgb => {
         if (rgb && rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined) {
-          const blendedColor = this.blendWithBlack(rgb, 0.5);
+          const blendedColor = this.blendWithBlack(rgb, 0.3);
           const trackThemeColor = `rgb(${blendedColor.r}, ${blendedColor.g}, ${blendedColor.b})`;
+          this.trackThemeColor = trackThemeColor;
           this.setMetaThemeColor.setThemeColor(trackThemeColor, this.renderer);
         }
       })
@@ -170,6 +268,9 @@ export class PlayerComponent {
         }
       }
       this.currentTime = this.formatTime(this.audio.currentTime);
+      if (!isNaN(this.audio.duration)) {
+        this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
+      }
       this.updateSeekBar();
       this.updateSeekBarOpenPlayer();
     }, 1000)
@@ -220,6 +321,7 @@ export class PlayerComponent {
   }
 
   seekMoveOpenPlayer(e: any, type: string) {
+    this.moveLimit = 0;
     if (this.seekBarContainerOpenPlayer && !this.isClickUp) {
       const seekBarRect = this.seekBarContainerOpenPlayer.nativeElement.getBoundingClientRect();
       let offsetX: number;
@@ -258,12 +360,14 @@ export class PlayerComponent {
       this.pause();
       this.trackIndex++;
       this.audio_info = this.trackList[this.trackIndex];
+      skip(1);
       this.load();
       this.play();
     } else  {
       this.trackIndex = 0;
       this.pause();
       this.audio_info = this.trackList[this.trackIndex];
+      skip(1);
       this.load();
       this.play();
     }
@@ -274,12 +378,14 @@ export class PlayerComponent {
       this.pause();
       this.trackIndex--
       this.audio_info = this.trackList[this.trackIndex];
+      skip(-1);
       this.load();
       this.play();
     } else {
       this.pause();
       this.trackIndex = this.trackList.length - 1;
       this.audio_info = this.trackList[this.trackIndex];
+      skip(-1);
       this.load();
       this.play();
     }
@@ -296,8 +402,9 @@ export class PlayerComponent {
       this.playerController.setIsOpenedPlayer(true);
       this.playerController.color$.subscribe(rgb => {
         if (rgb && rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined) {
-          const blendedColor = this.blendWithBlack(rgb, 0.5);
+          const blendedColor = this.blendWithBlack(rgb, 0.3);
           const trackThemeColor = `rgb(${blendedColor.r}, ${blendedColor.g}, ${blendedColor.b})`;
+          this.trackThemeColor = trackThemeColor;
           this.setMetaThemeColor.setThemeColor(trackThemeColor, this.renderer);
         }
       })
@@ -307,6 +414,7 @@ export class PlayerComponent {
 
   closeMobilePlayer() {
     setTimeout(() => {
+      this.isOpenedTimerBottomSheet = false;
       this.playerController.setIsOpenedPlayer(false);
       this.setMetaThemeColor.setThemeColor('#1a1a1a', this.renderer);
       if (innerWidth < 500) {
@@ -344,6 +452,8 @@ export class PlayerComponent {
   }
 
   openTimerBottomSheet() {
-    this.playerController.setTimer('open');
+    this.isOpenedTimerBottomSheet = !this.isOpenedTimerBottomSheet;
   }
+
+  protected readonly innerHeight = innerHeight;
 }

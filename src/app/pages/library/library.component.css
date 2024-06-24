@@ -11,6 +11,12 @@
   align-items: center;
 }
 
+mat-tab-group {
+  margin-top: 50px;
+  color: white;
+  border-bottom: none ;
+}
+
 .account_block > h2 {
   color: white;
   font-family: "Nunito", sans-serif;

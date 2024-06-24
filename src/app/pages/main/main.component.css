@@ -2,6 +2,7 @@
   width: 100%;
   height: 100vh;
   display: flex;
+  flex-direction: column;
 }
 
 .scroll_box {
@@ -75,6 +76,19 @@ app-timer-bottom-sheet {
 
 @media screen and (max-width: 850px) {
   .scroll_box {
-    padding-bottom: 370px;
+    padding-bottom: 120px;
   }
+}
+
+.top_block {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.top_block > svg {
+  width: 40px;
+  height: 40px;
 }

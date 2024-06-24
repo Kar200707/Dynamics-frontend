@@ -22,10 +22,19 @@ export class AppComponent {
   title = 'Dynamics';
   routePath!: string;
   isOpenedPlayer: boolean = false;
+  navPanelTimeOff: boolean = true;
 
   constructor(private router: Router, private playerController: PlayerControllerService) {
     this.playerController.isOpened$.subscribe(isOpened => {
+
       this.isOpenedPlayer = isOpened;
+      if (isOpened) {
+        setTimeout(() => {
+          this.navPanelTimeOff = !isOpened;
+        }, 250)
+      } else {
+        this.navPanelTimeOff = !isOpened;
+      }
     })
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {

@@ -20,6 +20,12 @@
 .main_block > .nav_box > svg {
   width: 30px;
   height: 30px;
+  transition: .1s;
+}
+
+.main_block > .nav_box > img:active,
+.main_block > .nav_box > svg:active {
+  scale: 0.9;
 }
 
 .main_block > .nav_box > img + img {

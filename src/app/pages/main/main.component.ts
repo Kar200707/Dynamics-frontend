@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef} from '@angular/core';
 import {PcNavPanelComponent} from "../../components/pc-nav-panel/pc-nav-panel.component";
 import {NewsBlockComponent} from "../../components/news-block/news-block.component";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
@@ -7,6 +7,8 @@ import {PlayerComponent} from "../../components/player/player.component";
 import {PlayerControllerService} from "../../services/player-controller.service";
 import {MobileNavPanelComponent} from "../../components/mobile-nav-panel/mobile-nav-panel.component";
 import {TimerBottomSheetComponent} from "../../components/timer-bottom-sheet/timer-bottom-sheet.component";
+import {MatIconButton} from "@angular/material/button";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-main',
@@ -19,21 +21,17 @@ import {TimerBottomSheetComponent} from "../../components/timer-bottom-sheet/tim
     PlayerComponent,
     MobileNavPanelComponent,
     TimerBottomSheetComponent,
+    MatIconButton,
+    MatIcon,
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
 export class MainComponent {
-  isOpenedTimerBottomSheet: boolean = false;
+
 
   constructor(private playerController: PlayerControllerService) {
-    this.playerController.timer$.subscribe((timer) => {
-      if (!timer) {
-        this.isOpenedTimerBottomSheet = false;
-      } else if (timer === 'open') {
-        this.isOpenedTimerBottomSheet = true;
-      }
-    })
+
   }
 
   protected readonly innerWidth = innerWidth;

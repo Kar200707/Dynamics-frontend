@@ -25,5 +25,15 @@
       title: 'Dynamics',
       path: 'category/:type',
       loadComponent: () => import('./pages/categories/categories.component').then(x => (x.CategoriesComponent)),
+    },
+    {
+      title: 'Dynamics Admin',
+      path: 'admin',
+      loadComponent: () => import('./pages/admin/admin.component').then(x => (x.AdminComponent)),
+    },
+    {
+      title: 'Dynamics Favorites',
+      path: 'track-favorites',
+      loadComponent: () => import('./pages/track-favorites/track-favorites.component').then(x => (x.TrackFavoritesComponent)),
     }
   ];

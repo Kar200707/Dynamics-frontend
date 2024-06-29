@@ -24,7 +24,9 @@ export class AppComponent {
   isOpenedPlayer: boolean = false;
   navPanelTimeOff: boolean = true;
 
-  constructor(private router: Router, private playerController: PlayerControllerService) {
+  constructor(
+    private router: Router,
+    private playerController: PlayerControllerService) {
     this.playerController.isOpened$.subscribe(isOpened => {
 
       this.isOpenedPlayer = isOpened;

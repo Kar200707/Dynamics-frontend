@@ -1,28 +1,37 @@
 import {Component, ElementRef} from '@angular/core';
 import {PlayerControllerService} from "../../services/player-controller.service";
 import {RouterLink} from "@angular/router";
+import {RequestService} from "../../services/request.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-playlists-block',
   standalone: true,
   imports: [
-    RouterLink
+    RouterLink,
+    HttpClientModule
+  ],
+  providers: [
+    RequestService
   ],
   templateUrl: './playlists-block.component.html',
   styleUrl: './playlists-block.component.css'
 })
 export class PlaylistsBlockComponent {
-  constructor(private playerController: PlayerControllerService) {  }
+
+  constructor(
+    private requestService: RequestService,
+    private playerController: PlayerControllerService) {}
 
   setPlaylist(playlistNum: number) {
     if (playlistNum === 1) {
       this.playerController.setList([
         {
-          track_name: 'Miloya moya',
+          track_name: 'Эгоист',
           track_artist: 'Navai',
           track_duration: '3:33',
-          track_image: 'https://i.scdn.co/image/ab67616d00001e028b07ffa001a2cc510aa469a7',
-          track_url: 'https://mp3uk.net/mp3/files/navai-ellai-milaya-moya-mp3.mp3'
+          track_image: 'https://i.scdn.co/image/ab67616d00001e02475dcf40059d411897dd9197',
+          track_url: 'http://api-dynamics.adaptable.app/auth/get/179HcPo6OjqZUzcdVjvgCxgTD-A9RicOd',
         },
         {
           track_name: 'Не люби меня',
@@ -36,7 +45,7 @@ export class PlaylistsBlockComponent {
           track_artist: 'Xcho',
           track_duration: '3:33',
           track_image: 'https://i.scdn.co/image/ab67616d00001e02d0270a9e7b596206ba59345f',
-          track_url: 'https://sefon.pro/api/mp3_download/direct/1259270/3vUCALstTR0CCnnHDt1UO7YeSxAOuoeqen_FYI-Tl1GPVNHMbKvkY4E3fQzHmiibM8oxzGFrnNSDDnAs1lZ4izCgl9pbEP33BrIqeAvIQkFB9hYLi1ndt6IBe8iYcSrhlVBiS3EwLDa9ZoQzjAc550Z-Ufd4JYgvs_dmcYc/'
+          track_url: 'http://localhost:8080/auth/get/12_YLFh3ANMWz98OxfY5zeg0cko2gsyRw'
         },
         {
           track_name: 'Ну почему?',

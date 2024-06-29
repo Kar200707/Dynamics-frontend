@@ -1,4 +1,4 @@
-import {Component, ViewChild, ElementRef, Renderer2} from '@angular/core';
+import {Component, ViewChild, ElementRef, Renderer2, OnInit, OnDestroy, AfterViewInit} from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { PlayerControllerService } from "../../services/player-controller.service";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
@@ -7,6 +7,8 @@ import {ChangeMetaThemeColorService} from "../../services/change-meta-theme-colo
 import {MatIconButton} from "@angular/material/button";
 import {TimerBottomSheetComponent} from "../timer-bottom-sheet/timer-bottom-sheet.component";
 import {skip} from "rxjs";
+import {RequestService} from "../../services/request.service";
+import {HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-player',
@@ -15,7 +17,11 @@ import {skip} from "rxjs";
     MatIcon,
     ResizeHeightDirective,
     MatIconButton,
-    TimerBottomSheetComponent
+    TimerBottomSheetComponent,
+    HttpClientModule
+  ],
+  providers: [
+    RequestService
   ],
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
@@ -53,10 +59,11 @@ export class PlayerComponent {
     track_artist: '---',
     track_duration: '--:--',
     track_image: 'assets/images/icon-384x384.png',
-    track_url: ''
+    track_sound_id: ''
   };
 
   constructor(
+    private requestService: RequestService,
     private renderer: Renderer2,
     private setMetaThemeColor: ChangeMetaThemeColorService,
     private router: Router,
@@ -133,10 +140,13 @@ export class PlayerComponent {
     window.addEventListener('touchend', () => {
       this.isClickUp = true;
     })
+    playerController.trackIndex$.subscribe(index => {
+      this.trackIndex = index;
+    })
     playerController.playerInfo$.subscribe((list) => {
       if (list) {
         this.trackList = list;
-        this.audio_info = list[0];
+        this.audio_info = list[this.trackIndex];
         this.load();
         this.play();
       }
@@ -197,14 +207,16 @@ export class PlayerComponent {
     this.updateSeekBarOpenPlayer();
   }
 
-  load() {
-    this.isLoaded = false;
-    this.audio.src = this.audio_info.track_url;
+  async load() {
+    this.audio.src = `https://api-dynamics.adaptable.app/media/track/${this.audio_info.track_sound_id}`;
     this.audio.load();
+
     this.playerController.setImageColor(this.audio_info.track_image);
     this.audio.addEventListener('loadedmetadata', () => {
       this.isLoaded = true;
-      this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
+      if (!isNaN(this.audio.duration) && !isNaN(this.audio.currentTime)) {
+        this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
+      }
       this.currentTime = '00:00';
 
       if ('mediaSession' in navigator) {
@@ -221,7 +233,9 @@ export class PlayerComponent {
     });
     this.audio.addEventListener('timeupdate', () => {
       this.currentTime = this.formatTime(this.audio.currentTime);
-      this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
+      if (!isNaN(this.audio.duration) && !isNaN(this.audio.currentTime)) {
+        this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
+      }
     });
     if (this.isOpenedMobilePlayer) {
       this.playerController.color$.subscribe(rgb => {
@@ -256,6 +270,9 @@ export class PlayerComponent {
     //     clearInterval(volumeInterval);
     //   }
     // }, 5)
+    this.audio.onloadeddata = () => {
+      this.audio.play(); // Play the audio once it's fully loaded
+    };
     this.audio.play();
     this.isPlaying = true;
     this.trackInterval = setInterval(() => {
@@ -356,6 +373,7 @@ export class PlayerComponent {
   }
 
   next() {
+    this.endOfTrack = '--:--';
     if (this.trackList.length - 1 > this.trackIndex) {
       this.pause();
       this.trackIndex++;
@@ -374,6 +392,7 @@ export class PlayerComponent {
   }
 
   prev() {
+    this.endOfTrack = '00:00';
     if (this.trackIndex != 0) {
       this.pause();
       this.trackIndex--

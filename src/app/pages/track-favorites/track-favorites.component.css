@@ -1,0 +1,112 @@
+.main_block {
+  display: flex;
+  flex-direction: column;
+}
+
+.back_button_block {
+  width: 100%;
+  display: flex;
+  align-items: start;
+}
+
+.back_button_block > button {
+  color: white;
+  border: 0;
+  background-color: transparent;
+}
+
+.back_button_block > button > mat-icon {
+  color: white;
+}
+
+.header_block {
+  padding: 20px 20px 40px 20px;
+  background-image: linear-gradient(to bottom, rgba(17, 0, 255, 0.66), transparent);
+}
+
+.title_block {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+}
+
+h1 {
+  color: white;
+}
+
+.scroll_box {
+  overflow-y: scroll;
+}
+
+.track_block {
+  margin-top: 20px;
+  padding: 0 20px;
+}
+
+.track_box {
+  width: 100%;
+  background-color: rgba(51, 51, 51, 0.41);
+  border-radius: 20px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.track_image {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.track_image > img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.track_info_box {
+  margin-left: 10px;
+}
+
+.track_info_box > h4 {
+  color: white;
+}
+
+.track_info_box > span {
+  color: #676767;
+  font-weight: lighter;
+}
+
+.track_duration {
+  margin-right: 3px;
+  color: #b2b2b2;
+  font-size: 15px;
+  font-weight: lighter;
+}
+
+.control_box {
+  display: flex;
+  align-items: center;
+}
+
+.favorite_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  margin-right: 5px;
+}
+
+.favorite_button > img {
+  width: 30px;
+  height: 30px;
+  display: block;
+  object-fit: cover;
+}

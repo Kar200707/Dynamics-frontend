@@ -1,0 +1,35 @@
+<div class="main_block">
+  <div class="scroll_box">
+    <div class="header_block">
+      <div class="back_button_block">
+        <button>
+          <mat-icon routerLink="/library">arrow_back_ios</mat-icon>
+        </button>
+      </div>
+      <div class="title_block">
+        <h1>Favorites</h1>
+      </div>
+    </div>
+    @for (track of trackList; track $index) {
+      <div class="track_block">
+        <div (click)="setTrack($index)" class="track_box">
+          <div style="display: flex; align-items: center">
+            <div class="track_image">
+              <img [src]="track.track_image" alt="track image">
+            </div>
+            <div class="track_info_box">
+              <h4>{{ track.track_name }}</h4>
+              <span>{{ track.track_artist }}</span>
+            </div>
+          </div>
+          <div class="control_box">
+            <button class="favorite_button">
+              <img src="assets/images/icons/favorite.png">
+            </button>
+            <span class="track_duration">{{ formatTime(track.track_duration) }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

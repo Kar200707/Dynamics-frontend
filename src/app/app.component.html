@@ -1,6 +1,5 @@
 <router-outlet></router-outlet>
 <app-player
-  [style.display]="routePath !== 'library' && routePath !== 'search' ? 'block' : 'none'"
   [style.bottom]="isOpenedPlayer ? '0' : '70px'"
   style="position: absolute; width: 100%;"></app-player>
 @if (navPanelTimeOff) {

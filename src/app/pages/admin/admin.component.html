@@ -1,0 +1,7 @@
+<form (ngSubmit)="send()">
+  <h2>track</h2>
+  <input type="file" #track_input (change)="changeTrackInput(track_input.files)" />
+  <h2>image</h2>
+  <input type="file" #image_input (change)="changeImageInput(image_input.files)" />
+  <button type="submit">Submit</button>
+</form>

@@ -51,7 +51,7 @@ export class TrackFavoritesComponent implements OnInit {
 
   getFavoriteTracksList() {
     this.requestService.post<any>(
-      'http://localhost:8080/media/track-details/get-favorites-list',
+      'https://api-dynamics.adaptable.app/media/track-details/get-favorites-list',
       { access_token: "$2b$13$S8Cf8aEwAmwb70VdH5MUXuWA2QS6Lzq/z8ITwE74wv1HijpdTaxES" }
     ).subscribe(tracksList => {
       this.trackList = tracksList;

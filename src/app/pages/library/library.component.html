@@ -1,18 +1,26 @@
 <div class="main_block">
   <div class="account_block">
     <h2>Your Library</h2>
-    <div class="account">
-      <img src="assets/images/medium.webp">
+    <div (click)="toggleAccountInfoBlock($event)" class="account">
+      <img *ngIf="account" [src]="account.avatar">
+      <div *ngIf="isOpenedAccountInfoBlock" class="layer">
+        <div class="account_info_block" (click)="$event.stopPropagation()">
+          <h3>{{ account.name }}</h3>
+          <p>{{ account.email }}</p>
+          <span>{{ account.bio }}</span>
+          <button mat-button color="warn" (click)="logout()">Logout</button>
+        </div>
+      </div>
     </div>
   </div>
   <mat-tab-group backgroundColor="primary">
     <mat-tab label="Playlists">
       <div class="list_block">
-        <div routerLink="/track-favorites" class="favorites">
+        <div routerLink="/home/track-favorites" class="favorites">
           <img src="assets/images/favorites.png">
           <div style="margin-left: 20px">
             <h3>Favorites</h3>
-            <p>Playlist - 31 songs</p>
+            <p>Playlist - {{ favoritePlayListLength }} songs</p>
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ import {MobileNavPanelComponent} from "../../components/mobile-nav-panel/mobile-
 import {TimerBottomSheetComponent} from "../../components/timer-bottom-sheet/timer-bottom-sheet.component";
 import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
+import {NavigationEnd, Router, RouterOutlet} from "@angular/router";
 
 @Component({
   selector: 'app-main',
@@ -23,17 +24,34 @@ import {MatIcon} from "@angular/material/icon";
     TimerBottomSheetComponent,
     MatIconButton,
     MatIcon,
+    RouterOutlet,
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
 export class MainComponent {
+  routePath!: string;
+  isOpenedPlayer: boolean = false;
+  navPanelTimeOff: boolean = true;
 
+  constructor(
+    private router: Router,
+    private playerController: PlayerControllerService) {
+    this.playerController.isOpened$.subscribe(isOpened => {
 
-  constructor(private playerController: PlayerControllerService) {
-
+      this.isOpenedPlayer = isOpened;
+      if (isOpened) {
+        setTimeout(() => {
+          this.navPanelTimeOff = !isOpened;
+        }, 250)
+      } else {
+        this.navPanelTimeOff = !isOpened;
+      }
+    })
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.routePath = event.urlAfterRedirects.split('/')[1];
+      }
+    });
   }
-
-  protected readonly innerWidth = innerWidth;
-  protected readonly innerHeight = innerHeight;
 }

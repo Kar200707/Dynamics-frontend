@@ -1,0 +1,63 @@
+<div style="position: relative" class="main_div">
+  @if (mainLoader) {
+    <app-loader-main style="position: absolute; z-index: 1000; width: 100%; height: 100%"></app-loader-main>
+  }
+  <img class="side_image" src="assets/images/icon-384x384.png">
+  <div class="withe_layer"></div>
+  <div class="container">
+    <div class="images_box">
+      <img class="messgae_image" src="assets/images/message.gif">
+    </div>
+    <div class="block">
+      <form #formDirective="ngForm" [formGroup]="form" (ngSubmit)="send(formDirective)">
+        <h1>Register</h1>
+        <input
+          class="text_field"
+          type="text"
+          name="name"
+          formControlName="name"
+          placeholder="Enter your name">
+        <input
+          class="text_field"
+          type="email"
+          name="email"
+          formControlName="email"
+          placeholder="Enter your email">
+        <div style="position: relative">
+          <input
+            style="padding-right: 65px"
+            class="text_field"
+            name="password" [type]="hide ? 'password' : 'text'"
+            formControlName="password" type="password"
+            placeholder="Enter your password">
+          <button
+            type="button"
+            class="hide_show_pass_btn"
+            mat-icon-button
+            (click)="hide = !hide"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide">
+            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </div>
+        @if (isFalseRegister && !form.touched && !form.dirty) {
+          <strong
+            style="margin-top: 5px; color: #d23b3b; font-family: Poppins"
+          >this user already exists</strong>
+        }
+        @if (form.get('name')?.hasError('pattern')) {
+          <strong
+            style="margin-top: 5px; color: #d23b3b; font-family: Poppins"
+          >The name must contain only Latin letters, before 10 characters</strong>
+        }
+        @if (form.get('email')?.hasError('email') && form.touched && form.dirty) {
+          <strong
+            style="margin-top: 5px; color: #d23b3b; font-family: Poppins"
+          >Enter valid email</strong>
+        }
+        <button [disabled]="form.invalid" class="send_button">SEND</button>
+      </form>
+      <a class="dont_acc_link" routerLink="/login">already have account - login</a>
+    </div>
+  </div>
+</div>

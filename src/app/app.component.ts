@@ -4,44 +4,22 @@ import {MainComponent} from "./pages/main/main.component";
 import {MobileNavPanelComponent} from "./components/mobile-nav-panel/mobile-nav-panel.component";
 import {PlayerComponent} from "./components/player/player.component";
 import {PlayerControllerService} from "./services/player-controller.service";
+import {LayoutComponent} from "./layout/layout.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-    imports: [
-        RouterOutlet,
-        MainComponent,
-        MobileNavPanelComponent,
-        RouterModule,
-        PlayerComponent
-    ],
+  imports: [
+    RouterOutlet,
+    MainComponent,
+    MobileNavPanelComponent,
+    RouterModule,
+    PlayerComponent,
+    LayoutComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'Dynamics';
-  routePath!: string;
-  isOpenedPlayer: boolean = false;
-  navPanelTimeOff: boolean = true;
-
-  constructor(
-    private router: Router,
-    private playerController: PlayerControllerService) {
-    this.playerController.isOpened$.subscribe(isOpened => {
-
-      this.isOpenedPlayer = isOpened;
-      if (isOpened) {
-        setTimeout(() => {
-          this.navPanelTimeOff = !isOpened;
-        }, 250)
-      } else {
-        this.navPanelTimeOff = !isOpened;
-      }
-    })
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.routePath = event.urlAfterRedirects.split('/')[1];
-      }
-    });
-  }
 }

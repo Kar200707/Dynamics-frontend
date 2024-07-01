@@ -9,6 +9,7 @@ import {TimerBottomSheetComponent} from "../timer-bottom-sheet/timer-bottom-shee
 import {skip} from "rxjs";
 import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
+import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 
 @Component({
   selector: 'app-player',
@@ -18,7 +19,8 @@ import {HttpClientModule} from "@angular/common/http";
     ResizeHeightDirective,
     MatIconButton,
     TimerBottomSheetComponent,
-    HttpClientModule
+    HttpClientModule,
+    LoaderIosComponent
   ],
   providers: [
     RequestService
@@ -207,12 +209,37 @@ export class PlayerComponent {
     this.updateSeekBarOpenPlayer();
   }
 
+  loadedImage() {
+    this.playerController.color$.subscribe(rgb => {
+      if (rgb && rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined) {
+        const blendedColor = this.blendWithBlack(rgb, 0.3);
+        const trackThemeColor = `rgb(${blendedColor.r}, ${blendedColor.g}, ${blendedColor.b})`;
+        this.trackThemeColor = trackThemeColor;
+        if (this.isOpenedMobilePlayer) {
+          this.setMetaThemeColor.setThemeColor(trackThemeColor, this.renderer);
+        }
+      }
+    })
+  }
+
   async load() {
+    this.audio.currentTime = 0;
+    this.updateSeekBarOpenPlayer();
+    this.updateSeekBar();
     this.audio.src = `https://api-dynamics.adaptable.app/media/track/${this.audio_info.track_sound_id}`;
     this.audio.load();
+    this.audio_info = {
+      track_name: '---',
+      track_artist: '---',
+      track_duration: '--:--',
+      track_image: 'assets/images/icon-384x384.png',
+      track_sound_id: ''
+    };
 
     this.playerController.setImageColor(this.audio_info.track_image);
     this.audio.addEventListener('loadedmetadata', () => {
+      this.audio_info = this.trackList[this.trackIndex];
+      this.playerController.setImageColor(this.audio_info.track_image);
       this.isLoaded = true;
       if (!isNaN(this.audio.duration) && !isNaN(this.audio.currentTime)) {
         this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
@@ -378,11 +405,13 @@ export class PlayerComponent {
       this.pause();
       this.trackIndex++;
       this.audio_info = this.trackList[this.trackIndex];
+      this.playerController.setTrackIndex(this.trackIndex);
       skip(1);
       this.load();
       this.play();
     } else  {
       this.trackIndex = 0;
+      this.playerController.setTrackIndex(this.trackIndex);
       this.pause();
       this.audio_info = this.trackList[this.trackIndex];
       skip(1);
@@ -396,6 +425,7 @@ export class PlayerComponent {
     if (this.trackIndex != 0) {
       this.pause();
       this.trackIndex--
+      this.playerController.setTrackIndex(this.trackIndex);
       this.audio_info = this.trackList[this.trackIndex];
       skip(-1);
       this.load();
@@ -403,6 +433,7 @@ export class PlayerComponent {
     } else {
       this.pause();
       this.trackIndex = this.trackList.length - 1;
+      this.playerController.setTrackIndex(this.trackIndex);
       this.audio_info = this.trackList[this.trackIndex];
       skip(-1);
       this.load();

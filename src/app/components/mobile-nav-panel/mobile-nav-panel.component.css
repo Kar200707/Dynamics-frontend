@@ -11,26 +11,37 @@
 .main_block > .nav_box {
   width: 300px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
 }
 
+.main_block > .nav_box > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-.main_block > .nav_box > img,
-.main_block > .nav_box > svg {
-  width: 30px;
-  height: 30px;
+.main_block > .nav_box > div > span {
+  color: white;
+  font-family: "Nunito", sans-serif;
+  font-size: 11px;
+}
+
+.main_block > .nav_box > div > img,
+.main_block > .nav_box > div > svg {
+  width: 24px;
+  height: 24px;
   transition: .1s;
 }
 
-.main_block > .nav_box > img:active,
-.main_block > .nav_box > svg:active {
+.main_block > .nav_box > div > img:active,
+.main_block > .nav_box > div > svg:active {
   scale: 0.9;
 }
 
-.main_block > .nav_box > img + img {
-  width: 25px;
-  height: 25px;
+.main_block > .nav_box > div + div > img {
+  width: 19px;
+  height: 19px;
 }
 
 @media screen and (max-width: 400px) {
@@ -38,14 +49,9 @@
     width: 210px;
   }
 
-  .main_block > .nav_box > img,
-  .main_block > .nav_box > svg {
-    width: 28px;
-    height: 38px;
-  }
-
-  .main_block > .nav_box > img + img {
-    width: 23px;
-    height: 23px;
+  .main_block > .nav_box > div > img,
+  .main_block > .nav_box > div > svg {
+    width: 22px;
+    height: 22px;
   }
 }

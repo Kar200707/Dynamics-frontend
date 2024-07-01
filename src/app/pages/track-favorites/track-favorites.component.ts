@@ -6,6 +6,8 @@ import {ChangeMetaThemeColorService} from "../../services/change-meta-theme-colo
 import {MatButton} from "@angular/material/button";
 import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
+import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
+import {environment} from "../../../environment/environment";
 
 @Component({
   selector: 'app-track-favorites',
@@ -14,7 +16,8 @@ import {HttpClientModule} from "@angular/common/http";
     MatIcon,
     RouterLink,
     MatButton,
-    HttpClientModule
+    HttpClientModule,
+    LoaderIosComponent
   ],
   providers: [
     RequestService
@@ -23,20 +26,18 @@ import {HttpClientModule} from "@angular/common/http";
   styleUrl: './track-favorites.component.css'
 })
 export class TrackFavoritesComponent implements OnInit {
-  trackList: any = [
-    {
-      track_name: 'loading',
-      track_artist: 'loading',
-      track_image: 'assets/images/loading_image.webp'
-    }
-  ]
+  trackList?: any;
+  trackPlayIndex!: number;
+  token: string | null = localStorage.getItem('token');
 
   constructor(
     private requestService: RequestService,
     private renderer: Renderer2,
     private setMetaThemeColor: ChangeMetaThemeColorService,
     private playerController: PlayerControllerService) {
-    this.setMetaThemeColor.setThemeColor('rgba(0, 89, 222, 0.68)', this.renderer);
+    this.playerController.trackIndex$.subscribe(index => {
+      this.trackPlayIndex = index;
+    })
   }
 
   ngOnInit() {
@@ -51,14 +52,15 @@ export class TrackFavoritesComponent implements OnInit {
 
   getFavoriteTracksList() {
     this.requestService.post<any>(
-      'http://localhost:8080/media/track-details/get-favorites-list',
-      { access_token: "$2b$13$S8Cf8aEwAmwb70VdH5MUXuWA2QS6Lzq/z8ITwE74wv1HijpdTaxES" }
+      environment.getFavoriteTracksList,
+      { access_token: this.token }
     ).subscribe(tracksList => {
       this.trackList = tracksList;
     })
   }
 
   setTrack(index: number) {
+    this.trackPlayIndex = index;
     this.playerController.setTrackIndex(index);
     this.playerController.setList(this.trackList);
   }

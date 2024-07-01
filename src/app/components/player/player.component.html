@@ -1,6 +1,6 @@
 @if (!isLoaded && trackList) {
   <div class="loader_box">
-    <div class="loader"></div>
+    <app-loader-ios></app-loader-ios>
   </div>
 }
 <div
@@ -23,54 +23,56 @@
       [style.background-image]="isOpenedMobilePlayer ?
       'linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.52))' : 'unset'"
       class="layer_2">
-      @if (!isOpenedMobilePlayer) {
-        <div (click)="openMobilePlayer()" class="track_info_box">
-          <div class="track_image_box">
-            <img [src]="audio_info.track_image" alt="track image">
+<!--      @if (!isOpenedMobilePlayer) {-->
+        <div [style.display]="!isOpenedMobilePlayer ? 'flex' : 'none'" class="closed_mobile_player">
+          <div (click)="openMobilePlayer()" class="track_info_box">
+            <div class="track_image_box">
+              <img [src]="audio_info.track_image" alt="track image">
+            </div>
+            <div class="track_name_artist_box">
+              <h2 class="track_name">{{ audio_info.track_name }}</h2>
+              <h4 class="track_artist">{{ audio_info.track_artist }}</h4>
+            </div>
           </div>
-          <div class="track_name_artist_box">
-            <h2 class="track_name">{{ audio_info.track_name }}</h2>
-            <h4 class="track_artist">{{ audio_info.track_artist }}</h4>
-          </div>
-        </div>
-        <div class="player_controller_box">
-          <div class="player_controller_line">
-            <div class="slider_box">
-              <span style="margin-right: 25px">{{ currentTime }}</span>
-              <div
-                #seekBarContainer
-                class="slider-1"
-                (mousedown)="isClickUp = false; this.pause()"
-                (mouseup)="this.play()"
-                (touchend)="this.play(); seekBarContainer.style.scale = '1'; seekBarContainer.style.height = '10px'"
-                (touchstart)="isClickUp = false; this.pause();
+          <div class="player_controller_box">
+            <div class="player_controller_line">
+              <div class="slider_box">
+                <span style="margin-right: 25px">{{ currentTime }}</span>
+                <div
+                  #seekBarContainer
+                  class="slider-1"
+                  (mousedown)="isClickUp = false; this.pause()"
+                  (mouseup)="this.play()"
+                  (touchend)="this.play(); seekBarContainer.style.scale = '1'; seekBarContainer.style.height = '10px'"
+                  (touchstart)="isClickUp = false; this.pause();
         seekBarContainer.style.scale = '1.07'; seekBarContainer.style.height = '20px'"
-                (touchmove)="!isClickUp ? seekMove($event, 'touch') : false; $event.preventDefault()"
-                (mousemove)="!isClickUp ? seekMove($event, 'mouse') : false">
-                <div class="track">
-                  <div #seekBarProgress class="swapper"></div>
+                  (touchmove)="!isClickUp ? seekMove($event, 'touch') : false; $event.preventDefault()"
+                  (mousemove)="!isClickUp ? seekMove($event, 'mouse') : false">
+                  <div class="track">
+                    <div #seekBarProgress class="swapper"></div>
+                  </div>
+                </div>
+                <span style="margin-left: 25px">{{ endOfTrack }}</span>
+              </div>
+              <div class="track_controller">
+                <div (click)="prev()" class="prev">
+                  <img src="assets/images/icons/prev.svg">
+                </div>
+                <button
+                  [style.rotate]="isPlaying ? '180deg' : '0deg'"
+                  [style.color]="trackThemeColor ? trackThemeColor : 'black'"
+                  (click)="playPause()" title="play" class="play_pause_button">
+                  <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+                </button>
+                <div (click)="next()" class="next">
+                  <img src="assets/images/icons/next.svg">
                 </div>
               </div>
-              <span style="margin-left: 25px">{{ endOfTrack }}</span>
-            </div>
-            <div class="track_controller">
-              <div (click)="prev()" class="prev">
-                <img src="assets/images/icons/prev.svg">
-              </div>
-              <button
-                [style.rotate]="isPlaying ? '180deg' : '0deg'"
-                [style.color]="trackThemeColor ? trackThemeColor : 'black'"
-                (click)="playPause()" title="play" class="play_pause_button">
-                <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
-              </button>
-              <div (click)="next()" class="next">
-                <img src="assets/images/icons/next.svg">
-              </div>
             </div>
           </div>
         </div>
-      } @else {
-        <div class="mobile_player_block">
+<!--      } @else {-->
+        <div [style.display]="isOpenedMobilePlayer ? 'block' : 'none'" class="mobile_player_block">
           <div class="top_bar">
             <img (click)="closeMobilePlayer()" src="assets/images/icons/down-arrow.svg">
             <div></div>
@@ -80,7 +82,7 @@
           </div>
           <div class="track_block">
             <div class="slide_box">
-              <img class="open_player_track_image" [src]="audio_info.track_image" alt="track image">
+              <img class="open_player_track_image" (load)="loadedImage()" [src]="audio_info.track_image" alt="track image">
               <h2
                 style="margin-top: 14px; font-size: 23px"
                 class="track_name">{{ audio_info.track_name }}</h2>
@@ -150,10 +152,10 @@
               </div>
             </div>
           </div>
+          <app-timer-bottom-sheet
+            [style.bottom]="isOpenedTimerBottomSheet ? '0px' : '-' + innerHeight + 'px'"></app-timer-bottom-sheet>
         </div>
-        <app-timer-bottom-sheet
-          [style.bottom]="isOpenedTimerBottomSheet ? '0px' : '-' + innerHeight + 'px'"></app-timer-bottom-sheet>
-      }
+<!--      }-->
     </div>
   </div>
 </div>

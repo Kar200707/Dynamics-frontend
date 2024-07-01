@@ -21,7 +21,6 @@
 
 .header_block {
   padding: 20px 20px 40px 20px;
-  background-image: linear-gradient(to bottom, rgba(17, 0, 255, 0.66), transparent);
 }
 
 .title_block {
@@ -40,16 +39,18 @@ h1 {
 }
 
 .track_block {
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 0 20px;
 }
 
 .track_box {
   width: 100%;
+  margin-bottom: 1px;
   background-color: rgba(51, 51, 51, 0.41);
-  border-radius: 20px;
-  padding: 10px;
+  border-radius: 15px;
+  padding: 8px;
   display: flex;
+  transition: .3s background-color;
   align-items: center;
   justify-content: space-between;
 }
@@ -57,14 +58,23 @@ h1 {
 .track_image {
   width: 50px;
   height: 50px;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
+  position: relative;
 }
 
-.track_image > img {
+.track_image > .image {
   width: 50px;
   height: 50px;
   object-fit: cover;
+}
+
+.music_playGIF {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 30px;
+  height: 30px;
 }
 
 .track_info_box {
@@ -105,8 +115,15 @@ h1 {
 }
 
 .favorite_button > img {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 26px;
   display: block;
-  object-fit: cover;
+}
+
+.loader_block {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

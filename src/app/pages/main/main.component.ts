@@ -1,4 +1,4 @@
-import {Component, ElementRef} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {PcNavPanelComponent} from "../../components/pc-nav-panel/pc-nav-panel.component";
 import {NewsBlockComponent} from "../../components/news-block/news-block.component";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
@@ -31,14 +31,19 @@ import {NavigationEnd, Router, RouterOutlet} from "@angular/router";
 })
 export class MainComponent {
   routePath!: string;
-  isOpenedPlayer: boolean = false;
   navPanelTimeOff: boolean = true;
+  isOpenedPlayer: boolean = false;
 
   constructor(
-    private router: Router,
-    private playerController: PlayerControllerService) {
-    this.playerController.isOpened$.subscribe(isOpened => {
+    private playerController: PlayerControllerService,
+    private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.routePath = event.urlAfterRedirects.split('/')[1];
+      }
+    });
 
+    this.playerController.isOpened$.subscribe(isOpened => {
       this.isOpenedPlayer = isOpened;
       if (isOpened) {
         setTimeout(() => {
@@ -48,10 +53,5 @@ export class MainComponent {
         this.navPanelTimeOff = !isOpened;
       }
     })
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.routePath = event.urlAfterRedirects.split('/')[1];
-      }
-    });
   }
 }

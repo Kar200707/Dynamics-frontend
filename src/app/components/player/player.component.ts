@@ -10,6 +10,7 @@ import {skip} from "rxjs";
 import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
+import {environment} from "../../../environment/environment";
 
 @Component({
   selector: 'app-player',
@@ -28,13 +29,14 @@ import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component"
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
 })
-export class PlayerComponent {
+export class PlayerComponent implements OnDestroy {
   @ViewChild('seekBarContainer') seekBarContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('seekBarProgress') seekBarProgress!: ElementRef<HTMLDivElement>;
   @ViewChild('seekBarContainerOpenPlayer') seekBarContainerOpenPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('seekBarProgressOpenPlayer') seekBarProgressOpenPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('main_block') mainBlock!: ElementRef<HTMLDivElement>;
   audio: HTMLAudioElement = new Audio();
+  token: string | null = localStorage.getItem('token');
   backgroundImage: string = '';
   isOpenedMobilePlayer: boolean = false;
   isLoaded: boolean = false;
@@ -56,12 +58,12 @@ export class PlayerComponent {
   isClickUp: boolean = true;
   currentTime: string = '--:--';
   endOfTrack: string = '--:--';
-  audio_info = {
+  audio_info: any = {
     track_name: '---',
     track_artist: '---',
     track_duration: '--:--',
     track_image: 'assets/images/icon-384x384.png',
-    track_sound_id: ''
+    track_sound_id: '',
   };
 
   constructor(
@@ -145,14 +147,27 @@ export class PlayerComponent {
     playerController.trackIndex$.subscribe(index => {
       this.trackIndex = index;
     })
-    playerController.playerInfo$.subscribe((list) => {
-      if (list) {
+    this.playerController.playerInfo$.subscribe((list) => {
+      if (list && this.audio) {
         this.trackList = list;
         this.audio_info = list[this.trackIndex];
         this.load();
         this.play();
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.isLoaded = false;
+    this.trackIndex = 0;
+    this.trackList = null;
+    if (this.audio) {
+      this.audio.pause();
+      this.audio.currentTime = 0;
+      this.audio.src = '';
+      this.audio.load();
+      this.audio.remove();
+    }
   }
 
   onTouchStart(event: TouchEvent): void {
@@ -196,6 +211,13 @@ export class PlayerComponent {
     }
   }
 
+  getIsFavorite(trackId: string) {
+    this.requestService.post<any>(environment.getIsFavoriteTrack, { trackId: trackId, access_token: this.token })
+      .subscribe(data => {
+        this.isSetFavorite = data.isFavorite;
+      })
+  }
+
   seek(offset: number) {
     const newTime = this.audio.currentTime + offset;
     this.audio.currentTime = newTime;
@@ -227,6 +249,7 @@ export class PlayerComponent {
     this.updateSeekBarOpenPlayer();
     this.updateSeekBar();
     this.audio.src = `https://api-dynamics.adaptable.app/media/track/${this.audio_info.track_sound_id}`;
+    this.getIsFavorite(this.audio_info._id);
     this.audio.load();
     this.audio_info = {
       track_name: '---',

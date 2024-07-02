@@ -6,6 +6,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {environment} from "../../../environment/environment";
 import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-library',
@@ -16,7 +17,8 @@ import {NgIf} from "@angular/common";
     RouterLink,
     HttpClientModule,
     MatButton,
-    NgIf
+    NgIf,
+    MatIcon
   ],
   providers: [RequestService],
   templateUrl: './library.component.html',
@@ -27,6 +29,7 @@ export class LibraryComponent implements OnInit {
   account: any;
   token: string | null = localStorage.getItem('token');
   isOpenedAccountInfoBlock: boolean = false;
+  role!: string;
 
   constructor(
     private router: Router,
@@ -36,6 +39,7 @@ export class LibraryComponent implements OnInit {
     this.requestService.post<any>(environment.getAccount, { acsses_token: this.token })
       .subscribe(account => {
         this.account = account;
+        this.role = account.role;
       })
 
     this.requestService.post<any>(

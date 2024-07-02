@@ -1,6 +1,64 @@
 <div class="main_block">
-  <div [style.background-image]="gradient" class="top_bar">
-    <h3>{{ category | titlecase }}</h3>
-    <img [style.height]="innerWidth - 40" [src]="imgUrl" alt="{{ category }}">
+  <div class="scroll_box">
+    <div class="header_block">
+      <div class="back_button_block">
+        <button>
+          <mat-icon routerLink="/home">arrow_back_ios</mat-icon>
+        </button>
+      </div>
+      <div [style.background-image]="gradient" class="top_bar">
+        <h3>{{ category | titlecase }}</h3>
+        <img [style.height]="innerWidth - 40" [src]="imgUrl" alt="{{ category }}">
+      </div>
+    </div>
+    @if (trackList) {
+      @for (track of trackList; track $index) {
+        <div class="track_block">
+          <div
+            [style.outline]="$index === trackPlayIndex ? '#ffffff36 solid 1px' : 'none'"
+            [style.background-color]="$index === trackPlayIndex ? 'rgb(35 45 92 / 45%)' : 'rgba(51, 51, 51, 0.41)'"
+            (click)="setTrack($index)" class="track_box">
+            <div style="display: flex; align-items: center">
+              <div class="track_image">
+                @if ($index === trackPlayIndex) {
+                  <img class="music_playGIF" src="assets/images/icons/music_play.gif">
+                }
+                <img class="image" [src]="track.track_image" alt="track image">
+              </div>
+              <div class="track_info_box">
+                <h4>{{ track.track_name }}</h4>
+                <span>{{ track.track_artist }}</span>
+              </div>
+            </div>
+            <div class="control_box">
+              <button class="favorite_button">
+                <img src="assets/images/icons/favorite.png">
+              </button>
+              <span class="track_duration">{{ formatTime(track.track_duration) }}</span>
+            </div>
+          </div>
+        </div>
+      }
+      @if (trackList.length === 0) {
+        <h3 style="color: white; text-align: center;">This category not added</h3>
+        <div style="text-align: center">
+          <button
+            routerLink="/home/"
+            style="
+              background-color: transparent;
+              border: 1px solid rgba(255,255,255,0.47);
+              padding: 10px 20px;
+              color: white;
+              margin-top: 10px;
+              border-radius: 10px;
+              outline: none;
+            ">Home</button>
+        </div>
+      }
+    } @else {
+      <div class="loader_block">
+        <app-loader-ios></app-loader-ios>
+      </div>
+    }
   </div>
 </div>

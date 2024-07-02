@@ -1,7 +1,3 @@
-.main_block {
-
-}
-
 .top_bar {
   width: 100%;
   padding: 20px;
@@ -18,4 +14,134 @@
   border-radius: 14px;
   width: 100%;
   object-fit: cover;
+}
+
+.main_block {
+  display: flex;
+  flex-direction: column;
+}
+
+.back_button_block {
+  width: 100%;
+  display: flex;
+  align-items: start;
+}
+
+.back_button_block > button {
+  color: white;
+  border: 0;
+  background-color: transparent;
+}
+
+.back_button_block > button > mat-icon {
+  color: white;
+}
+
+.header_block {
+  padding: 20px 20px 40px 20px;
+}
+
+.title_block {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+}
+
+h1 {
+  color: white;
+}
+
+.scroll_box {
+  overflow-y: scroll;
+}
+
+.track_block {
+  margin-top: 10px;
+  padding: 0 20px;
+}
+
+.track_box {
+  width: 100%;
+  margin-bottom: 1px;
+  background-color: rgba(51, 51, 51, 0.41);
+  border-radius: 15px;
+  padding: 8px;
+  display: flex;
+  transition: .3s background-color;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.track_image {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.track_image > .image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.music_playGIF {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 30px;
+  height: 30px;
+}
+
+.track_info_box {
+  margin-left: 10px;
+}
+
+.track_info_box > h4 {
+  color: white;
+}
+
+.track_info_box > span {
+  color: #676767;
+  font-weight: lighter;
+}
+
+.track_duration {
+  margin-right: 3px;
+  color: #b2b2b2;
+  font-size: 15px;
+  font-weight: lighter;
+}
+
+.control_box {
+  display: flex;
+  align-items: center;
+}
+
+.favorite_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  margin-right: 5px;
+}
+
+.favorite_button > img {
+  width: 28px;
+  height: 26px;
+  display: block;
+}
+
+.loader_block {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

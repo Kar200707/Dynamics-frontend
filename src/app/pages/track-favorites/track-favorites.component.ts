@@ -1,4 +1,4 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {PlayerControllerService} from "../../services/player-controller.service";
@@ -25,7 +25,7 @@ import {environment} from "../../../environment/environment";
   templateUrl: './track-favorites.component.html',
   styleUrl: './track-favorites.component.css'
 })
-export class TrackFavoritesComponent implements OnInit {
+export class TrackFavoritesComponent implements OnInit, OnDestroy {
   trackList?: any;
   trackPlayIndex!: number;
   token: string | null = localStorage.getItem('token');
@@ -38,6 +38,11 @@ export class TrackFavoritesComponent implements OnInit {
     this.playerController.trackIndex$.subscribe(index => {
       this.trackPlayIndex = index;
     })
+  }
+
+  ngOnDestroy() {
+    this.trackList = null;
+    this.trackPlayIndex = 0;
   }
 
   ngOnInit() {

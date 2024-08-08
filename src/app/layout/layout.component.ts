@@ -15,12 +15,4 @@ import {PlayerControllerService} from "../services/player-controller.service";
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
-export class LayoutComponent {
-  isOpenedPlayer: boolean = false;
-
-  constructor(private playerController: PlayerControllerService) {
-    this.playerController.isOpened$.subscribe(isOpened => {
-      this.isOpenedPlayer = isOpened;
-    })
-  }
-}
+export class LayoutComponent {  }

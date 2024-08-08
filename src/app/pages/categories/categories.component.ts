@@ -1,6 +1,6 @@
 import {Component, Renderer2} from '@angular/core';
 import {ActivatedRoute, RouterLink} from "@angular/router";
-import {TitleCasePipe, UpperCasePipe} from "@angular/common";
+import {NgIf, TitleCasePipe, UpperCasePipe} from "@angular/common";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import {MatIcon} from "@angular/material/icon";
 import {RequestService} from "../../services/request.service";
@@ -8,6 +8,7 @@ import {ChangeMetaThemeColorService} from "../../services/change-meta-theme-colo
 import {PlayerControllerService} from "../../services/player-controller.service";
 import {environment} from "../../../environment/environment";
 import {HttpClientModule} from "@angular/common/http";
+import {ResizeHeightDirective} from "../../directives/resize-height.directive";
 
 @Component({
   selector: 'app-categories',
@@ -19,6 +20,8 @@ import {HttpClientModule} from "@angular/common/http";
     MatIcon,
     RouterLink,
     HttpClientModule,
+    ResizeHeightDirective,
+    NgIf,
   ],
   providers: [RequestService],
   templateUrl: './categories.component.html',
@@ -30,45 +33,43 @@ export class CategoriesComponent {
   gradient: string = '';
   protected readonly innerWidth = innerWidth;
   trackList?: any;
-  trackPlayIndex!: number;
+  trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
   categoryForReq!: string;
 
   constructor(
     private requestService: RequestService,
-    private renderer: Renderer2,
-    private setMetaThemeColor: ChangeMetaThemeColorService,
     private playerController: PlayerControllerService,
     private activatedRoute: ActivatedRoute) {
-    this.playerController.trackIndex$.subscribe(index => {
-      this.trackPlayIndex = index;
+    this.playerController.trackId$.subscribe(id => {
+      this.trackPlayId = id;
     })
-    activatedRoute.params.subscribe((p:any) => {
+    this.activatedRoute.params.subscribe((p:any) => {
       this.category = p.type;
       this.imgUrl = `assets/images/categories/${p.type}.png`;
       if (p.type === 'rock') {
         this.categoryForReq = 'rock';
-        this.gradient = 'linear-gradient(to top, #efbc3f, #d09607)';
+        this.gradient = 'linear-gradient(to bottom, #d09607, rgba(239, 188, 63, 0.30), transparent)';
       } else if (p.type === 'rap') {
         this.categoryForReq = 'rap';
-        this.gradient = 'linear-gradient(to top, #75768a, #434459)';
+        this.gradient = 'linear-gradient(to bottom, #434459, rgba(117, 118, 138, 0.42), transparent)';
       } else  if (p.type === 'jazz') {
         this.categoryForReq = 'jazz';
-        this.gradient = 'linear-gradient(to top, #35322d, #312817)';
+        this.gradient = 'linear-gradient(to bottom, #312817, #35322d, transparent)';
       } else  if (p.type === 'hip-hop') {
         this.categoryForReq = 'hip%20hop';
-        this.gradient = 'linear-gradient(to top, #1f1250, #4e067e)';
+        this.gradient = 'linear-gradient(to bottom, #4e067e, #1f1250, transparent)';
       }
     })
   }
 
   ngOnDestroy() {
     this.trackList = null;
-    this.trackPlayIndex = 0;
+    this.trackPlayId = '';
   }
 
   ngOnInit() {
-    this.getFavoriteTracksList();
+    this.getTracksList();
   }
 
   formatTime(seconds: number): string {
@@ -77,7 +78,15 @@ export class CategoriesComponent {
     return `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   }
 
-  getFavoriteTracksList() {
+  // getIsFavorite(trackId: string, index: number) {
+  //   this.requestService.post<any>(environment.getIsFavoriteTrack, { trackId: trackId, access_token: this.token })
+  //     .subscribe(data => {
+  //       this.isFavoriteList = [];
+  //       this.isFavoriteList[index] = data.isFavorite;
+  //     })
+  // }
+
+  getTracksList() {
     this.requestService.post<any>(
       environment.getTracksListByCategory + this.categoryForReq,
       { access_token: this.token }
@@ -86,8 +95,9 @@ export class CategoriesComponent {
     })
   }
 
-  setTrack(index: number) {
-    this.trackPlayIndex = index;
+  setTrack(id: string, index: number) {
+    this.trackPlayId = id;
+    this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
     this.playerController.setList(this.trackList);
   }

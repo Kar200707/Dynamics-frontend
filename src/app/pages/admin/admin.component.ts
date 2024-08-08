@@ -17,6 +17,7 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatButton} from "@angular/material/button";
 import {RouterLink} from "@angular/router";
+import {environment} from "../../../environment/environment";
 
 @Component({
   selector: 'app-admin',
@@ -96,7 +97,7 @@ export class AdminComponent {
     formData.append("track_artist", this.form.get('track_artist')?.value);
     formData.append("track_category", JSON.stringify(lowercaseCategories));
     formData.append("track_image_url", this.form.get('track_image_url')?.value);
-    this.requestService.post('http://localhost:8080/admin/track', formData).subscribe({
+    this.requestService.post(environment.adminTrack, formData).subscribe({
       next: (data) => {
         console.log(data);
       },

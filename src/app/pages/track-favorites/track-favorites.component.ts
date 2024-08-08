@@ -8,17 +8,19 @@ import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import {environment} from "../../../environment/environment";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-track-favorites',
   standalone: true,
-  imports: [
-    MatIcon,
-    RouterLink,
-    MatButton,
-    HttpClientModule,
-    LoaderIosComponent
-  ],
+    imports: [
+        MatIcon,
+        RouterLink,
+        MatButton,
+        HttpClientModule,
+        LoaderIosComponent,
+        NgIf
+    ],
   providers: [
     RequestService
   ],
@@ -27,22 +29,20 @@ import {environment} from "../../../environment/environment";
 })
 export class TrackFavoritesComponent implements OnInit, OnDestroy {
   trackList?: any;
-  trackPlayIndex!: number;
+  trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
 
   constructor(
     private requestService: RequestService,
-    private renderer: Renderer2,
-    private setMetaThemeColor: ChangeMetaThemeColorService,
     private playerController: PlayerControllerService) {
-    this.playerController.trackIndex$.subscribe(index => {
-      this.trackPlayIndex = index;
+    this.playerController.trackId$.subscribe(id => {
+      this.trackPlayId = id;
     })
   }
 
   ngOnDestroy() {
     this.trackList = null;
-    this.trackPlayIndex = 0;
+    this.trackPlayId = '';
   }
 
   ngOnInit() {
@@ -64,8 +64,9 @@ export class TrackFavoritesComponent implements OnInit, OnDestroy {
     })
   }
 
-  setTrack(index: number) {
-    this.trackPlayIndex = index;
+  setTrack(id: string, index: number) {
+    this.trackPlayId = id;
+    this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
     this.playerController.setList(this.trackList);
   }

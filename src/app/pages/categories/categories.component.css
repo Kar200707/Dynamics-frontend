@@ -1,6 +1,6 @@
 .top_bar {
   width: 100%;
-  padding: 20px;
+  padding: 75px 20px;
 }
 
 .top_bar > h3 {
@@ -13,6 +13,7 @@
 .top_bar > img {
   border-radius: 14px;
   width: 100%;
+  height: 200px;
   object-fit: cover;
 }
 
@@ -24,7 +25,13 @@
 .back_button_block {
   width: 100%;
   display: flex;
+  padding: 10px 20px;
+  left: 0;
+  top: 0;
   align-items: start;
+  position: fixed;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
 }
 
 .back_button_block > button {
@@ -35,10 +42,6 @@
 
 .back_button_block > button > mat-icon {
   color: white;
-}
-
-.header_block {
-  padding: 20px 20px 40px 20px;
 }
 
 .title_block {
@@ -53,6 +56,7 @@ h1 {
 }
 
 .scroll_box {
+  padding-bottom: 130px;
   overflow-y: scroll;
 }
 

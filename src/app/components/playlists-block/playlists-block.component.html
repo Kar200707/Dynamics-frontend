@@ -1,65 +1,144 @@
 <div class="main-block">
   <div class="playlists_box">
-    <h2 class="title_playlists">Playlists</h2>
-    <div (click)="setPlaylist(1)" style="margin-top: 8px" class="box">
-      <div class="playlist">
-        <div class="layer">
-          <h2 class="playlist_name">Cat</h2>
+    <h2 class="title_playlists">New collectors</h2>
+    <div class="playlists">
+      <div class="scroll">
+        <div class="playlist_block_cover">
+          <div class="playlist">
+            <div class="layer">
+              <div class="play_circle">
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+            </div>
+            <img src="https://marketplace.canva.com/EAEdeiU-IeI/1/0/1600w/canva-purple-and-red-orange-tumblr-aesthetic-chill-acoustic-classical-lo-fi-playlist-cover-jGlDSM71rNM.jpg">
+          </div>
+          <p>Name</p>
         </div>
-        <div>
-          <img src="assets/images/medium.webp">
-          <img src="assets/images/medium.webp">
+        <div class="playlist_block_cover">
+          <div class="playlist">
+            <div class="layer">
+              <div class="play_circle">
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+            </div>
+            <img src="https://marketplace.canva.com/EAEdeiU-IeI/1/0/1600w/canva-purple-and-red-orange-tumblr-aesthetic-chill-acoustic-classical-lo-fi-playlist-cover-jGlDSM71rNM.jpg">
+          </div>
+          <p>Name</p>
         </div>
-        <div>
-          <img src="assets/images/medium.webp">
-          <img src="assets/images/medium.webp">
+        <div class="playlist_block_cover">
+          <div class="playlist">
+            <div class="layer">
+              <div class="play_circle">
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+            </div>
+            <img src="https://marketplace.canva.com/EAEdeiU-IeI/1/0/1600w/canva-purple-and-red-orange-tumblr-aesthetic-chill-acoustic-classical-lo-fi-playlist-cover-jGlDSM71rNM.jpg">
+          </div>
+          <p>Name</p>
         </div>
-      </div>
-      <div style="margin-left: 30px" class="playlist">
-        <div class="layer">
-          <h2 class="playlist_name">Cat</h2>
-        </div>
-        <div>
-          <img src="assets/images/medium.webp">
-          <img src="assets/images/medium.webp">
-        </div>
-        <div>
-          <img src="assets/images/medium.webp">
-          <img src="assets/images/medium.webp">
+        <div class="playlist_block_cover">
+          <div class="playlist">
+            <div class="layer">
+              <div class="play_circle">
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+            </div>
+            <img src="https://marketplace.canva.com/EAEdeiU-IeI/1/0/1600w/canva-purple-and-red-orange-tumblr-aesthetic-chill-acoustic-classical-lo-fi-playlist-cover-jGlDSM71rNM.jpg">
+          </div>
+          <p>Name</p>
         </div>
       </div>
     </div>
-    <div class="box">
-      <div style="margin-top: 30px" class="playlist">
-        <div class="layer">
-          <h2 class="playlist_name">Cat</h2>
+  </div>
+  <div class="artists_box">
+    <h2 class="title_playlists">Favorite Artists</h2>
+    <div class="artists">
+      <div class="scroll">
+        <div class="artist_block_cover">
+          <div class="artist_block">
+            <img src="assets/images/icon-384x384.png" alt="artist">
+          </div>
+          <p>Artist</p>
         </div>
-        <div>
-          <img src="assets/images/medium.webp">
-          <img src="assets/images/medium.webp">
+        <div class="artist_block_cover">
+          <div class="artist_block">
+            <img src="assets/images/icon-384x384.png" alt="artist">
+          </div>
+          <p>Artist</p>
         </div>
-        <div>
-          <img src="assets/images/medium.webp">
-          <img src="assets/images/medium.webp">
+        <div class="artist_block_cover">
+          <div class="artist_block">
+            <img src="assets/images/icon-384x384.png" alt="artist">
+          </div>
+          <p>Artist</p>
+        </div>
+        <div class="artist_block_cover">
+          <div class="artist_block">
+            <img src="assets/images/icon-384x384.png" alt="artist">
+          </div>
+          <p>Artist</p>
+        </div>
+        <div class="artist_block_cover">
+          <div class="artist_block">
+            <img src="assets/images/icon-384x384.png" alt="artist">
+          </div>
+          <p>Artist</p>
         </div>
       </div>
-      <div style="margin: 30px 0 0 30px" class="playlist">
-        <div class="layer">
-          <h2 class="playlist_name">Cat</h2>
+    </div>
+  </div>
+  <div style="margin-top: 40px" class="playlists_box">
+    <h2 class="title_playlists">Collectors just for you, {{ account ? account.name : '' }}</h2>
+    <div class="playlists">
+      <div class="scroll">
+        <div class="playlist_block_cover">
+          <div class="playlist">
+            <div class="layer">
+              <div class="play_circle">
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+            </div>
+            <img src="http://localhost:8080/hello/get/ab67616d0000b27320f9eac87498482bc561504b.jpg">
+          </div>
+          <p>Name</p>
         </div>
-        <div>
-          <img src="assets/images/medium.webp">
-          <img src="assets/images/medium.webp">
+        <div class="playlist_block_cover">
+          <div class="playlist">
+            <div class="layer">
+              <div class="play_circle">
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+            </div>
+            <img src="https://marketplace.canva.com/EAEdeiU-IeI/1/0/1600w/canva-purple-and-red-orange-tumblr-aesthetic-chill-acoustic-classical-lo-fi-playlist-cover-jGlDSM71rNM.jpg">
+          </div>
+          <p>Name</p>
         </div>
-        <div>
-          <img src="assets/images/medium.webp">
-          <img src="assets/images/medium.webp">
+        <div class="playlist_block_cover">
+          <div class="playlist">
+            <div class="layer">
+              <div class="play_circle">
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+            </div>
+            <img src="https://marketplace.canva.com/EAEdeiU-IeI/1/0/1600w/canva-purple-and-red-orange-tumblr-aesthetic-chill-acoustic-classical-lo-fi-playlist-cover-jGlDSM71rNM.jpg">
+          </div>
+          <p>Name</p>
+        </div>
+        <div class="playlist_block_cover">
+          <div class="playlist">
+            <div class="layer">
+              <div class="play_circle">
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+            </div>
+            <img src="https://marketplace.canva.com/EAEdeiU-IeI/1/0/1600w/canva-purple-and-red-orange-tumblr-aesthetic-chill-acoustic-classical-lo-fi-playlist-cover-jGlDSM71rNM.jpg">
+          </div>
+          <p>Name</p>
         </div>
       </div>
     </div>
   </div>
   <div class="right_block">
-    <h2 class="category_title">Categories</h2>
     <div class="categories">
       <div class="block">
         <div routerLink="/home/category/rap" class="box rap">
@@ -80,21 +159,6 @@
           <h5>Jazz</h5>
           <img src="assets/images/categories/jazz.png">
         </div>
-      </div>
-    </div>
-    <h2 class="artist_title" style="margin-top: 20px">Artists</h2>
-    <div class="artists">
-      <div class="artist_block">
-        <img src="assets/images/icon-384x384.png" alt="artist">
-      </div>
-      <div class="artist_block">
-        <img src="assets/images/icon-384x384.png" alt="artist">
-      </div>
-      <div class="artist_block">
-        <img src="assets/images/icon-384x384.png" alt="artist">
-      </div>
-      <div class="artist_block">
-        <img src="assets/images/icon-384x384.png" alt="artist">
       </div>
     </div>
   </div>

@@ -10,16 +10,16 @@
         <h1>Favorites</h1>
       </div>
     </div>
-    @if (trackList) {
+    <div [style.display]="trackList ? 'block' : 'none'">
       @for (track of trackList; track $index) {
         <div class="track_block">
           <div
-            [style.outline]="$index === trackPlayIndex ? '#ffffff36 solid 1px' : 'none'"
-            [style.background-color]="$index === trackPlayIndex ? 'rgb(35 45 92 / 45%)' : 'rgba(51, 51, 51, 0.41)'"
-            (click)="setTrack($index)" class="track_box">
+            [style.outline]="track._id === trackPlayId ? '#ffffff36 solid 1px' : 'none'"
+            [style.background-color]="track._id === trackPlayId ? 'rgb(35 45 92 / 45%)' : 'rgba(51, 51, 51, 0.41)'"
+            (click)="setTrack(track._id, $index)" class="track_box">
             <div style="display: flex; align-items: center">
               <div class="track_image">
-                @if ($index === trackPlayIndex) {
+                @if (track._id === trackPlayId) {
                   <img class="music_playGIF" src="assets/images/icons/music_play.gif">
                 }
                 <img class="image" [src]="track.track_image" alt="track image">
@@ -38,12 +38,13 @@
           </div>
         </div>
       }
-      @if (trackList.length === 0) {
-        <h3 style="color: white; text-align: center;">Favorites not added</h3>
-        <div style="text-align: center">
-          <button
-            routerLink="/home/"
-            style="
+      @if (trackList) {
+        @if (trackList.length === 0) {
+          <h3 style="color: white; text-align: center;">Favorites not added</h3>
+          <div style="text-align: center">
+            <button
+              routerLink="/home/"
+              style="
               background-color: transparent;
               border: 1px solid rgba(255,255,255,0.47);
               padding: 10px 20px;
@@ -52,12 +53,12 @@
               border-radius: 10px;
               outline: none;
             ">Home</button>
-        </div>
+          </div>
+        }
       }
-    } @else {
-      <div class="loader_block">
-        <app-loader-ios></app-loader-ios>
-      </div>
-    }
+    </div>
+    <div *ngIf="!trackList" class="loader_block">
+      <app-loader-ios></app-loader-ios>
+    </div>
    </div>
 </div>

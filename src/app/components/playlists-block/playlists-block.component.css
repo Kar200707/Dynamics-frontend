@@ -3,23 +3,41 @@
   display: flex;
 }
 
-.playlist {
-  width: 200px;
-  height: 200px;
-  background-color: #333333;
+.playlists {
+  overflow-x: scroll;
+  margin-top: 10px;
   border-radius: 20px;
+  background-color: #1f1f1f;
+  padding: 20px 20px 10px 20px;
+}
+
+.playlists::-webkit-scrollbar {
+  height: 0;
+}
+
+.playlist {
+  width: 140px;
+  height: 140px;
+  background-color: #333333;
+  border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.2) 0 3px 8px;
   overflow: hidden;
   position: relative;
 }
 
-.playlist > div {
-  display: flex;
+.playlist_block_cover {
+  margin-right: 20px;
 }
 
-.playlist > div > img {
-  width: 50%;
-  height: 100px;
+.playlist_block_cover > p {
+  color: white;
+  font-family: "Nunito", sans-serif;
+  margin-top: 5px;
+}
+
+.playlist > img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -32,15 +50,29 @@
 .playlist > .layer {
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 187, 68, 0.6);
+  /*background-color: rgba(54, 54, 54, 0.6);*/
   position: absolute;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 15px;
+}
+.playlist > .layer > .play_circle {
+  width: 45px;
+  height: 45px;
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.playlist_name {
-  font-size: 50px;
+.playlist > .layer > .play_circle > mat-icon {
+  color: #005cbb;
+  width: 36px;
+  height: 36px;
+  font-size: 36px;
+  display: block;
 }
 
 .playlists_box > .box {
@@ -50,6 +82,8 @@
 h2 {
   font-family: "Nunito", sans-serif;
   color: white;
+  font-weight: 400;
+  font-size: 20px;
 }
 
 .right_block {
@@ -58,7 +92,7 @@ h2 {
 }
 
 .categories {
-   margin-top: 8px;
+   margin-top: 40px;
 }
 
 .categories > .block {
@@ -124,14 +158,37 @@ h2 {
   border-radius: 20px;
   background-color: #1f1f1f;
   padding: 20px;
+  overflow-x: scroll;
+}
+
+.artist_block_cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.artist_block_cover > p {
+  color: white;
+  font-family: "Nunito", sans-serif;
+  margin-top: 5px;
+}
+
+.artists::-webkit-scrollbar {
+  height: 0;
+}
+
+.artists > .scroll,
+.playlists > .scroll {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: fit-content;
 }
 
-.artists > .artist_block {
-  width: 120px;
-  height: 120px;
+.artist_block {
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
   overflow: hidden;
   background-color: #333333;
@@ -140,9 +197,9 @@ h2 {
   justify-content: center;
 }
 
-.artists > .artist_block > img {
-  width: 100px;
-  height: 100px;
+.artist_block > img {
+  width: 92px;
+  height: 92px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -210,10 +267,6 @@ h2 {
 
   .playlists_box {
     width: 100%;
-  }
-
-  .playlist {
-    width: 50%;
   }
 }
 

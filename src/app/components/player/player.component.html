@@ -8,12 +8,17 @@
   (touchmove)="onTouchMove($event)"
   (touchend)="onTouchEnd($event)"
   [style.padding]="!isOpenedMobilePlayer ? '12px' : '0'"
-  [style.height]="isOpenedMobilePlayer ? '100vh' : '110px'"
+  [style.height]="isOpenedMobilePlayer ? '100vh' : '100px'"
   [style.bottom]="!isLoaded && !isOpenedMobilePlayer ? '-100px' : '0'"
   [style.border-radius]="touchStart && isOpenedMobilePlayer && mainBlock.nativeElement.offsetHeight < innerHeight
   ? '25px 25px 0 0' : '0'"
   #main_block
   class="main_block">
+  @if (isOpenedMobilePlayer) {
+    <div [style.top]="trackAddedInFavorites ? '15px' : '-70px'" class="alert_message">
+      <p>Track added in favorites</p>
+    </div>
+  }
   <div
     [style.border]="isOpenedMobilePlayer ? '0' : '1px solid rgba(255, 255, 255, 0.23)'"
     [style.background-color]="trackThemeColor ? trackThemeColor : 'unset'"
@@ -23,11 +28,18 @@
       [style.background-image]="isOpenedMobilePlayer ?
       'linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.52))' : 'unset'"
       class="layer_2">
-<!--      @if (!isOpenedMobilePlayer) {-->
+      <div
+        *ngIf="!isOpenedMobilePlayer"
+        #seekBarContainer
+        class="slider_bar">
+        <div style="background-color: transparent" class="track">
+          <div #seekBarProgress style="background-color: #10409a" class="swapper"></div>
+        </div>
+      </div>
         <div [style.display]="!isOpenedMobilePlayer ? 'flex' : 'none'" class="closed_mobile_player">
           <div (click)="openMobilePlayer()" class="track_info_box">
             <div class="track_image_box">
-              <img [src]="audio_info.track_image" alt="track image">
+              <img [style.display]="audio_info.track_image != '' ? 'block' : 'none'" [src]="audio_info.track_image" alt="track image">
             </div>
             <div class="track_name_artist_box">
               <h2 class="track_name">{{ audio_info.track_name }}</h2>
@@ -71,7 +83,6 @@
             </div>
           </div>
         </div>
-<!--      } @else {-->
         <div [style.display]="isOpenedMobilePlayer ? 'block' : 'none'" class="mobile_player_block">
           <div class="top_bar">
             <img (click)="closeMobilePlayer()" src="assets/images/icons/down-arrow.svg">
@@ -82,7 +93,13 @@
           </div>
           <div class="track_block">
             <div class="slide_box">
-              <img class="open_player_track_image" (load)="loadedImage()" [src]="audio_info.track_image" alt="track image">
+              <div [style.scale]="isPlaying ? '1' : '0.9'" class="open_player_track_img_block">
+                <img
+                  [style.display]="audio_info.track_image != '' ? 'block' : 'none'"
+                  class="open_player_track_image"
+                  (load)="loadedImage()"
+                  [src]="audio_info.track_image" alt="track image">
+              </div>
               <h2
                 style="margin-top: 14px; font-size: 23px"
                 class="track_name">{{ audio_info.track_name }}</h2>
@@ -155,7 +172,6 @@
           <app-timer-bottom-sheet
             [style.bottom]="isOpenedTimerBottomSheet ? '0px' : '-' + innerHeight + 'px'"></app-timer-bottom-sheet>
         </div>
-<!--      }-->
     </div>
   </div>
 </div>

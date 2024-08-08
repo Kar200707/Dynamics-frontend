@@ -11,6 +11,7 @@ import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import {environment} from "../../../environment/environment";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-player',
@@ -21,7 +22,8 @@ import {environment} from "../../../environment/environment";
     MatIconButton,
     TimerBottomSheetComponent,
     HttpClientModule,
-    LoaderIosComponent
+    LoaderIosComponent,
+    NgIf
   ],
   providers: [
     RequestService
@@ -54,6 +56,7 @@ export class PlayerComponent implements OnDestroy {
   trackInterval: any;
   touchClinetY: number = 0;
   replay: boolean = false;
+  trackAddedInFavorites: boolean = false;
   trackIndex:number = 0;
   isClickUp: boolean = true;
   currentTime: string = '--:--';
@@ -62,7 +65,7 @@ export class PlayerComponent implements OnDestroy {
     track_name: '---',
     track_artist: '---',
     track_duration: '--:--',
-    track_image: 'assets/images/icon-384x384.png',
+    track_image: '',
     track_sound_id: '',
   };
 
@@ -77,6 +80,7 @@ export class PlayerComponent implements OnDestroy {
         this.isOpenedTimerBottomSheet = false;
       }
     })
+
     document.addEventListener('touchmove', (event: TouchEvent) => {
       if (this.touchStart && this.mainBlock.nativeElement && this.isOpenedMobilePlayer && this.moveLimit > 4 || this.moveLimit < -4) {
         const touch = event.touches[0];
@@ -251,13 +255,6 @@ export class PlayerComponent implements OnDestroy {
     this.audio.src = `https://api-dynamics.adaptable.app/media/track/${this.audio_info.track_sound_id}`;
     this.getIsFavorite(this.audio_info._id);
     this.audio.load();
-    this.audio_info = {
-      track_name: '---',
-      track_artist: '---',
-      track_duration: '--:--',
-      track_image: 'assets/images/icon-384x384.png',
-      track_sound_id: ''
-    };
 
     this.playerController.setImageColor(this.audio_info.track_image);
     this.audio.addEventListener('loadedmetadata', () => {
@@ -298,6 +295,14 @@ export class PlayerComponent implements OnDestroy {
       })
     }
     this.playerController.setBackground(this.audio_info.track_image);
+
+    this.audio_info = {
+      track_name: '---',
+      track_artist: '---',
+      track_duration: '--:--',
+      track_image: '',
+      track_sound_id: '',
+    };
   }
 
   blendWithBlack(rgb: { r: number, g: number, b: number }, factor: number): { r: number, g: number, b: number } {
@@ -428,13 +433,13 @@ export class PlayerComponent implements OnDestroy {
       this.pause();
       this.trackIndex++;
       this.audio_info = this.trackList[this.trackIndex];
-      this.playerController.setTrackIndex(this.trackIndex);
+      this.playerController.setTrackId(this.audio_info._id);
       skip(1);
       this.load();
       this.play();
     } else  {
       this.trackIndex = 0;
-      this.playerController.setTrackIndex(this.trackIndex);
+      this.playerController.setTrackId(this.audio_info._id);
       this.pause();
       this.audio_info = this.trackList[this.trackIndex];
       skip(1);
@@ -448,7 +453,7 @@ export class PlayerComponent implements OnDestroy {
     if (this.trackIndex != 0) {
       this.pause();
       this.trackIndex--
-      this.playerController.setTrackIndex(this.trackIndex);
+      this.playerController.setTrackId(this.audio_info._id);
       this.audio_info = this.trackList[this.trackIndex];
       skip(-1);
       this.load();
@@ -456,7 +461,7 @@ export class PlayerComponent implements OnDestroy {
     } else {
       this.pause();
       this.trackIndex = this.trackList.length - 1;
-      this.playerController.setTrackIndex(this.trackIndex);
+      this.playerController.setTrackId(this.audio_info._id);
       this.audio_info = this.trackList[this.trackIndex];
       skip(-1);
       this.load();
@@ -501,7 +506,15 @@ export class PlayerComponent implements OnDestroy {
   }
 
   setFavorite() {
-    this.isSetFavorite = !this.isSetFavorite;
+    if (!this.isSetFavorite) {
+      this.isSetFavorite = true;
+      this.requestService.post<any>(environment.addFavorite, { access_token: this.token, trackId: this.audio_info._id })
+        .subscribe(() => {
+          this.trackAddedInFavorites = true;
+          setTimeout(() => {
+            this.trackAddedInFavorites = false;}, 2000)
+        })
+    }
   }
 
   previous_10s() {

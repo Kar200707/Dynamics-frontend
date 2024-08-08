@@ -2,7 +2,7 @@
   <div class="account_block">
     <h2>Your Library</h2>
     <div (click)="toggleAccountInfoBlock($event)" class="account">
-      <img *ngIf="account" [src]="account.avatar">
+      <img [style.display]="account ? 'block' : 'none'" [src]="account ? account.avatar : ''">
       <div *ngIf="isOpenedAccountInfoBlock" class="layer">
         <div class="account_info_block" (click)="$event.stopPropagation()">
           <h3>{{ account.name }}</h3>

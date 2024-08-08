@@ -8,6 +8,8 @@ import {ImageColorService} from "./image-color.service";
 export class PlayerControllerService {
   private playerInfo: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   playerInfo$:Observable<any> = this.playerInfo.asObservable();
+  private trackId: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  trackId$:Observable<any> = this.trackId.asObservable();
   private trackIndex: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   trackIndex$:Observable<any> = this.trackIndex.asObservable();
   private backgroundUrl: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -25,12 +27,16 @@ export class PlayerControllerService {
     this.playerInfo.next(list);
   }
 
-  setTrackIndex(index: number) {
-    this.trackIndex.next(index);
+  setTrackId(trackId: string) {
+    this.trackId.next(trackId);
   }
 
   setBackground(bgUrl: string) {
     this.backgroundUrl.next(bgUrl);
+  }
+
+  setTrackIndex(index: number) {
+    this.trackIndex.next(index);
   }
 
   setImageColor(imgUrl: string) {

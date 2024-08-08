@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import {NewsBlockComponent} from "../../components/news-block/news-block.component";
 import {PlaylistsBlockComponent} from "../../components/playlists-block/playlists-block.component";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
+import {NgOptimizedImage} from "@angular/common";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -9,7 +11,9 @@ import {ResizeHeightDirective} from "../../directives/resize-height.directive";
   imports: [
     NewsBlockComponent,
     PlaylistsBlockComponent,
-    ResizeHeightDirective
+    ResizeHeightDirective,
+    NgOptimizedImage,
+    RouterLink
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'

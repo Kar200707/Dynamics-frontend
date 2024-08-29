@@ -12,6 +12,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import {environment} from "../../../environment/environment";
 import {NgIf} from "@angular/common";
+import {SearchListModel} from "../../../models/search_list.model";
 
 @Component({
   selector: 'app-player',
@@ -61,12 +62,18 @@ export class PlayerComponent implements OnDestroy {
   isClickUp: boolean = true;
   currentTime: string = '--:--';
   endOfTrack: string = '--:--';
-  audio_info: any = {
-    track_name: '---',
-    track_artist: '---',
-    track_duration: '--:--',
-    track_image: '',
-    track_sound_id: '',
+  audio_info: SearchListModel = {
+    duration: {
+      seconds: 0,
+      timestamp: '--:--'
+    },
+    author: {
+      name: '--',
+      url: ''
+    },
+    image: '',
+    title: '--',
+    videoId: ''
   };
 
   constructor(
@@ -252,14 +259,14 @@ export class PlayerComponent implements OnDestroy {
     this.audio.currentTime = 0;
     this.updateSeekBarOpenPlayer();
     this.updateSeekBar();
-    this.audio.src = `https://api-dynamics.adaptable.app/media/track/${this.audio_info.track_sound_id}`;
-    this.getIsFavorite(this.audio_info._id);
+    this.audio.src = environment.getStream + this.audio_info.videoId;
+    this.getIsFavorite(this.audio_info.videoId);
     this.audio.load();
 
-    this.playerController.setImageColor(this.audio_info.track_image);
+    this.playerController.setImageColor(this.audio_info.image);
     this.audio.addEventListener('loadedmetadata', () => {
       this.audio_info = this.trackList[this.trackIndex];
-      this.playerController.setImageColor(this.audio_info.track_image);
+      this.playerController.setImageColor(this.audio_info.image);
       this.isLoaded = true;
       if (!isNaN(this.audio.duration) && !isNaN(this.audio.currentTime)) {
         this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
@@ -268,12 +275,12 @@ export class PlayerComponent implements OnDestroy {
 
       if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
-          title: this.audio_info.track_name,
-          artist: this.audio_info.track_artist,
+          title: this.audio_info.title,
+          artist: this.audio_info.author.name,
           artwork: [
-            { src: this.audio_info.track_image, sizes: '96x96', type: 'image/jpeg' },
-            { src: this.audio_info.track_image, sizes: '128x128', type: 'image/jpeg' },
-            { src: this.audio_info.track_image, sizes: '192x192', type: 'image/jpeg' }
+            { src: this.audio_info.image, sizes: '96x96', type: 'image/jpeg' },
+            { src: this.audio_info.image, sizes: '128x128', type: 'image/jpeg' },
+            { src: this.audio_info.image, sizes: '192x192', type: 'image/jpeg' }
           ]
         });
       }
@@ -294,14 +301,20 @@ export class PlayerComponent implements OnDestroy {
         }
       })
     }
-    this.playerController.setBackground(this.audio_info.track_image);
+    this.playerController.setBackground(this.audio_info.image);
 
     this.audio_info = {
-      track_name: '---',
-      track_artist: '---',
-      track_duration: '--:--',
-      track_image: '',
-      track_sound_id: '',
+      duration: {
+        seconds: 0,
+        timestamp: '--:--'
+      },
+      author: {
+        name: '--',
+        url: ''
+      },
+      image: '',
+      title: '--',
+      videoId: ''
     };
   }
 
@@ -433,13 +446,13 @@ export class PlayerComponent implements OnDestroy {
       this.pause();
       this.trackIndex++;
       this.audio_info = this.trackList[this.trackIndex];
-      this.playerController.setTrackId(this.audio_info._id);
+      this.playerController.setTrackId(this.audio_info.videoId);
       skip(1);
       this.load();
       this.play();
     } else  {
       this.trackIndex = 0;
-      this.playerController.setTrackId(this.audio_info._id);
+      this.playerController.setTrackId(this.audio_info.videoId);
       this.pause();
       this.audio_info = this.trackList[this.trackIndex];
       skip(1);
@@ -453,7 +466,7 @@ export class PlayerComponent implements OnDestroy {
     if (this.trackIndex != 0) {
       this.pause();
       this.trackIndex--
-      this.playerController.setTrackId(this.audio_info._id);
+      this.playerController.setTrackId(this.audio_info.videoId);
       this.audio_info = this.trackList[this.trackIndex];
       skip(-1);
       this.load();
@@ -461,7 +474,7 @@ export class PlayerComponent implements OnDestroy {
     } else {
       this.pause();
       this.trackIndex = this.trackList.length - 1;
-      this.playerController.setTrackId(this.audio_info._id);
+      this.playerController.setTrackId(this.audio_info.videoId);
       this.audio_info = this.trackList[this.trackIndex];
       skip(-1);
       this.load();
@@ -508,7 +521,7 @@ export class PlayerComponent implements OnDestroy {
   setFavorite() {
     if (!this.isSetFavorite) {
       this.isSetFavorite = true;
-      this.requestService.post<any>(environment.addFavorite, { access_token: this.token, trackId: this.audio_info._id })
+      this.requestService.post<any>(environment.addFavorite, { access_token: this.token, trackId: this.audio_info.videoId })
         .subscribe(() => {
           this.trackAddedInFavorites = true;
           setTimeout(() => {

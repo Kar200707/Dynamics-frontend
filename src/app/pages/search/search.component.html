@@ -1,13 +1,15 @@
 <div class="main_block">
-  <h1>Search for your interest</h1>
   <div class="search_block">
-    <input #searchInput placeholder="Search..." class="search" type="search">
-    <div class="search_history_block">
-      @for (item of search; track item.history) {
-        <button (click)="setSearchHistory(item.history)" mat-button class="history_block">
-          <h2 style="color: white; font-weight: lighter; margin: 10px 0;">{{ item.history }}</h2>
-        </button>
-      }
-    </div>
+    <input #searchInput (input)="searchTrackList(searchInput.value)" placeholder="Search..." class="search" type="search">
+    @if (searchInput.value !== '') {
+      <div class="search_history_block">
+        @for (item of search; track item) {
+          <button (click)="setTrack(item.videoId, $index)" class="history_block">
+            <img class="track_image" [src]="item.image">
+            <h3 class="title">{{ item.title.length > 50 ? item.title.slice(0, 50) : item.title }}</h3>
+          </button>
+        }
+      </div>
+    }
   </div>
 </div>

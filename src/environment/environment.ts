@@ -10,4 +10,6 @@ export const environment = {
   getAccount: host + 'user/account',
   adminTrack: host + 'admin/track',
   addFavorite: host + 'media/track-details/add-favorites',
+  searchTracksList: host + 'youtube-base/search',
+  getStream: host + 'youtube-base/get-stream/',
 }

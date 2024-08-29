@@ -10,6 +10,9 @@ import {TimerBottomSheetComponent} from "../../components/timer-bottom-sheet/tim
 import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {NavigationEnd, Router, RouterOutlet} from "@angular/router";
+import {HttpClientModule} from "@angular/common/http";
+import {RequestService} from "../../services/request.service";
+import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
 
 @Component({
   selector: 'app-main',
@@ -23,9 +26,11 @@ import {NavigationEnd, Router, RouterOutlet} from "@angular/router";
     MobileNavPanelComponent,
     TimerBottomSheetComponent,
     MatIconButton,
+    HttpClientModule,
     MatIcon,
     RouterOutlet,
   ],
+  providers: [ RequestService ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
@@ -35,6 +40,7 @@ export class MainComponent {
   isOpenedPlayer: boolean = false;
 
   constructor(
+    private reqServ: RequestService,
     private playerController: PlayerControllerService,
     private router: Router) {
     this.router.events.subscribe(event => {
@@ -42,6 +48,11 @@ export class MainComponent {
         this.routePath = event.urlAfterRedirects.split('/')[1];
       }
     });
+
+    this.reqServ.get('https://i.ytimg.com/vi/IIBv6jISYG8/hq720.jpg')
+      .subscribe(data => {
+        console.log(data)
+      })
 
     this.playerController.isOpened$.subscribe(isOpened => {
       this.isOpenedPlayer = isOpened;

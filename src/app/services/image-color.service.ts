@@ -1,65 +1,62 @@
 import { Injectable } from '@angular/core';
+import {RequestService} from "./request.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageColorService {
 
-  constructor() { }
-
-  getAverageRGB(imgURL: string): Promise<{r: number, g: number, b: number}> {
+  private loadImage(imgURL: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
-      let imgEl = new Image();
-      imgEl.src = imgURL;
-      imgEl.crossOrigin = "Anonymous";
+      const img = new Image();
+      img.src = imgURL;
+      img.crossOrigin = 'Google'; // Handle cross-origin requests
 
-      imgEl.onload = () => {
-        let blockSize = 5, // only visit every 5 pixels
-          defaultRGB = {r:0,g:0,b:0}, // for non-supporting envs
-          canvas = document.createElement('canvas'),
-          context = canvas.getContext && canvas.getContext('2d'),
-          data, width, height,
-          i = -4,
-          length,
-          rgb = {r:0,g:0,b:0},
-          count = 0;
+      img.onload = () => resolve(img);
+      img.onerror = (err) => reject(new Error('Failed to load image.'));
+    });
+  }
 
-        if (!context) {
-          resolve(defaultRGB);
-          return;
+  getAverageRGB(imgURL: string): Promise<{ r: number, g: number, b: number }> {
+    return this.loadImage(imgURL).then(img => {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+
+      if (!context) {
+        console.error('Canvas context not supported.');
+        return { r: 0, g: 0, b: 0 };
+      }
+
+      canvas.width = img.naturalWidth || img.width;
+      canvas.height = img.naturalHeight || img.height;
+
+      context.drawImage(img, 0, 0);
+
+      try {
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        let r = 0, g = 0, b = 0;
+        let count = 0;
+
+        for (let i = 0; i < data.length; i += 4) {
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          count++;
         }
 
-        height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
-        width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
+        r = Math.floor(r / count);
+        g = Math.floor(g / count);
+        b = Math.floor(b / count);
 
-        context.drawImage(imgEl, 0, 0);
-
-        try {
-          data = context.getImageData(0, 0, width, height);
-        } catch(e) {
-          resolve(defaultRGB);
-          return;
-        }
-
-        length = data.data.length;
-
-        while ((i += blockSize * 4) < length) {
-          ++count;
-          rgb.r += data.data[i];
-          rgb.g += data.data[i + 1];
-          rgb.b += data.data[i + 2];
-        }
-
-        rgb.r = ~~(rgb.r / count);
-        rgb.g = ~~(rgb.g / count);
-        rgb.b = ~~(rgb.b / count);
-
-        resolve(rgb);
-      };
-
-      imgEl.onerror = (err) => {
-        reject(err);
-      };
+        return { r, g, b };
+      } catch (e) {
+        console.error('Error processing image data:', e);
+        return { r: 0, g: 0, b: 0 };
+      }
+    }).catch(err => {
+      console.error('Image loading error:', err);
+      return { r: 0, g: 0, b: 0 };
     });
   }
 }

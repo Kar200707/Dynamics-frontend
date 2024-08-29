@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
 import {PlayerControllerService} from "../../services/player-controller.service";
+import {HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-pc-nav-panel',
   standalone: true,
   imports: [
-    MatIcon
+    MatIcon,
+    HttpClientModule
   ],
   templateUrl: './pc-nav-panel.component.html',
   styleUrl: './pc-nav-panel.component.css'

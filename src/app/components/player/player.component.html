@@ -20,30 +20,28 @@
     </div>
   }
   <div
-    [style.border]="isOpenedMobilePlayer ? '0' : '1px solid rgba(255, 255, 255, 0.23)'"
-    [style.background-color]="trackThemeColor ? trackThemeColor : 'unset'"
+    [style.border]="isOpenedMobilePlayer ? '0' : '1px solid rgb(104 104 104)'"
+    [style.background-image]="'url(' + audio_info.image + ')'"
     [style.border-radius]="!isOpenedMobilePlayer ? '20px' : '0'" class="layer">
     <div
       [style.padding]="isOpenedMobilePlayer ? '0' : '10px 20px 10px 10px'"
-      [style.background-image]="isOpenedMobilePlayer ?
-      'linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.52))' : 'unset'"
       class="layer_2">
       <div
         *ngIf="!isOpenedMobilePlayer"
         #seekBarContainer
         class="slider_bar">
         <div style="background-color: transparent" class="track">
-          <div #seekBarProgress style="background-color: #10409a" class="swapper"></div>
+          <div #seekBarProgress style="background-color: #ffffff" class="swapper"></div>
         </div>
       </div>
         <div [style.display]="!isOpenedMobilePlayer ? 'flex' : 'none'" class="closed_mobile_player">
           <div (click)="openMobilePlayer()" class="track_info_box">
             <div class="track_image_box">
-              <img [style.display]="audio_info.track_image != '' ? 'block' : 'none'" [src]="audio_info.track_image" alt="track image">
+              <img [style.display]="audio_info.image != '' ? 'block' : 'none'" [src]="audio_info.image" alt="track image">
             </div>
             <div class="track_name_artist_box">
-              <h2 class="track_name">{{ audio_info.track_name }}</h2>
-              <h4 class="track_artist">{{ audio_info.track_artist }}</h4>
+              <h2 style="font-size: 15px" class="track_name">{{ audio_info.title }}</h2>
+              <h4 class="track_artist">{{ audio_info.author.name }}</h4>
             </div>
           </div>
           <div class="player_controller_box">
@@ -95,17 +93,17 @@
             <div class="slide_box">
               <div [style.scale]="isPlaying ? '1' : '0.9'" class="open_player_track_img_block">
                 <img
-                  [style.display]="audio_info.track_image != '' ? 'block' : 'none'"
+                  [style.display]="audio_info.image != '' ? 'block' : 'none'"
                   class="open_player_track_image"
                   (load)="loadedImage()"
-                  [src]="audio_info.track_image" alt="track image">
+                  [src]="audio_info.image" alt="track image">
               </div>
               <h2
                 style="margin-top: 14px; font-size: 23px"
-                class="track_name">{{ audio_info.track_name }}</h2>
+                class="track_name">{{ audio_info.title }}</h2>
               <h4
                 style="font-size: 16px; font-weight: lighter"
-                class="track_artist">{{ audio_info.track_artist }}</h4>
+                class="track_artist">{{ audio_info.author.name }}</h4>
             </div>
             <div class="media_all_button_block">
               <div style="display: flex">

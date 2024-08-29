@@ -57,6 +57,7 @@ app-timer-bottom-sheet {
   width: 100%;
   height: 100%;
   backdrop-filter: blur(20px);
+  background-color: rgba(26, 26, 26, 0.85);
 }
 
 .layer_2 > .closed_mobile_player {
@@ -69,7 +70,6 @@ app-timer-bottom-sheet {
   width: 55px;
   height: 55px;
   border-radius: 10px;
-  overflow: hidden;
   box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
 }
 
@@ -85,22 +85,44 @@ app-timer-bottom-sheet {
   height: 55px;
   object-fit: cover;
   margin-right: 10px;
+  border-radius: 10px;
 }
 
 .track_name_artist_box {
   margin-left: 15px;
-  width: 200px;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  font-weight: lighter;
+  font-size: 1rem;
+  text-align: start;
 }
 
 .track_name {
   color: white;
   font-family: "Nunito", sans-serif;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: lighter;
+  font-size: 1rem;
+  text-align: start;
 }
 
 .track_artist {
   color: #a6a6a6;
   font-family: "Nunito", sans-serif;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: lighter;
+  text-align: start;
 }
 
 .player_controller_box {
@@ -357,10 +379,6 @@ input[type="range"]::-moz-range-thumb {
   .player_controller_box {
     width: unset;
   }
-
-  .track_name_artist_box {
-    width: unset;
-  }
 }
 
 @media screen and (max-width: 445px) {
@@ -440,6 +458,7 @@ input[type="range"]::-moz-range-thumb {
 .open_player_track_img_block {
   border-radius: 15px;
   width: 310px;
+  align-self: center;
   height: 310px;
   overflow: hidden;
   transition: scale .4s cubic-bezier(0,-0.4,0,1.20);

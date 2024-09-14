@@ -1,5 +1,4 @@
 .main-block {
-  margin-top: 20px;
   display: flex;
 }
 
@@ -7,7 +6,7 @@
   overflow-x: scroll;
   margin-top: 10px;
   border-radius: 20px;
-  background-color: #1f1f1f;
+  background-color: #1a1a1a;
   padding: 20px 20px 10px 20px;
 }
 
@@ -268,6 +267,60 @@ h2 {
   .playlists_box {
     width: 100%;
   }
+}
+
+.listen_again_block {
+  width: 100%;
+  overflow-x: auto;
+  background-color: #1f1f1f;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  margin-top: 15px;
+}
+
+.listen_again_block::-webkit-scrollbar { height: 0 }
+
+.track_block {
+  width: 160px;
+  height: 160px;
+  margin-right: 15px;
+  transition: .1s;
+}
+
+.track_block:active {
+  scale: .97;
+}
+
+.track_block > img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 13px;
+  display: block;
+}
+
+.track_block > h3 {
+  overflow: hidden;
+  display: -webkit-box;
+  font-weight: lighter;
+  font-size: 0.9rem;
+  font-family: "Nunito", sans-serif;
+  color: white;
+  text-align: start;
+  margin-top: 5px;
+  width: 110px;
+}
+
+.track_block > span {
+  width: 110px;
+  overflow: hidden;
+  display: -webkit-box;
+  font-family: "Nunito", sans-serif;
+  font-weight: lighter;
+  font-size: 0.8rem;
+  color: #919191;
+  text-align: start;
 }
 
 @media screen and (max-width: 660px) {

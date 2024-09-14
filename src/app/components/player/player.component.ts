@@ -38,6 +38,7 @@ export class PlayerComponent implements OnDestroy {
   @ViewChild('seekBarContainerOpenPlayer') seekBarContainerOpenPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('seekBarProgressOpenPlayer') seekBarProgressOpenPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('main_block') mainBlock!: ElementRef<HTMLDivElement>;
+  @ViewChild('image_track') image!: ElementRef<HTMLImageElement>;
   audio: HTMLAudioElement = new Audio();
   token: string | null = localStorage.getItem('token');
   backgroundImage: string = '';
@@ -256,12 +257,18 @@ export class PlayerComponent implements OnDestroy {
   }
 
   async load() {
+    this.requestService.post<any>(environment.setPlayHistory,
+      { access_token: this.token, trackId: this.audio_info.videoId }).subscribe()
+    this.isLoaded = false;
     this.audio.currentTime = 0;
     this.updateSeekBarOpenPlayer();
     this.updateSeekBar();
     this.audio.src = environment.getStream + this.audio_info.videoId;
     this.getIsFavorite(this.audio_info.videoId);
     this.audio.load();
+    this.audio.onerror = (e) => {
+      this.isLoaded = true;
+    }
 
     this.playerController.setImageColor(this.audio_info.image);
     this.audio.addEventListener('loadedmetadata', () => {
@@ -328,38 +335,55 @@ export class PlayerComponent implements OnDestroy {
   }
 
   play() {
-    // let volume:number = 0;
-    // const volumeInterval = setInterval(() => {
-    //   console.log(volume);
-    //   volume = volume + 0.01;
-    //   this.audio.volume = volume;
-    //   if (volume === 0.9900000000000007) {
-    //     this.audio.volume = 1;
-    //     clearInterval(volumeInterval);
-    //   }
-    // }, 5)
-    this.audio.onloadeddata = () => {
-      this.audio.play(); // Play the audio once it's fully loaded
-    };
-    this.audio.play();
-    this.isPlaying = true;
-    this.trackInterval = setInterval(() => {
-      if (this.audio.ended) {
-        if (this.replay) {
-          this.audio.currentTime = 0;
-          this.play();
+    let volume = 0;
+    const fadeDuration = 500;
+    const fadeInterval = 7;
+    const volumeIncrement = fadeInterval / fadeDuration;
+
+    if (!this.audio) {
+      console.error('Audio element not initialized.');
+      return;
+    }
+
+    if (!this.audio.src) {
+      console.error('Audio source not set.');
+      return;
+    }
+
+    this.audio.play().then(() => {
+      this.isPlaying = true;
+      const volumeInterval = setInterval(() => {
+        if (volume < 1) {
+          volume += volumeIncrement;
+          this.audio.volume = Math.min(volume, 1);
         } else {
-          this.next();
+          clearInterval(volumeInterval);
+        }}, fadeInterval);
+
+      this.trackInterval = setInterval(() => {
+        if (this.audio.ended) {
+          if (this.replay) {
+            this.audio.currentTime = 0;
+            this.play();
+          } else {
+            this.next();
+          }
         }
-      }
-      this.currentTime = this.formatTime(this.audio.currentTime);
-      if (!isNaN(this.audio.duration)) {
-        this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
-      }
-      this.updateSeekBar();
-      this.updateSeekBarOpenPlayer();
-    }, 1000)
+        this.currentTime = this.formatTime(this.audio.currentTime);
+        if (!isNaN(this.audio.duration)) {
+          this.endOfTrack = this.formatTime(this.audio.duration - this.audio.currentTime);
+        }
+        this.updateSeekBar();
+        this.updateSeekBarOpenPlayer();}, 1000);
+    }).catch(error => {
+      console.error('Error playing audio:', error);
+    });
+
+    this.audio.onerror = () => {
+      console.error('Error loading audio.');
+    };
   }
+
 
   pause() {
     // let volume:number = 1;
@@ -527,6 +551,14 @@ export class PlayerComponent implements OnDestroy {
           setTimeout(() => {
             this.trackAddedInFavorites = false;}, 2000)
         })
+    } else {
+      this.requestService.post<any>(environment.remFavorite,
+        {
+          access_token: this.token,
+          trackId: this.audio_info.videoId
+        }).subscribe(() => {
+        this.isSetFavorite = false;
+      })
     }
   }
 

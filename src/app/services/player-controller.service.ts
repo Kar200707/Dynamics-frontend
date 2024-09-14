@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
-import {ImageColorService} from "./image-color.service";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +20,7 @@ export class PlayerControllerService {
   private timer: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   timer$:Observable<any> = this.timer.asObservable();
 
-  constructor(private imageColor: ImageColorService) {}
+  constructor() {}
 
   setList (list: any[]) {
     this.playerInfo.next(list);
@@ -40,9 +39,9 @@ export class PlayerControllerService {
   }
 
   setImageColor(imgUrl: string) {
-    this.imageColor.getAverageRGB(imgUrl).then(rgb => {
-      this.color.next(rgb);
-    });
+    // this.imageColor.getAverageRGB(imgUrl).then(rgb => {
+    //   this.color.next(rgb);
+    // });
   }
 
   setIsOpenedPlayer(isOpened: boolean) {

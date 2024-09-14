@@ -24,7 +24,7 @@
     [style.background-image]="'url(' + audio_info.image + ')'"
     [style.border-radius]="!isOpenedMobilePlayer ? '20px' : '0'" class="layer">
     <div
-      [style.padding]="isOpenedMobilePlayer ? '0' : '10px 20px 10px 10px'"
+      [style.padding]="isOpenedMobilePlayer ? '0' : '0 9px'"
       class="layer_2">
       <div
         *ngIf="!isOpenedMobilePlayer"
@@ -37,7 +37,7 @@
         <div [style.display]="!isOpenedMobilePlayer ? 'flex' : 'none'" class="closed_mobile_player">
           <div (click)="openMobilePlayer()" class="track_info_box">
             <div class="track_image_box">
-              <img [style.display]="audio_info.image != '' ? 'block' : 'none'" [src]="audio_info.image" alt="track image">
+              <img #image_track [style.display]="audio_info.image != '' ? 'block' : 'none'" [src]="audio_info.image" alt="track image">
             </div>
             <div class="track_name_artist_box">
               <h2 style="font-size: 15px" class="track_name">{{ audio_info.title }}</h2>
@@ -91,7 +91,7 @@
           </div>
           <div class="track_block">
             <div class="slide_box">
-              <div [style.scale]="isPlaying ? '1' : '0.9'" class="open_player_track_img_block">
+              <div [style.scale]="isPlaying ? '1' : '0.9'" (click)="playPause()" class="open_player_track_img_block">
                 <img
                   [style.display]="audio_info.image != '' ? 'block' : 'none'"
                   class="open_player_track_image"

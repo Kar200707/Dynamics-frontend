@@ -49,11 +49,6 @@ export class MainComponent {
       }
     });
 
-    this.reqServ.get('https://i.ytimg.com/vi/IIBv6jISYG8/hq720.jpg')
-      .subscribe(data => {
-        console.log(data)
-      })
-
     this.playerController.isOpened$.subscribe(isOpened => {
       this.isOpenedPlayer = isOpened;
       if (isOpened) {

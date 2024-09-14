@@ -5,6 +5,7 @@ import {RequestService} from "../../services/request.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {environment} from "../../../environment/environment";
 import {MatIcon} from "@angular/material/icon";
+import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 
 @Component({
   selector: 'app-playlists-block',
@@ -12,7 +13,8 @@ import {MatIcon} from "@angular/material/icon";
   imports: [
     RouterLink,
     HttpClientModule,
-    MatIcon
+    MatIcon,
+    LoaderIosComponent
   ],
   providers: [
     RequestService
@@ -23,15 +25,31 @@ import {MatIcon} from "@angular/material/icon";
 export class PlaylistsBlockComponent implements OnInit {
   account: any;
   token: string | null = localStorage.getItem('token');
+  historyList?: any[];
+  trackListLoaded: boolean = false;
 
   constructor(
     private requestService: RequestService,
     private playerController: PlayerControllerService) {}
 
   ngOnInit() {
+    this.requestService.post<any>(environment.getPlayHistory, { access_token: this.token })
+      .subscribe(list => {
+        this.trackListLoaded = true;
+        const sortedTrackList = list.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+        this.historyList = sortedTrackList;
+      }, () => { this.trackListLoaded = false; })
+
     this.requestService.post<any>(environment.getAccount, { acsses_token: this.token })
       .subscribe(account => {
         this.account = account;
       })
+  }
+
+  setTrack(id: string, index: number) {
+    // this.trackPlayId = id;
+    this.playerController.setTrackId(id);
+    this.playerController.setTrackIndex(index);
+    this.playerController.setList(this.historyList as any[]);
   }
 }

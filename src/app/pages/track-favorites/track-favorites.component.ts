@@ -9,25 +9,27 @@ import {HttpClientModule} from "@angular/common/http";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import {environment} from "../../../environment/environment";
 import {NgIf} from "@angular/common";
+import {ResizeHeightDirective} from "../../directives/resize-height.directive";
 
 @Component({
   selector: 'app-track-favorites',
   standalone: true,
-    imports: [
-        MatIcon,
-        RouterLink,
-        MatButton,
-        HttpClientModule,
-        LoaderIosComponent,
-        NgIf
-    ],
+  imports: [
+    MatIcon,
+    RouterLink,
+    MatButton,
+    HttpClientModule,
+    LoaderIosComponent,
+    NgIf,
+    ResizeHeightDirective
+  ],
   providers: [
     RequestService
   ],
   templateUrl: './track-favorites.component.html',
   styleUrl: './track-favorites.component.css'
 })
-export class TrackFavoritesComponent implements OnInit, OnDestroy {
+export class TrackFavoritesComponent implements OnInit {
   trackList?: any;
   trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
@@ -38,11 +40,6 @@ export class TrackFavoritesComponent implements OnInit, OnDestroy {
     this.playerController.trackId$.subscribe(id => {
       this.trackPlayId = id;
     })
-  }
-
-  ngOnDestroy() {
-    this.trackList = null;
-    this.trackPlayId = '';
   }
 
   ngOnInit() {
@@ -60,7 +57,19 @@ export class TrackFavoritesComponent implements OnInit, OnDestroy {
       environment.getFavoriteTracksList,
       { access_token: this.token }
     ).subscribe(tracksList => {
-      this.trackList = tracksList;
+      const sortedTrackFavorites = tracksList.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+      this.trackList = sortedTrackFavorites;
+    });
+  }
+
+  remFavoriteTrack(id: string) {
+    this.requestService.post<any>(environment.remFavorite,
+      {
+        access_token: this.token,
+        trackId: id
+      }).subscribe(() => {
+        this.trackList = [];
+        this.getFavoriteTracksList();
     })
   }
 

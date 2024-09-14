@@ -98,7 +98,7 @@
                 <mat-icon>play_arrow</mat-icon>
               </div>
             </div>
-            <img src="http://localhost:8080/hello/get/ab67616d0000b27320f9eac87498482bc561504b.jpg">
+            <img src="https://marketplace.canva.com/EAEdeiU-IeI/1/0/1600w/canva-purple-and-red-orange-tumblr-aesthetic-chill-acoustic-classical-lo-fi-playlist-cover-jGlDSM71rNM.jpg">
           </div>
           <p>Name</p>
         </div>
@@ -162,4 +162,18 @@
       </div>
     </div>
   </div>
+  <div class="listen_again_block">
+    @if (trackListLoaded) {
+      @for (track of historyList; track historyList) {
+        <div (click)="setTrack(track.videoId, $index)" class="track_block">
+          <img [src]="track.image" alt="">
+          <h3>{{ track.title.length > 13 ? track.title.slice(0, 13) + '...' : track.title }}</h3>
+          <span>{{ track.author.name.length > 15 ? track.author.name.slice(0, 15) + '...' : track.author.name }}</span>
+        </div>
+      }
+    } @else {
+      <app-loader-ios></app-loader-ios>
+    }
+  </div>
+  <h2 class="title_playlists">Listen again</h2>
 </div>

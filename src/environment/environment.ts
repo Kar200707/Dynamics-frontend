@@ -1,5 +1,5 @@
-export const host = 'http://localhost:8080/';
-// export const host = 'https://api-dynamics.adaptable.app/';
+// export const host = 'http://localhost:8080/';
+export const host = 'https://dynamics-backend-production.up.railway.app/';
 
 export const environment = {
   signIn: host + 'auth/login',
@@ -10,6 +10,9 @@ export const environment = {
   getAccount: host + 'user/account',
   adminTrack: host + 'admin/track',
   addFavorite: host + 'media/track-details/add-favorites',
+  remFavorite: host + 'media/track-details/rem-favorites',
   searchTracksList: host + 'youtube-base/search',
   getStream: host + 'youtube-base/get-stream/',
+  setPlayHistory: host + 'media/set-play-history',
+  getPlayHistory: host + 'media/get-play-history',
 }

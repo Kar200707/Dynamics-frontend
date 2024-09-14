@@ -10,27 +10,30 @@
         <h1>Favorites</h1>
       </div>
     </div>
-    <div [style.display]="trackList ? 'block' : 'none'">
+    <div
+      style="overflow-y: auto; padding-bottom: 200px"
+      appResizeHeight [size]="250"
+      [style.display]="trackList ? 'block' : 'none'">
       @for (track of trackList; track $index) {
         <div class="track_block">
           <div
-            [style.outline]="track._id === trackPlayId ? '#ffffff36 solid 1px' : 'none'"
-            [style.background-color]="track._id === trackPlayId ? 'rgb(35 45 92 / 45%)' : 'rgba(51, 51, 51, 0.41)'"
-            (click)="setTrack(track._id, $index)" class="track_box">
-            <div style="display: flex; align-items: center">
+            [style.outline]="track.videoId === trackPlayId ? '#ffffff36 solid 1px' : 'none'"
+            [style.background-color]="track.videoId === trackPlayId ? 'rgb(35 45 92 / 45%)' : 'rgba(51, 51, 51, 0.41)'"
+            class="track_box">
+            <div (click)="setTrack(track.videoId, $index)" style="display: flex; align-items: center">
               <div class="track_image">
-                @if (track._id === trackPlayId) {
+                @if (track.videoId === trackPlayId) {
                   <img class="music_playGIF" src="assets/images/icons/music_play.gif">
                 }
-                <img class="image" [src]="track.track_image" alt="track image">
+                <img class="image" [src]="track.image" alt="track image">
               </div>
               <div class="track_info_box">
-                <h4>{{ track.track_name }}</h4>
-                <span>{{ track.track_artist }}</span>
+                <h4>{{ track.title }}</h4>
+                <span>{{ track.author.name }}</span>
               </div>
             </div>
             <div class="control_box">
-              <button class="favorite_button">
+              <button (click)="remFavoriteTrack(track.videoId)" class="favorite_button">
                 <img src="assets/images/icons/favorite.png">
               </button>
               <span class="track_duration">{{ formatTime(track.track_duration) }}</span>

@@ -26,7 +26,7 @@ mat-tab-group {
 .account {
   width: 70px;
   height: 70px;
-  background-color: #232323;
+  background-color: #1a1a1a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,7 +46,7 @@ mat-tab-group {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #232323;
+  background-color: #1a1a1a;
   border-radius: 20px;
   margin-top: 30px;
 }

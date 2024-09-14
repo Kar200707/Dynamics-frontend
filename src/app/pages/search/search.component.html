@@ -3,6 +3,11 @@
     <input #searchInput (input)="searchTrackList(searchInput.value)" placeholder="Search..." class="search" type="search">
     @if (searchInput.value !== '') {
       <div class="search_history_block">
+        @if (!isLoaded) {
+          <div style="width: 100%; display: flex; justify-content: center; align-items: center">
+            <app-loader-ios></app-loader-ios>
+          </div>
+        }
         @for (item of search; track item) {
           <button (click)="setTrack(item.videoId, $index)" class="history_block">
             <img class="track_image" [src]="item.image">

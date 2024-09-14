@@ -20,7 +20,7 @@
 }
 
 .header_block {
-  padding: 20px 20px 40px 20px;
+  padding: 20px;
 }
 
 .title_block {
@@ -58,8 +58,6 @@ h1 {
 .track_image {
   width: 50px;
   height: 50px;
-  border-radius: 8px;
-  overflow: hidden;
   position: relative;
 }
 
@@ -67,6 +65,8 @@ h1 {
   width: 50px;
   height: 50px;
   object-fit: cover;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 .music_playGIF {
@@ -79,15 +79,32 @@ h1 {
 
 .track_info_box {
   margin-left: 10px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  font-weight: lighter;
+  font-size: 1rem;
+  text-align: start;
 }
 
 .track_info_box > h4 {
   color: white;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  font-weight: 300;
 }
 
 .track_info_box > span {
   color: #676767;
   font-weight: lighter;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
 }
 
 .track_duration {

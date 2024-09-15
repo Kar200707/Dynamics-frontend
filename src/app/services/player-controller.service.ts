@@ -7,6 +7,8 @@ import {BehaviorSubject, Observable} from "rxjs";
 export class PlayerControllerService {
   private playerInfo: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   playerInfo$:Observable<any> = this.playerInfo.asObservable();
+  private actPlayer: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  actPlayer$:Observable<any> = this.actPlayer.asObservable();
   private trackId: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   trackId$:Observable<any> = this.trackId.asObservable();
   private trackIndex: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -28,6 +30,10 @@ export class PlayerControllerService {
 
   setTrackId(trackId: string) {
     this.trackId.next(trackId);
+  }
+
+  onActPlayer(act:string) {
+    this.actPlayer.next(act);
   }
 
   setBackground(bgUrl: string) {

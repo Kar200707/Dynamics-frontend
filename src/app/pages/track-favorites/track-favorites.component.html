@@ -1,30 +1,55 @@
 <div class="main_block">
   <div class="scroll_box">
+    @if (trackList && trackList.length !== 0) {
+      <div (click)="setTrack(trackList[0].videoId, 0)" class="play_list">
+        @if (listIsPlay) {
+          <img class="music_playGIF" src="assets/images/icons/music_play.gif">
+        } @else {
+          <mat-icon>play_arrow</mat-icon>
+        }
+      </div>
+    }
     <div class="header_block">
       <div class="back_button_block">
         <button>
           <mat-icon routerLink="/home/library">arrow_back_ios</mat-icon>
         </button>
       </div>
-      <div class="title_block">
-        <h1>Favorites</h1>
-      </div>
     </div>
     <div
-      style="overflow-y: auto; padding-bottom: 200px"
-      appResizeHeight [size]="250"
-      [style.display]="trackList ? 'block' : 'none'">
+      style="overflow-y: auto; padding-bottom: 150px; margin-top: 55px"
+      appResizeHeight [size]="216">
+      <div class="title_block">
+        <h1>Favorites</h1>
+        @if (trackList && trackList.length !== 0) {
+          <span>{{ trackList.length }} tracks</span>
+        }
+      </div>
+      @if (!trackList) {
+        @for (num of loadArray; track loadArray) {
+          <div class="track_block">
+            <div class="track_box">
+              <div style="display: flex; align-items: center">
+                <div class="track_image">
+                  <div style="width: 50px; height: 50px; background-color: #2a2a2a; border-radius: 8px"></div>
+                </div>
+                <div class="track_info_box">
+                  <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px"></div>
+                  <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      }
       @for (track of trackList; track $index) {
         <div class="track_block">
           <div
-            [style.outline]="track.videoId === trackPlayId ? '#ffffff36 solid 1px' : 'none'"
-            [style.background-color]="track.videoId === trackPlayId ? 'rgb(35 45 92 / 45%)' : 'rgba(51, 51, 51, 0.41)'"
+            [style.outline]="track.videoId === trackPlayId ? 'rgb(255 255 255 / 39%) solid 1px' : 'none'"
+            [style.background-color]="track.videoId === trackPlayId ? 'rgb(96 96 96 / 45%)' : '#1a1a1a'"
             class="track_box">
             <div (click)="setTrack(track.videoId, $index)" style="display: flex; align-items: center">
               <div class="track_image">
-                @if (track.videoId === trackPlayId) {
-                  <img class="music_playGIF" src="assets/images/icons/music_play.gif">
-                }
                 <img class="image" [src]="track.image" alt="track image">
               </div>
               <div class="track_info_box">
@@ -59,9 +84,6 @@
           </div>
         }
       }
-    </div>
-    <div *ngIf="!trackList" class="loader_block">
-      <app-loader-ios></app-loader-ios>
     </div>
    </div>
 </div>

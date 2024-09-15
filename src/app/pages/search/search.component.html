@@ -15,6 +15,14 @@
           </button>
         }
       </div>
+    } @else {
+      <div class="search_history_block">
+        @for (search of searchHistory; track searchHistory) {
+          <button (click)="setSearchHistory(search.text)" class="history_block">
+            <h3 class="title">{{ search.text }}</h3>
+          </button>
+        }
+      </div>
     }
   </div>
 </div>

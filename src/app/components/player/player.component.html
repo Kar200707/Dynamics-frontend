@@ -10,8 +10,7 @@
   [style.padding]="!isOpenedMobilePlayer ? '12px' : '0'"
   [style.height]="isOpenedMobilePlayer ? '100vh' : '100px'"
   [style.bottom]="!isLoaded && !isOpenedMobilePlayer ? '-100px' : '0'"
-  [style.border-radius]="touchStart && isOpenedMobilePlayer && mainBlock.nativeElement.offsetHeight < innerHeight
-  ? '25px 25px 0 0' : '0'"
+  [style.border-radius]="isOpenedMobilePlayer ? '25px 25px 0 0' : '0'"
   #main_block
   class="main_block">
   @if (isOpenedMobilePlayer) {
@@ -31,7 +30,7 @@
         #seekBarContainer
         class="slider_bar">
         <div style="background-color: transparent" class="track">
-          <div #seekBarProgress style="background-color: #ffffff" class="swapper"></div>
+          <div #seekBarProgress style="height: 2px" class="swapper"></div>
         </div>
       </div>
         <div [style.display]="!isOpenedMobilePlayer ? 'flex' : 'none'" class="closed_mobile_player">
@@ -166,6 +165,7 @@
                 <img src="assets/images/icons/10s-next.svg">
               </div>
             </div>
+<!--            <div class="description-block"></div>-->
           </div>
           <app-timer-bottom-sheet
             [style.bottom]="isOpenedTimerBottomSheet ? '0px' : '-' + innerHeight + 'px'"></app-timer-bottom-sheet>

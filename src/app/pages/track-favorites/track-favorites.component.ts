@@ -33,6 +33,16 @@ export class TrackFavoritesComponent implements OnInit {
   trackList?: any;
   trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
+  listIsPlay:boolean = false;
+  loadArray = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
 
   constructor(
     private requestService: RequestService,
@@ -44,6 +54,14 @@ export class TrackFavoritesComponent implements OnInit {
 
   ngOnInit() {
     this.getFavoriteTracksList();
+    this.playerController.actPlayer$.subscribe(act => {
+      if (act === 'pause') {
+        this.listIsPlay = false;
+      }
+      if (act === 'play') {
+        this.listIsPlay = true;
+      }
+    })
   }
 
   formatTime(seconds: number): string {
@@ -68,12 +86,18 @@ export class TrackFavoritesComponent implements OnInit {
         access_token: this.token,
         trackId: id
       }).subscribe(() => {
-        this.trackList = [];
-        this.getFavoriteTracksList();
+        let newTrackArray = []
+        this.trackList.forEach((track: any) => {
+          if (track.videoId !== id) {
+            newTrackArray.push(track)
+          }
+          this.trackList = newTrackArray;
+        })
     })
   }
 
   setTrack(id: string, index: number) {
+    this.listIsPlay = true;
     this.trackPlayId = id;
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);

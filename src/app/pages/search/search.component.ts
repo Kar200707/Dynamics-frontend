@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {RequestService} from "../../services/request.service";
 import {environment} from "../../../environment/environment";
@@ -22,12 +22,15 @@ import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component"
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   searchTimeOut: any;
   private searchSubject: Subject<any> = new Subject<string>();
+  token: string | null = localStorage.getItem('token');
   isLoaded: boolean = false;
-  search: SearchListModel[] = []
+  search: SearchListModel[] = [];
+  searchHistory:any = [];
+  searchText: string = '';
 
   constructor(
     private playerController: PlayerControllerService,
@@ -42,15 +45,31 @@ export class SearchComponent {
     });
   }
 
+  ngOnInit() {
+    this.getSearchHistory();
+  }
+
+  getSearchHistory() {
+    this.reqServ.post<any>(environment.getSearchHistory, { access_token: this.token })
+      .subscribe((history) => {
+        this.searchHistory = history;
+      })
+  }
+
   setSearchHistory(search: string) {
     if (this.searchInput) {
       this.searchInput.nativeElement.value = search;
+      this.searchTrackList(search);
     }
   }
 
   searchTrackList(value: string) {
+    if (value === '') {
+      this.getSearchHistory();
+    }
     if (value.trim()) {
       this.searchSubject.next(value);
+      this.searchText = value;
     } else {
       this.isLoaded = false;
       this.search = [];
@@ -58,6 +77,8 @@ export class SearchComponent {
   }
 
   setTrack(id: string, index: number) {
+    this.reqServ.post<any>(environment.setSearchHistory, { access_token: this.token, text: this.searchText })
+      .subscribe(() => {})
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
     this.playerController.setList(this.search);

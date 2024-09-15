@@ -14,4 +14,6 @@ export const environment = {
   getStream: host + 'youtube-base/get-stream/',
   setPlayHistory: host + 'media/set-play-history',
   getPlayHistory: host + 'media/get-play-history',
+  setSearchHistory: host + 'media/set-search-history',
+  getSearchHistory: host + 'media/get-search-history',
 }

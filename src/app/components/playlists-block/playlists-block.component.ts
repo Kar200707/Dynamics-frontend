@@ -27,6 +27,11 @@ export class PlaylistsBlockComponent implements OnInit {
   token: string | null = localStorage.getItem('token');
   historyList?: any[];
   trackListLoaded: boolean = false;
+  loadArray = [
+    1,
+    2,
+    3
+  ]
 
   constructor(
     private requestService: RequestService,

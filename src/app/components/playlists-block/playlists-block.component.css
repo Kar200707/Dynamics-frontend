@@ -4,11 +4,10 @@
 
 .playlists {
   overflow-x: scroll;
-  margin-top: 10px;
-  border-radius: 20px;
-  background-color: #1a1a1a;
-  padding: 20px 20px 10px 20px;
+  padding: 15px 20px;
 }
+
+.playlists::-webkit-scrollbar { height: 0; display: none; }
 
 .playlists::-webkit-scrollbar {
   height: 0;
@@ -91,7 +90,7 @@ h2 {
 }
 
 .categories {
-   margin-top: 40px;
+   margin: 40px 20px 0 20px;
 }
 
 .categories > .block {
@@ -153,12 +152,11 @@ h2 {
 
 .artists {
   width: 100%;
-  margin-top: 10px;
-  border-radius: 20px;
-  background-color: #1f1f1f;
-  padding: 20px;
+  padding: 15px 20px;
   overflow-x: scroll;
 }
+
+.artists::-webkit-scrollbar { height: 0; display: none; }
 
 .artist_block_cover {
   display: flex;
@@ -251,7 +249,7 @@ h2 {
   }
 
   .title_playlists {
-    margin-top: 20px;
+    margin: 20px 0 0 20px;
   }
 
   .artists > .artist_block {
@@ -272,20 +270,18 @@ h2 {
 .listen_again_block {
   width: 100%;
   overflow-x: auto;
-  background-color: #1f1f1f;
-  border-radius: 20px;
-  padding: 20px;
+  overflow-y: hidden;
+  padding: 0 20px;
   display: flex;
   margin-top: 15px;
 }
 
-.listen_again_block::-webkit-scrollbar { height: 0 }
+.listen_again_block::-webkit-scrollbar { height: 0; display: none; }
 
 .track_block {
-  width: 160px;
-  height: 160px;
   margin-right: 15px;
   transition: .1s;
+  height: 215px;
 }
 
 .track_block:active {
@@ -293,8 +289,8 @@ h2 {
 }
 
 .track_block > img {
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 13px;
   display: block;
@@ -309,11 +305,11 @@ h2 {
   color: white;
   text-align: start;
   margin-top: 5px;
-  width: 110px;
+  width: 100%;
 }
 
 .track_block > span {
-  width: 110px;
+  width: 100%;
   overflow: hidden;
   display: -webkit-box;
   font-family: "Nunito", sans-serif;

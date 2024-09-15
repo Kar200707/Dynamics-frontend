@@ -1,9 +1,11 @@
 .scroll_box {
   overflow-y: scroll;
-  padding: 20px;
+  padding: 20px 0;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(3px);
 }
+
+.scroll_box::-webkit-scrollbar { height: 0; display: none; }
 
 .scroll_box > .box {
   display: flex;
@@ -79,6 +81,7 @@ app-timer-bottom-sheet {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  padding: 0 20px;
 }
 
 .top_block > svg {

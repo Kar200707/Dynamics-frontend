@@ -350,6 +350,7 @@ export class PlayerComponent implements OnDestroy {
       return;
     }
 
+    this.playerController.onActPlayer('play');
     this.audio.play().then(() => {
       this.isPlaying = true;
       const volumeInterval = setInterval(() => {
@@ -386,6 +387,7 @@ export class PlayerComponent implements OnDestroy {
 
 
   pause() {
+    this.playerController.onActPlayer('pause');
     // let volume:number = 1;
     //
     // const volumeInterval = setInterval(() => {

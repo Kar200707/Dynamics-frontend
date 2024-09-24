@@ -1,0 +1,19 @@
+.header_block {
+  padding: 20px;
+}
+
+.back_button_block {
+  width: 100%;
+  display: flex;
+  align-items: start;
+}
+
+.back_button_block > button {
+  color: white;
+  border: 0;
+  background-color: transparent;
+}
+
+.back_button_block > button > mat-icon {
+  color: white;
+}

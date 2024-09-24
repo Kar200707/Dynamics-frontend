@@ -17,4 +17,6 @@ export const environment = {
   getPlayHistory: host + 'media/get-play-history',
   setSearchHistory: host + 'media/set-search-history',
   getSearchHistory: host + 'media/get-search-history',
+  getChannelInfo: host + 'youtube-base/get-channel-info/',
+  getAuthorIdByVideoId: host + 'youtube-base/get-author-id-by-video-id/',
 }

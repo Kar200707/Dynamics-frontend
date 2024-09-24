@@ -18,11 +18,13 @@ h1 {
 
 .search {
   width: 100%;
-  font-size: 19px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px;
-  background-color: white;
+  font-size: 17px;
+  padding: 7px 14px;
+  border-radius: 15px;
+  background-color: #0f0f0f;
+  font-weight: normal;
+  color: white;
+  border: 1px solid gray;
   outline: none;
   font-family: "Nunito", sans-serif;
 }
@@ -32,18 +34,20 @@ h1 {
   width: 100%;
   display: flex;
   flex-direction: column;
-  border-radius: 20px;
-  padding: 10px;
-  background-color: #232323;
-  max-height: 300px;
+  padding-bottom: 55vh;
+  max-height: calc(100vh - 20px);
   overflow-y: scroll;
+}
+
+.search_history_block::-webkit-scrollbar {
+  display: none;
 }
 
 .history_block {
   background-color: transparent;
   border: none;
   width: 100%;
-  padding: 10px;
+  padding: 10px 0;
   display: flex;
   align-items: center;
   border-radius: 5px;

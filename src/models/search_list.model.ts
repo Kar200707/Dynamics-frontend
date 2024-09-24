@@ -8,6 +8,7 @@ export interface SearchListModel {
     seconds: number,
     timestamp: string
   }
+  views: number;
   image: string,
   title: string,
   videoId: string

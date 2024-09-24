@@ -39,6 +39,11 @@
           path: 'track-favorites',
           loadComponent: () => import('./pages/track-favorites/track-favorites.component').then(x => (x.TrackFavoritesComponent)),
         },
+        {
+          title: 'Dynamics Channels',
+          path: 'channel/:id',
+          loadComponent: () => import('./pages/channel/channel.component').then(x => (x.ChannelComponent)),
+        }
       ]
     },
     {

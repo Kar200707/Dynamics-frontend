@@ -1,0 +1,13 @@
+<div class="main_block">
+  <div class="header_block">
+    <div class="back_button_block">
+      <button>
+        <mat-icon routerLink="/home/library">arrow_back_ios</mat-icon>
+      </button>
+    </div>
+  </div>
+  @if (channel) {
+    <img [src]="channel.image" alt="image">
+    <h2>{{ channel.title }}</h2>
+  }
+</div>

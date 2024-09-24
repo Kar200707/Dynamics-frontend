@@ -1,16 +1,9 @@
-@if (!isLoaded && trackList) {
-  <div class="loader_box">
-    <app-loader-ios></app-loader-ios>
-  </div>
-}
 <div
-  (touchstart)="onTouchStart($event)"
+  (touchstart)="onTouchStart($event);"
   (touchmove)="onTouchMove($event)"
-  (touchend)="onTouchEnd($event)"
+  (touchend)="onTouchEnd($event); main_block.style.transition = '.23s cubic-bezier(0.6, 0.03, 0.2, 1)'"
   [style.padding]="!isOpenedMobilePlayer ? '12px' : '0'"
   [style.height]="isOpenedMobilePlayer ? '100vh' : '100px'"
-  [style.bottom]="!isLoaded && !isOpenedMobilePlayer ? '-100px' : '0'"
-  [style.border-radius]="isOpenedMobilePlayer ? '25px 25px 0 0' : '0'"
   #main_block
   class="main_block">
   @if (isOpenedMobilePlayer) {
@@ -19,9 +12,9 @@
     </div>
   }
   <div
-    [style.border]="isOpenedMobilePlayer ? '0' : '1px solid rgb(104 104 104)'"
+    [style.border]="isOpenedMobilePlayerAnim ? '0' : '1px solid rgb(104 104 104)'"
     [style.background-image]="'url(' + audio_info.image + ')'"
-    [style.border-radius]="!isOpenedMobilePlayer ? '20px' : '0'" class="layer">
+    [style.border-radius]="isOpenedMobilePlayer ? '25px 25px 0 0' : '20px'" class="layer">
     <div
       [style.padding]="isOpenedMobilePlayer ? '0' : '0 9px'"
       class="layer_2">
@@ -30,10 +23,13 @@
         #seekBarContainer
         class="slider_bar">
         <div style="background-color: transparent" class="track">
+          <div *ngIf="!isLoaded && audio_info.title != '--'" class="slider_loader"></div>
           <div #seekBarProgress style="height: 2px" class="swapper"></div>
         </div>
       </div>
-        <div [style.display]="!isOpenedMobilePlayer ? 'flex' : 'none'" class="closed_mobile_player">
+        <div
+          [style.z-index]="!isOpenedMobilePlayerAnim ? '1' : '0'"
+          [style.opacity]="!isOpenedMobilePlayerAnim ? '1' : '0'" class="closed_mobile_player">
           <div (click)="openMobilePlayer()" class="track_info_box">
             <div class="track_image_box">
               <img #image_track [style.display]="audio_info.image != '' ? 'block' : 'none'" [src]="audio_info.image" alt="track image">
@@ -80,29 +76,49 @@
             </div>
           </div>
         </div>
-        <div [style.display]="isOpenedMobilePlayer ? 'block' : 'none'" class="mobile_player_block">
+        <div
+          [style.opacity]="isOpenedMobilePlayerAnim ? '1' : '0'" class="mobile_player_block">
           <div class="top_bar">
             <img (click)="closeMobilePlayer()" src="assets/images/icons/down-arrow.svg">
-            <div></div>
-            <button (click)="openTimerBottomSheet()" mat-icon-button>
-              <img src="assets/images/icons/timer.svg" alt="timer">
-            </button>
+            <div class="line"></div>
+            <div style="display: flex; align-items: center">
+              <button style="margin-right: 10px; display: none" (click)="setAudioOrVideo()" mat-icon-button>
+                @if (type !== 'audio') {
+                  <mat-icon>play_circle</mat-icon>
+                } @else {
+                  <mat-icon>smart_display</mat-icon>
+                }
+              </button>
+              <button (click)="openTimerBottomSheet()" mat-icon-button>
+                <img src="assets/images/icons/timer.svg" alt="timer">
+              </button>
+            </div>
           </div>
           <div class="track_block">
             <div class="slide_box">
-              <div [style.scale]="isPlaying ? '1' : '0.9'" (click)="playPause()" class="open_player_track_img_block">
-                <img
-                  [style.display]="audio_info.image != '' ? 'block' : 'none'"
-                  class="open_player_track_image"
-                  (load)="loadedImage()"
-                  [src]="audio_info.image" alt="track image">
+              <div
+                [style.scale]="isPlaying ? '1' : '0.9'"
+                (click)="playPause()"
+                [style.background-color]="type === 'video' ? '#0f0f0f' : 'unset'"
+                [style.width]="type === 'video' ? '100%' : '310px'"
+                [style.height]="type === 'video' ? '174px' : '310px'"
+                class="open_player_track_img_block">
+                @if (type === 'audio') {
+                  <img
+                    [style.display]="audio_info.image != '' ? 'block' : 'none'"
+                    class="open_player_track_image"
+                    [src]="audio_info.image" alt="track image">`
+                }
+                <video [style.display]="type === 'video' ? 'block' : 'none'" #videoElement></video>
               </div>
-              <h2
-                style="margin-top: 14px; font-size: 23px"
-                class="track_name">{{ audio_info.title }}</h2>
-              <h4
-                style="font-size: 16px; font-weight: lighter"
-                class="track_artist">{{ audio_info.author.name }}</h4>
+              <div style="height: 100px">
+                <h2
+                  style="margin-top: 14px; font-size: 23px;"
+                  class="track_name">{{ audio_info.title }}</h2>
+                <h4
+                  style="font-size: 16px; font-weight: lighter"
+                  class="track_artist">{{ audio_info.author.name }}</h4>
+              </div>
             </div>
             <div class="media_all_button_block">
               <div style="display: flex">
@@ -122,18 +138,21 @@
             </div>
             <div
               (mousedown)="isClickUp = false; this.pause()"
-              (mouseup)="this.play()"
-              (touchend)="this.play();
+              (mouseup)="isLoaded ? this.play() : false"
+              (touchend)="isLoaded ? this.play() : false;
                 moveLimit = 0;
-                seekBarContainerOpenPlayer.style.scale = '1';
+                seekBarProgressOpenPlayer.style.transition = '.2s linear';
                 seekBarContainerOpenPlayer.style.height = '10px'"
-              (touchstart)="isClickUp = false; this.pause();
+              (touchstart)="isClickUp = false;
+                this.pause();
                 seekMoveOpenPlayer($event, 'touch');
-                seekBarContainerOpenPlayer.style.scale = '1.05'; seekBarContainerOpenPlayer.style.height = '20px'"
-              (touchmove)="!isClickUp ? seekMoveOpenPlayer($event, 'touch') : false; $event.preventDefault()"
+                seekBarProgressOpenPlayer.style.transition = 'unset';"
+              (touchmove)="!isClickUp ? seekMoveOpenPlayer($event, 'touch') : false; $event.preventDefault(); this.pause();"
               (mousemove)="!isClickUp ? seekMoveOpenPlayer($event, 'mouse') : false"
               class="slider_box_open_player">
+              <div *ngIf="!isLoaded && audio_info.title != '--'" style="height: 10px; border-radius: 10px" class="slider_loader"></div>
               <div
+                [style.display]="isLoaded ? 'block' : 'none'"
                 #seekBarContainerOpenPlayer
                 class="slider-1">
                 <div class="track">
@@ -165,6 +184,12 @@
                 <img src="assets/images/icons/10s-next.svg">
               </div>
             </div>
+            @if (audio_info.views !== 0) {
+              <div class="views">
+                <img src="assets/images/icons/headphone.svg" alt="headphone icon">
+                <span>{{ getFormattedViews(audio_info.views) }}</span>
+              </div>
+            }
 <!--            <div class="description-block"></div>-->
           </div>
           <app-timer-bottom-sheet

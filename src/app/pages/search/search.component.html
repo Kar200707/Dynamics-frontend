@@ -1,18 +1,24 @@
 <div class="main_block">
   <div class="search_block">
-    <input #searchInput (input)="searchTrackList(searchInput.value)" placeholder="Search..." class="search" type="search">
+    <input #searchInput (input)="searchTrackList(searchInput.value)" placeholder="Search Dynamics" class="search" type="search">
     @if (searchInput.value !== '') {
       <div class="search_history_block">
-        @if (!isLoaded) {
-          <div style="width: 100%; display: flex; justify-content: center; align-items: center">
-            <app-loader-ios></app-loader-ios>
-          </div>
-        }
         @for (item of search; track item) {
           <button (click)="setTrack(item.videoId, $index)" class="history_block">
             <img class="track_image" [src]="item.image">
             <h3 class="title">{{ item.title.length > 50 ? item.title.slice(0, 50) : item.title }}</h3>
           </button>
+        }
+        @if (!isLoaded) {
+          @for (item of loadList; track loadList) {
+            <button class="history_block">
+              <div style="width: 50px; height: 50px; border-radius: 3px; background-color: #2a2a2a"></div>
+              <div>
+                <div style="width: 150px; height: 10px; border-radius: 3px; background-color: #2a2a2a; margin-left: 15px"></div>
+                <div style="width: 120px; height: 10px; border-radius: 3px; background-color: #2a2a2a; margin-left: 15px; margin-top: 7px"></div>
+              </div>
+            </button>
+          }
         }
       </div>
     } @else {

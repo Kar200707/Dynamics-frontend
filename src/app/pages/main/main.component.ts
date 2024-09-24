@@ -50,11 +50,15 @@ export class MainComponent {
     });
 
     this.playerController.isOpened$.subscribe(isOpened => {
-      this.isOpenedPlayer = isOpened;
+      if (this.isOpenedPlayer) {
+        this.isOpenedPlayer = isOpened;
+      } else {
+        this.isOpenedPlayer = isOpened;
+      }
       if (isOpened) {
         setTimeout(() => {
           this.navPanelTimeOff = !isOpened;
-        }, 250)
+        }, 200)
       } else {
         this.navPanelTimeOff = !isOpened;
       }

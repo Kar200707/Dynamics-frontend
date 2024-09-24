@@ -2,14 +2,10 @@
   <router-outlet></router-outlet>
   <app-player
     [style.bottom]="isOpenedPlayer ? '0' : '70px'"
-    style="position: absolute; width: 100%; z-index: 3"></app-player>
-  @if (navPanelTimeOff) {
+    style="position: absolute; width: 100%; z-index: 3; transition: .3s "></app-player>
     <app-mobile-nav-panel
-      [style.bottom]="isOpenedPlayer ? '-70px' : '0'"
       style="
-    transition: .25s cubic-bezier(0,-0.4,0,1.20);
     position: absolute;
     width: 100%;
-    bottom: 0; left: 0; z-index: 5"></app-mobile-nav-panel>
-  }
+    bottom: 0; left: 0; z-index: 2"></app-mobile-nav-panel>
 </div>

@@ -7,6 +7,8 @@ import {environment} from "../../../environment/environment";
 import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
+import localforage from "localforage";
+import {AudioCacheService} from "../../services/audio-cache.service";
 
 @Component({
   selector: 'app-library',
@@ -20,7 +22,10 @@ import {MatIcon} from "@angular/material/icon";
     NgIf,
     MatIcon
   ],
-  providers: [RequestService],
+  providers: [
+    RequestService,
+    AudioCacheService
+  ],
   templateUrl: './library.component.html',
   styleUrl: './library.component.css'
 })
@@ -32,6 +37,7 @@ export class LibraryComponent implements OnInit {
   role!: string;
 
   constructor(
+    private cacheService: AudioCacheService,
     private router: Router,
     private requestService: RequestService) {  }
 
@@ -42,12 +48,31 @@ export class LibraryComponent implements OnInit {
         this.role = account.role;
       })
 
-    this.requestService.post<any>(
-      environment.getFavoriteTracksList,
-      { access_token: this.token }
-    ).subscribe(tracksList => {
-      this.favoritePlayListLength = tracksList.length;
-    })
+    this.getFavoritePlaylistsLength();
+  }
+
+  async getFavoritePlaylistsLength () {
+    const cachedHistoryList = await localforage.getItem('favoritesTracksListLength');
+    try {
+      if (cachedHistoryList) {
+        this.favoritePlayListLength = JSON.parse(cachedHistoryList as string);
+      } else {
+        this.favoritePlayListLength = 0;
+      }
+
+      this.requestService.post<any>(
+        environment.getFavoriteTracksList,
+        { access_token: this.token }
+      ).subscribe(async tracksList => {
+        if (this.favoritePlayListLength !== tracksList.length || !cachedHistoryList) {
+          this.favoritePlayListLength = tracksList.length;
+          await localforage.setItem('favoritesTracksListLength', JSON.stringify(tracksList.length));
+        }
+      });
+    } catch (e) {
+      console.error('Error loading history list from cache:', e);
+      this.favoritePlayListLength = 0;
+    }
   }
 
   toggleAccountInfoBlock(event: Event) {
@@ -60,8 +85,15 @@ export class LibraryComponent implements OnInit {
     this.isOpenedAccountInfoBlock = false;
   }
 
-  logout() {
+  async logout() {
     localStorage.removeItem('token');
+    try {
+      await localforage.clear();
+      await this.cacheService.clear();
+      console.log('localforage cleared');
+    } catch (error) {
+      console.error('Error clearing localforage:', error);
+    }
     this.router.navigate(['/login']);
   }
 }

@@ -2,7 +2,7 @@
   <div class="account_block">
     <h2>Your Library</h2>
     <div (click)="toggleAccountInfoBlock($event)" class="account">
-      <img [style.display]="account ? 'block' : 'none'" [src]="account ? account.avatar : ''">
+      <img src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg">
       <div *ngIf="isOpenedAccountInfoBlock" class="layer">
         <div class="account_info_block" (click)="$event.stopPropagation()">
           <h3>{{ account.name }}</h3>

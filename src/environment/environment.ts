@@ -1,6 +1,7 @@
 export const host = 'http://localhost:8080/';
 // export const host = 'https://dynamics-backend-production.up.railway.app/';
 
+
 export const environment = {
   signIn: host + 'auth/login',
   signUp: host + 'auth/reg',
@@ -19,4 +20,5 @@ export const environment = {
   getSearchHistory: host + 'media/get-search-history',
   getChannelInfo: host + 'youtube-base/get-channel-info/',
   getAuthorIdByVideoId: host + 'youtube-base/get-author-id-by-video-id/',
+  getPlayerInfoByVideoId: host + 'media/getPlayerInfoByVideoId',
 }

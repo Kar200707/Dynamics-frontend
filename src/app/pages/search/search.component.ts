@@ -1,5 +1,5 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {MatButton} from "@angular/material/button";
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {RequestService} from "../../services/request.service";
 import {environment} from "../../../environment/environment";
 import {HttpClientModule} from "@angular/common/http";
@@ -8,6 +8,10 @@ import {PlayerControllerService} from "../../services/player-controller.service"
 import {debounceTime, Subject, switchMap} from "rxjs";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import localforage from "localforage";
+import {Haptics, ImpactStyle} from "@capacitor/haptics";
+import {MatIcon} from "@angular/material/icon";
+import {RouterLink} from "@angular/router";
+import {Keyboard} from "@capacitor/keyboard";
 
 @Component({
   selector: 'app-search',
@@ -15,7 +19,10 @@ import localforage from "localforage";
   imports: [
     MatButton,
     HttpClientModule,
-    LoaderIosComponent
+    LoaderIosComponent,
+    MatIcon,
+    RouterLink,
+    MatIconButton
   ],
   providers: [
     RequestService
@@ -24,14 +31,28 @@ import localforage from "localforage";
   styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnInit {
+  @Input('place') place: any;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-  searchTimeOut: any;
   private searchSubject: Subject<any> = new Subject<string>();
   token: string | null = localStorage.getItem('token');
   isLoaded: boolean = false;
   search: SearchListModel[] = [];
   searchHistory:any = [];
+  isOpenedKeyBoard: boolean = false;
+  isClickedSearchResBlock: boolean = false;
+  isOpenedSearchResBlock: boolean = false;
   searchText: string = '';
+  helpTexts: string[] = [
+    'New Musics',
+    'Armenian Hits',
+    'Rock Classics',
+    'Jazz Vibes',
+    'Pop Hits',
+    'Electronic Beats',
+    'Classical Favorites',
+    'Chill Vibes',
+    'Indie Sounds'
+  ];
   loadList: number[] = [
     1,
     2,
@@ -51,22 +72,42 @@ export class SearchComponent implements OnInit {
     this.searchSubject.pipe(
       debounceTime(400),
       switchMap((value: string) => this.reqServ.post<SearchListModel[]>(environment.searchTracksList, { searchText: value }))
-    ).subscribe((data: SearchListModel[]) => {
+    ).subscribe(async (data: SearchListModel[]) => {
       this.search = data;
-      console.log(data)
       this.isLoaded = true;
+      await Haptics.impact({ style: ImpactStyle.Light });
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if (this.place !== 'home') {
+      this.isOpenedSearchResBlock = true;
+    }
     this.getSearchHistory();
+    await Keyboard.addListener('keyboardWillShow', () => {
+      this.isOpenedKeyBoard = true;
+    });
+    await Keyboard.addListener('keyboardWillHide', () => {
+      this.isOpenedKeyBoard = false;
+    });
+  }
+
+  handleBlur(): void {
+    if (this.place === 'home') {
+      this.isClickedSearchResBlock = false;
+        setTimeout(() => {
+          if (!this.isClickedSearchResBlock) {
+            this.isOpenedSearchResBlock = false;
+          }
+        }, 200)
+    }
   }
 
   async getSearchHistory() {
     const cachedSearchHistory = await localforage.getItem('searchHistory');
     try {
       if (cachedSearchHistory) {
-        this.searchHistory = JSON.parse(cachedSearchHistory as string);
+        this.searchHistory = JSON.parse(cachedSearchHistory as string)
       } else {
         this.searchHistory = [];
       }
@@ -112,6 +153,5 @@ export class SearchComponent implements OnInit {
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
     this.playerController.setList(this.search);
-    console.log(this.search)
   }
 }

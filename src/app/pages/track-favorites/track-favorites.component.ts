@@ -7,9 +7,12 @@ import {MatButton} from "@angular/material/button";
 import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
-import {environment} from "../../../environment/environment";
+import {environment, host} from "../../../environment/environment";
 import {NgIf} from "@angular/common";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
+import {Haptics, ImpactStyle} from "@capacitor/haptics";
+import {CdkListbox} from "@angular/cdk/listbox";
+import {ImageDominantColorService} from "../../components/player/player_functions/image-dominat-color.service";
 
 @Component({
   selector: 'app-track-favorites',
@@ -21,7 +24,8 @@ import {ResizeHeightDirective} from "../../directives/resize-height.directive";
     HttpClientModule,
     LoaderIosComponent,
     NgIf,
-    ResizeHeightDirective
+    ResizeHeightDirective,
+    CdkListbox
   ],
   providers: [
     RequestService
@@ -34,6 +38,7 @@ export class TrackFavoritesComponent implements OnInit {
   trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
   listIsPlay:boolean = false;
+  trackImageBackgroundColor: string = 'rgb(84 38 199)'
   loadArray = [
     1,
     2,
@@ -45,9 +50,15 @@ export class TrackFavoritesComponent implements OnInit {
   ]
 
   constructor(
+    private imgColorService: ImageDominantColorService,
     private requestService: RequestService,
     private playerController: PlayerControllerService) {
     this.playerController.trackId$.subscribe(id => {
+      this.trackList.forEach(async (track: any) => {
+        if (track.videoId === id) {
+          this.trackImageBackgroundColor = await imgColorService.getDominantColor(host + 'media/cropImage?url=' + track.image);
+        }
+      })
       this.trackPlayId = id;
     })
   }
@@ -72,6 +83,9 @@ export class TrackFavoritesComponent implements OnInit {
 
   async getFavoriteTracksList() {
     const cachedHistoryList = await localforage.getItem('favoritesTracksList');
+    if (!cachedHistoryList) {
+      await Haptics.impact({ style: ImpactStyle.Heavy });
+    }
     try {
       if (cachedHistoryList) {
         this.trackList = JSON.parse(cachedHistoryList as string);
@@ -86,8 +100,8 @@ export class TrackFavoritesComponent implements OnInit {
         if (this.trackList !== tracksList || !cachedHistoryList) {
           const sortedTrackList = tracksList.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
           this.trackList = sortedTrackList;
-          console.log(this.trackList)
           await localforage.setItem('favoritesTracksList', JSON.stringify(sortedTrackList));
+          await Haptics.impact({ style: ImpactStyle.Light });
         }
       });
     } catch (e) {

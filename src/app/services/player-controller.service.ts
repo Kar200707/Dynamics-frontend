@@ -9,6 +9,8 @@ export class PlayerControllerService {
   playerInfo$:Observable<any> = this.playerInfo.asObservable();
   private actPlayer: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   actPlayer$:Observable<any> = this.actPlayer.asObservable();
+  private addFavorite: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  addFavorite$:Observable<any> = this.addFavorite.asObservable();
   private trackId: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   trackId$:Observable<any> = this.trackId.asObservable();
   private trackIndex: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -34,6 +36,10 @@ export class PlayerControllerService {
 
   onActPlayer(act:string) {
     this.actPlayer.next(act);
+  }
+
+  addFavoriteTrack(track: any) {
+    this.addFavorite.next(track);
   }
 
   setBackground(bgUrl: string) {

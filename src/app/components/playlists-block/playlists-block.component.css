@@ -1,5 +1,6 @@
 .main-block {
   display: flex;
+  flex-direction: column-reverse;
 }
 
 .playlists {
@@ -90,7 +91,7 @@ h2 {
 }
 
 .categories {
-   margin: 40px 20px 0 20px;
+   margin: 30px 20px 0 20px;
 }
 
 .categories > .block {
@@ -232,25 +233,22 @@ h2 {
   }
 }
 
+.title_playlists {
+  margin: 20px 0 0 20px;
+}
+
+.right_block {
+  width: 100%;
+  margin-left: 0;
+}
 
 @media screen and (max-width: 850px) {
-  .main-block {
-    flex-direction: column-reverse;
-  }
-
-  .right_block {
-    width: 100%;
-    margin-left: 0;
-  }
 
   .category_title,
   .artist_title {
     text-align: start;
   }
 
-  .title_playlists {
-    margin: 20px 0 0 20px;
-  }
 
   .artists > .artist_block {
     width: 130px;
@@ -305,7 +303,7 @@ h2 {
   color: white;
   text-align: start;
   margin-top: 5px;
-  width: 100%;
+  width: 150px;
 }
 
 .track_block > span {
@@ -317,6 +315,19 @@ h2 {
   font-size: 0.8rem;
   color: #919191;
   text-align: start;
+}
+
+@media screen and (min-width: 850px) {
+
+  .categories {
+    width: 50%;
+  }
+
+  .listen_again_block {
+    height: 212px;
+    overflow-y: hidden;
+    flex-wrap: wrap;
+  }
 }
 
 @media screen and (max-width: 660px) {

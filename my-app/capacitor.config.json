@@ -1,0 +1,10 @@
+{
+  "appId": "com.dynamics.app",
+  "appName": "dynamics",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}

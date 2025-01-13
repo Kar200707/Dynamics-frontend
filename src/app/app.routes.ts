@@ -20,6 +20,11 @@
           loadComponent: () => import('./pages/home/home.component').then(x => (x.HomeComponent)),
         },
         {
+          title: 'Dynamics Home',
+          path: 'track/:id',
+          loadComponent: () => import('./pages/home/home.component').then(x => (x.HomeComponent)),
+        },
+        {
           title: 'Dynamics library',
           path: 'library',
           loadComponent: () => import('./pages/library/library.component').then(x => (x.LibraryComponent)),

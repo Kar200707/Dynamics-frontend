@@ -4,3 +4,9 @@
   display: flex;
   flex-direction: column;
 }
+
+@media screen and (min-width: 850px) {
+  app-mobile-nav-panel {
+    display: none;
+  }
+}

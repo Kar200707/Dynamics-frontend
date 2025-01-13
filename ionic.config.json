@@ -1,0 +1,7 @@
+{
+  "name": "Dynamics",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

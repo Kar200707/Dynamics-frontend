@@ -1,22 +1,3 @@
-.top_bar {
-  width: 100%;
-  padding: 75px 20px;
-}
-
-.top_bar > h3 {
-  color: white;
-  font-family: "Nunito", sans-serif;
-  text-align: center;
-  font-size: 45px;
-}
-
-.top_bar > img {
-  border-radius: 14px;
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
 .main_block {
   display: flex;
   flex-direction: column;
@@ -25,13 +6,8 @@
 .back_button_block {
   width: 100%;
   display: flex;
-  padding: 10px 20px;
-  left: 0;
-  top: 0;
   align-items: start;
-  position: fixed;
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
+  margin-top: env(safe-area-inset-top);
 }
 
 .back_button_block > button {
@@ -44,19 +20,49 @@
   color: white;
 }
 
+.play_list {
+  width: 55px;
+  height: 55px;
+  background-color: #3774e1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 20px;
+  top: calc(90px + env(safe-area-inset-top));
+}
+
+.play_list > mat-icon {
+  font-size: 44px;
+  width: 45px;
+  height: 44px;
+  color: white;
+}
+
+.header_block {
+  padding: 20px;
+}
+
 .title_block {
   width: 100%;
   display: flex;
-  align-items: center;
-  margin-top: 50px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding: 0 20px;
+}
+
+.title_block > span {
+  color: white;
 }
 
 h1 {
+  font-size: 40px;
   color: white;
 }
 
 .scroll_box {
-  padding-bottom: 130px;
   overflow-y: scroll;
 }
 
@@ -68,7 +74,7 @@ h1 {
 .track_box {
   width: 100%;
   margin-bottom: 1px;
-  background-color: rgba(51, 51, 51, 0.41);
+  background-color: #1a1a1a;
   border-radius: 15px;
   padding: 8px;
   display: flex;
@@ -80,8 +86,6 @@ h1 {
 .track_image {
   width: 50px;
   height: 50px;
-  border-radius: 8px;
-  overflow: hidden;
   position: relative;
 }
 
@@ -89,27 +93,46 @@ h1 {
   width: 50px;
   height: 50px;
   object-fit: cover;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 .music_playGIF {
   position: absolute;
   inset: 0;
   margin: auto;
-  width: 30px;
-  height: 30px;
+  width: 27px;
+  height: 27px;
 }
 
 .track_info_box {
   margin-left: 10px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  font-weight: lighter;
+  font-size: 1rem;
+  text-align: start;
 }
 
 .track_info_box > h4 {
   color: white;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  font-weight: 300;
 }
 
 .track_info_box > span {
   color: #676767;
   font-weight: lighter;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
 }
 
 .track_duration {

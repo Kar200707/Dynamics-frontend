@@ -11,6 +11,15 @@
   display: flex;
 }
 
+app-search {
+  width: 40%;
+  position: absolute;
+  left: 50%;
+  margin: 10px 0;
+  translate: -50%;
+  z-index: 99;
+}
+
 .profile {
   width: 55px;
   height: 54px;
@@ -56,12 +65,10 @@ app-timer-bottom-sheet {
 /* media */
 
 @media screen and (max-width: 970px) {
-  app-pc-nav-panel {
-    display: none;
-  }
 
   app-mobile-nav-panel {
     display: block;
+    width: 30%;
   }
 
   .profile {
@@ -69,7 +76,7 @@ app-timer-bottom-sheet {
   }
 }
 
-@media screen and (max-width: 850px) {
+@media screen and (min-width: 850px) {
   .scroll_box {
     padding-bottom: 120px;
   }
@@ -79,12 +86,90 @@ app-timer-bottom-sheet {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  margin-top: env(safe-area-inset-top);
   align-items: center;
   margin-bottom: 16px;
   padding: 0 20px;
+  position: relative;
 }
 
-.top_block > svg {
+.top_block > div > svg {
   width: 40px;
   height: 40px;
+}
+
+app-pc-nav-panel {
+  display: none;
+}
+
+@media screen and (min-width: 850px) {
+  .scroll_box {
+    padding: 0 15px;
+    overflow: hidden;
+  }
+
+  .search_block {
+    width: 500px;
+    display: flex;
+    align-items: center;
+  }
+
+  .search_res_block::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+
+  .search_input {
+    margin-right: 15px;
+    width: 100%;
+    padding: 1px 10px 0 10px;
+    font-family: "Nunito", sans-serif;
+    border: none;
+    outline: none;
+    color: white;
+    border-radius: 20px;
+    background-color: #1a1a1a;
+    height: 35px;
+  }
+
+  .top_block {
+    padding: 5px 15px 5px 5px;
+    background-color: #0f0f0f;
+    border-radius: 10px;
+    margin: 10px 0 7px 0;
+  }
+
+  .playlists_block_layout {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px;
+  }
+
+  .nav_block_layout {
+    width: 20%;
+    background-color: #0f0f0f;
+    border-radius: 10px;
+    margin-right: 7px;
+    overflow-y: scroll;
+  }
+
+  .nav_block_layout::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav_block_layout::-webkit-scrollbar {
+    width: 0;
+  }
+
+  app-playlists-block {
+    background-color: #0f0f0f;
+    width: 80%;
+    border-radius: 10px;
+    overflow-y: scroll;
+  }
+
+  app-pc-nav-panel {
+    display: block;
+  }
 }

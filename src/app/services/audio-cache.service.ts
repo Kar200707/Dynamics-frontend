@@ -2,6 +2,7 @@ import localForage from 'localforage';
 
 const CACHE_KEY = 'audioCache';
 const CACHE_LIMIT = 30;
+const MAX_DURATION = 900;
 
 export class AudioCacheService {
   private cache = localForage.createInstance({
@@ -27,7 +28,16 @@ export class AudioCacheService {
     return this.cache.getItem(trackId);
   }
 
-  async set(trackId: string, data: Blob) {
+  async remove(trackId: string) {
+    await this.cache.removeItem(trackId);
+  }
+
+  async set(trackId: string, data: Blob, duration: number) {
+    if (duration > MAX_DURATION) {
+      console.log(`Track ${trackId} is longer than 15 minutes, skipping cache.`);
+      return;
+    }
+
     await this.ensureCache();
     await this.cache.setItem(trackId, data);
   }

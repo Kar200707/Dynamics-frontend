@@ -9,6 +9,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: env(safe-area-inset-top);
 }
 
 mat-tab-group {
@@ -26,7 +27,7 @@ mat-tab-group {
 .account {
   width: 70px;
   height: 70px;
-  background-color: #1a1a1a;
+  background-color: #1b1b1b;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -37,8 +37,9 @@ html, body { height: 100%; }
 body {
   margin: 0;
   font-family: 'Nunito', sans-serif;
-  background-color: #0f0f0f;
+  background-color: black;
   overflow: hidden;
+  touch-action: pan-x pan-y;
 }
 
 ::-webkit-scrollbar {

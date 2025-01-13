@@ -1,12 +1,15 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {PlayerControllerService} from "../../services/player-controller.service";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
 import localforage from 'localforage';
 import {environment} from "../../../environment/environment";
 import {MatIcon} from "@angular/material/icon";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
+import {Haptics, ImpactStyle} from "@capacitor/haptics";
+import {MatButton} from "@angular/material/button";
+import {AudioCacheService} from "../../services/audio-cache.service";
 
 @Component({
   selector: 'app-playlists-block',
@@ -15,10 +18,12 @@ import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component"
     RouterLink,
     HttpClientModule,
     MatIcon,
-    LoaderIosComponent
+    LoaderIosComponent,
+    MatButton
   ],
   providers: [
-    RequestService
+    RequestService,
+    AudioCacheService
   ],
   templateUrl: './playlists-block.component.html',
   styleUrl: './playlists-block.component.css'
@@ -27,32 +32,117 @@ export class PlaylistsBlockComponent implements OnInit {
   account: any;
   token: string | null = localStorage.getItem('token');
   historyList?: any[];
+  devices: any[] = [];
+  newReleasesList?: any[];
+  newCollectionsList?: any[];
   trackListLoaded: boolean = false;
+  newTrackListLoaded: boolean = false;
+  newCollectionsListLoaded: boolean = false;
+  isOpenedViewAll1:boolean = false;
+  isOpenedViewAll2:boolean = false;
+  isOpenedViewAll3:boolean = false;
   loadArray = [
     1,
     2,
-    3
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
   ]
 
   constructor(
+    private cacheService: AudioCacheService,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
     private requestService: RequestService,
     private playerController: PlayerControllerService) {}
 
   async ngOnInit() {
-    this.loadHistoryList();
     this.loadAccount();
-    this.setupVisibilityChangeListener();
+    await this.loadHistoryList();
+    await this.loadNewReleasesList();
+    await this.loadNewCollectionsList();
+
+    let lastUpdateTime = new Date();
+
+    document.addEventListener('visibilitychange', async () => {
+      if (document.visibilityState === 'visible') {
+        const currentTime = new Date();
+        const timeDifference = (currentTime.getTime() - lastUpdateTime.getTime()) / (1000 * 60);
+
+        if (timeDifference >= 10) {
+          await Haptics.impact({ style: ImpactStyle.Heavy });
+          await localforage.removeItem("historyList");
+          await localforage.removeItem("newReleasesList");
+          await localforage.removeItem("newCollectionsList");
+
+          this.trackListLoaded = false;
+          this.newTrackListLoaded = false;
+          this.newCollectionsListLoaded = false;
+          this.cdr.detectChanges();
+
+          await this.loadHistoryList();
+          await this.loadNewReleasesList();
+          await this.loadNewCollectionsList();
+
+          lastUpdateTime = new Date();
+        }
+      }
+    });
   }
 
-  setupVisibilityChangeListener() {
-    document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
+  async loadNewReleasesList() {
+    try {
+      const cachedHistoryList = await localforage.getItem('newReleasesList');
+
+      if (cachedHistoryList) {
+        this.newReleasesList = JSON.parse(cachedHistoryList as string);
+        this.newTrackListLoaded = true;
+      } else {
+        if (this.token) {
+          this.requestService.post<any[]>(environment.searchTracksList, { access_token: this.token, searchText: 'new music releases lang:am' })
+            .subscribe(async list => {
+              this.newTrackListLoaded = true;
+              await Haptics.impact({ style: ImpactStyle.Light });
+              this.newReleasesList = list;
+              this.cdr.detectChanges();
+              await localforage.setItem('newReleasesList', JSON.stringify(list));
+            }, () => { this.newTrackListLoaded = false; });
+        }
+      }
+    } catch (e) {
+      console.error('Error loading new releases list from cache:', e);
+      this.newTrackListLoaded = false;
+    }
   }
 
-  async onVisibilityChange(event: Event) {
-    if (document.visibilityState === 'visible') {
-      await localforage.removeItem("historyList");
-      this.trackListLoaded = false;
-      await this.loadHistoryList();
+  async loadNewCollectionsList() {
+    try {
+      const cachedHistoryList = await localforage.getItem('newCollectionsList');
+
+      if (cachedHistoryList) {
+        this.newCollectionsList = JSON.parse(cachedHistoryList as string);
+        this.newCollectionsListLoaded = true;
+      } else {
+        if (this.token) {
+          const currentYear = new Date().getFullYear();
+          this.requestService.post<any[]>(environment.searchTracksList,
+            { access_token: this.token, searchText: `Armenian Songs ${currentYear}` })
+            .subscribe(async list => {
+              this.newCollectionsListLoaded = true;
+              await Haptics.impact({ style: ImpactStyle.Light });
+              this.newCollectionsList = list;
+              this.cdr.detectChanges();
+              await localforage.setItem('newCollectionsList', JSON.stringify(list));
+            }, () => { this.newCollectionsListLoaded = false; });
+        }
+      }
+    } catch (e) {
+      console.error('Error loading new collections list from cache:', e);
+      this.newCollectionsListLoaded = false;
     }
   }
 
@@ -66,11 +156,15 @@ export class PlaylistsBlockComponent implements OnInit {
       } else {
         if (this.token) {
           this.requestService.post<any[]>(environment.getPlayHistory, { access_token: this.token })
-            .subscribe(list => {
+            .subscribe(async list => {
               this.trackListLoaded = true;
+              await Haptics.impact({ style: ImpactStyle.Light });
               const sortedTrackList = list.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
               this.historyList = sortedTrackList;
-              localforage.setItem('historyList', JSON.stringify(sortedTrackList));
+              this.playerController.setTrackIndex(0);
+              this.playerController.setList(sortedTrackList);
+              this.cdr.detectChanges();
+              await localforage.setItem('historyList', JSON.stringify(sortedTrackList));
             }, () => { this.trackListLoaded = false; });
         }
       }
@@ -85,14 +179,28 @@ export class PlaylistsBlockComponent implements OnInit {
       this.requestService.post<any>(environment.getAccount, { acsses_token: this.token })
         .subscribe(account => {
           this.account = account;
-        });
+        }, async () => { await this.logout() });
     }
   }
 
-  setTrack(id: string, index: number) {
-    // this.trackPlayId = id;
+  async logout() {
+    localStorage.removeItem('token');
+    try {
+      await localforage.clear();
+      await this.cacheService.clear();
+      console.log('localforage cleared');
+    } catch (error) {
+      console.error('Error clearing localforage:', error);
+    }
+    this.router.navigate(['/login']);
+  }
+
+  setTrack(id: string, index: number, list: any) {
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
-    this.playerController.setList(this.historyList as any[]);
+    this.playerController.setList(list as any[]);
   }
+
+  protected readonly innerWidth = innerWidth;
+  protected readonly console = console;
 }

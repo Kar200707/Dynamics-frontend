@@ -1,14 +1,14 @@
-import {Component, Renderer2} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {NgIf, TitleCasePipe, UpperCasePipe} from "@angular/common";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import {MatIcon} from "@angular/material/icon";
 import {RequestService} from "../../services/request.service";
-import {ChangeMetaThemeColorService} from "../../services/change-meta-theme-color.service";
 import {PlayerControllerService} from "../../services/player-controller.service";
 import {environment} from "../../../environment/environment";
 import {HttpClientModule} from "@angular/common/http";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
+import {Haptics, ImpactStyle} from "@capacitor/haptics";
 
 @Component({
   selector: 'app-categories',
@@ -27,15 +27,25 @@ import {ResizeHeightDirective} from "../../directives/resize-height.directive";
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.css'
 })
-export class CategoriesComponent {
+export class CategoriesComponent implements OnInit {
   category: string = 'None';
   imgUrl!: string;
-  gradient: string = '';
+  color: string = '';
   protected readonly innerWidth = innerWidth;
   trackList?: any;
   trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
   categoryForReq!: string;
+  listIsPlay:boolean = false;
+  loadArray = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
 
   constructor(
     private requestService: RequestService,
@@ -49,27 +59,34 @@ export class CategoriesComponent {
       this.imgUrl = `assets/images/categories/${p.type}.png`;
       if (p.type === 'rock') {
         this.categoryForReq = 'rock';
-        this.gradient = 'linear-gradient(to bottom, #d09607, rgba(239, 188, 63, 0.30), transparent)';
+        this.color = '#d09607'
+        // this.gradient = 'linear-gradient(to bottom, #d09607, rgba(239, 188, 63, 0.30), transparent)';
       } else if (p.type === 'rap') {
         this.categoryForReq = 'rap';
-        this.gradient = 'linear-gradient(to bottom, #434459, rgba(117, 118, 138, 0.42), transparent)';
+        this.color = '#434459'
+        // this.gradient = 'linear-gradient(to bottom, #434459, rgba(117, 118, 138, 0.42), transparent)';
       } else  if (p.type === 'jazz') {
         this.categoryForReq = 'jazz';
-        this.gradient = 'linear-gradient(to bottom, #312817, #35322d, transparent)';
+        this.color = '#312817'
+        // this.gradient = 'linear-gradient(to bottom, #312817, #35322d, transparent)';
       } else  if (p.type === 'hip-hop') {
-        this.categoryForReq = 'hip%20hop';
-        this.gradient = 'linear-gradient(to bottom, #4e067e, #1f1250, transparent)';
+        this.categoryForReq = 'hip-hop';
+        this.color = '#4e067e'
+        // this.gradient = 'linear-gradient(to bottom, #4e067e, #1f1250, transparent)';
       }
     })
   }
 
-  ngOnDestroy() {
-    this.trackList = null;
-    this.trackPlayId = '';
-  }
-
   ngOnInit() {
     this.getTracksList();
+    this.playerController.actPlayer$.subscribe(act => {
+      if (act === 'pause') {
+        this.listIsPlay = false;
+      }
+      if (act === 'play') {
+        this.listIsPlay = true;
+      }
+    })
   }
 
   formatTime(seconds: number): string {
@@ -86,13 +103,15 @@ export class CategoriesComponent {
   //     })
   // }
 
-  getTracksList() {
+  async getTracksList() {
     this.requestService.post<any>(
-      environment.getTracksListByCategory + this.categoryForReq,
-      { access_token: this.token }
-    ).subscribe(tracksList => {
+      environment.searchTracksList,
+      { access_token: this.token, searchText: `${this.categoryForReq} 3 minutes` }
+    ).subscribe(async tracksList => {
       this.trackList = tracksList;
+      await Haptics.impact({ style: ImpactStyle.Light });
     })
+    await Haptics.impact({ style: ImpactStyle.Heavy });
   }
 
   setTrack(id: string, index: number) {

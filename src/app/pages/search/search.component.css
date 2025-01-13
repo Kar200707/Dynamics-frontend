@@ -1,11 +1,30 @@
 .main_block {
   padding: 20px;
+  position: relative;
 }
 
 h1 {
   color: white;
   font-size: 50px;
   font-family: "Nunito", sans-serif;
+}
+
+.search_home_block {
+  position: absolute;
+  height: 60vh;
+  overflow-y: scroll;
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  bottom: calc(-60vh - 5px);
+  z-index: 15;
+  width: calc(100% - 35px);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  padding: 15px;
+}
+
+.search_home_block::-webkit-scrollbar {
+  width: 0;
+  display: none;
 }
 
 .search_block {
@@ -16,26 +35,92 @@ h1 {
   margin-top: 15px;
 }
 
+.search_cover_block {
+  margin-top: env(safe-area-inset-top);
+  width: 100%;
+  position: relative;
+}
+
+.help_keyboard_block {
+  width: 100%;
+  position: absolute;
+  background-color: #0f0f0f;
+  bottom: 0;
+  overflow-x: scroll;
+  padding: 12px;
+  left: 0;
+}
+
+.help_keyboard_block::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.help_keyboard_block > .scroll_box {
+  display: flex;
+  align-items: center;
+  width: max-content;
+}
+
+.help_text {
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: rgb(35 34 34);
+  color: white;
+  font-family: "Nunito", sans-serif;
+}
+
 .search {
   width: 100%;
   font-size: 17px;
-  padding: 7px 14px;
-  border-radius: 15px;
-  background-color: #0f0f0f;
+  padding: 10px 14px;
+  border-radius: 20px;
+  background-color: #1b1b1b;
   font-weight: normal;
   color: white;
-  border: 1px solid gray;
+  position: relative;
+  border: none;
   outline: none;
   font-family: "Nunito", sans-serif;
 }
 
+.search::-webkit-search-cancel-button {
+  display: none;
+}
+
+input[type="search"] {
+  width: 100%;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+.clear-btn {
+  position: absolute;
+  right: 5px;
+  top: 21px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  background: none;
+  border: none;
+  display: none;
+}
+input[type="search"]:not(:placeholder-shown) ~ .clear-btn {
+  display: block;
+}
+
+.search::placeholder {
+  color: #9b9b9b;
+}
+
 .search_history_block {
-  margin-top: 20px;
   width: 100%;
   display: flex;
   flex-direction: column;
   padding-bottom: 55vh;
   max-height: calc(100vh - 20px);
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 

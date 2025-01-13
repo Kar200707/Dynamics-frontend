@@ -86,7 +86,7 @@ h1 {
 .side_image {
   position: absolute;
   left: 3%;
-  top: 3%;
+  top: calc(3% + env(safe-area-inset-top));
   width: 60px;
   z-index: 99;
 }

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {PcNavPanelComponent} from "../../components/pc-nav-panel/pc-nav-panel.component";
 import {NewsBlockComponent} from "../../components/news-block/news-block.component";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
@@ -12,7 +12,7 @@ import {MatIcon} from "@angular/material/icon";
 import {NavigationEnd, Router, RouterOutlet} from "@angular/router";
 import {HttpClientModule} from "@angular/common/http";
 import {RequestService} from "../../services/request.service";
-import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {Keyboard} from "@capacitor/keyboard";
 
 @Component({
   selector: 'app-main',
@@ -34,10 +34,11 @@ import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
   routePath!: string;
   navPanelTimeOff: boolean = true;
   isOpenedPlayer: boolean = false;
+  keyboardHeight: number = 0;
 
   constructor(
     private reqServ: RequestService,
@@ -64,4 +65,16 @@ export class MainComponent {
       }
     })
   }
+
+  async ngOnInit() {
+    await Keyboard.addListener('keyboardWillShow', (info: any) => {
+      this.keyboardHeight = info.keyboardHeight;
+    });
+    await Keyboard.addListener('keyboardWillHide', () => {
+      this.keyboardHeight = 0;
+    });
+  }
+
+  protected readonly innerHeight = innerHeight;
+  protected readonly innerWidth = innerWidth;
 }

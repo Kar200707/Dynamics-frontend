@@ -50,7 +50,7 @@ app-timer-bottom-sheet {
   background: center;
   background-size: cover;
   overflow: hidden;
-  transition: .22s background-color;
+  transition: 1s background-color;
   width: 100%;
   height: 100%;
 }
@@ -258,17 +258,14 @@ input[type="range"]::-moz-range-thumb {
 
 .slider-1 {
   width: 500px;
-  height: 3px;
-  background-color: white;
   border-radius: 10px;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
 }
 
 .track {
   width: 50%;
   height: 5px;
-  background-color: rgb(255 255 255 / 20%);
   position: absolute;
   display: flex;
   align-items: center;
@@ -279,10 +276,22 @@ input[type="range"]::-moz-range-thumb {
   top: 0;
   left: 0;
   height: 100%;
-  background-image: linear-gradient(to left, #0133ff, #006aff, #006aff);
+  background-color: hsla(0, 0%, 100%, .5);
   transition: .3s;
   width: 0;
   border-radius: 20px 0 0 20px;
+}
+
+.circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: hsl(0, 0%, 100%);
+  position: absolute;
+  box-shadow: rgb(0 0 0 / 30%) 0px 0px 10px;
+  right: -8px;
+  display: none;
+  top: -4px;
 }
 
 .main_block {
@@ -316,8 +325,9 @@ input[type="range"]::-moz-range-thumb {
   transition: .2s ease-out;
   position: relative;
   flex: 1;
-  height: 10px;
-  background: #cccccc57;
+  height: 6px;
+  background: hsla(0, 0%, 100%, .3);
+  box-shadow: rgb(0 0 0 / 10%) 0px 5px 15px;
   cursor: pointer;
 }
 
@@ -343,14 +353,29 @@ input[type="range"]::-moz-range-thumb {
 
 .play_pause_button > mat-icon {
   display: block;
+  transition: 1s color;
 }
 
 .track_info_block {
   border-radius: 20px;
-  padding-top: 30px;
+  padding-top: 20px;
   margin: 14px;
   margin-bottom: calc(14px + env(safe-area-inset-top));
-  background: #151515;
+  background: #0b0b0b;
+}
+
+.track_info_block_anim {
+  animation: load_animation 1s cubic-bezier(0,-0.4,0,1.20);
+}
+
+@keyframes load_animation {
+  from {
+    translate: 0 30%;
+  }
+
+  to {
+    translate: 0 0;
+  }
 }
 
   /* media */
@@ -568,6 +593,10 @@ input[type="range"]::-moz-range-thumb {
   transition: .25s cubic-bezier(0,-0.4,0,1.20);
 }
 
+.play_pause_button_open_player > mat-icon {
+  transition: 1s color;
+}
+
 .play_pause_button_open_player:active,
 .play_pause_button:active,
 .favorite_button:active,
@@ -645,7 +674,7 @@ input[type="range"]::-moz-range-thumb {
 
 .description-block, .recommended-block {
   width: 100%;
-  margin-top: 15px;
+  margin-top: 5px;
   /*background-color: #00000080;*/
   border-radius: 20px;
   display: flex;
@@ -734,7 +763,7 @@ input[type="range"]::-moz-range-thumb {
   height: 3px;
   background-color: white;
   width: 100%;
-  animation: load-anim .6s infinite;
+  animation: load-anim 1s infinite;
 }
 
 .bottom-sheet-modal {

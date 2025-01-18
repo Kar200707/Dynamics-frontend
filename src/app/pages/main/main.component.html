@@ -4,7 +4,13 @@
   <app-player
     [style.width]="innerWidth > 850 ? 'calc(80% - 4px)' : '100%'"
     [style.right]="innerWidth > 850 ? '0' : 'unset'"
-    [style.bottom]="isOpenedPlayer ? '0' : innerWidth > 850 ? '10px' : 70 - keyboardHeight + 'px'"
+    [ngStyle]="{
+      bottom: isOpenedPlayer
+        ? '0'
+        : (innerWidth > 850
+          ? '10px'
+          : 'calc(env(safe-area-inset-bottom) +' + ' ' + (55 - keyboardHeight) + 'px)'),
+    }"
     style="position: absolute; width: 100%; z-index: 5; transition: .3s "></app-player>
     <app-mobile-nav-panel
       [style.bottom]="'-' + keyboardHeight + 'px'"

@@ -17,6 +17,7 @@ import {audio} from "../../../main";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {PlayerKeyboardPluginService} from "./player_functions/player-keyboard-plugin.service";
 import {ImageDominantColorService} from "./player_functions/image-dominat-color.service";
+import {filter} from "rxjs";
 
 
 @Component({
@@ -120,6 +121,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
     private audioCacheService: AudioCacheService,
     private activeRoute: ActivatedRoute,
     private playerController: PlayerControllerService) {
+
     this.playerController.timer$.subscribe((timer) => {
       if (!timer) {
         this.isOpenedTimerBottomSheet = false;
@@ -178,7 +180,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
       this.trackIndex = index;
     })
     this.playerController.playerInfo$.subscribe((list) => {
-        if (list[this.trackIndex]) {
+        if (list?.[this.trackIndex]) {
           if (this.audio_info.videoId !== list[this.trackIndex].videoId) {
             if (list && this.media) {
               this.type = 'audio';
@@ -223,14 +225,16 @@ export class PlayerComponent implements OnDestroy, OnInit {
     this.media.addEventListener('ended', () => {
       this.isClickUp = true;
       this.touchStart = false;
-
-      if (this.replay) {
-        this.media.currentTime = 0;
-        this.play();
-      } else {
-        this.pause();
-        this.next();
-      }
+      console.log('hello');
+      setTimeout(() => {
+        if (this.replay) {
+          this.media.currentTime = 0;
+          this.play();
+        } else {
+          this.pause();
+          this.next();
+        }
+      });
     });
   }
 
@@ -340,8 +344,17 @@ export class PlayerComponent implements OnDestroy, OnInit {
         this.views = data.views;
         this.likes = data.likes;
         this.description = data.description;
-        this.recTracksBlock.nativeElement.scrollLeft = 0;
+        if (this.recTracksBlock?.nativeElement) {
+          this.recTracksBlock.nativeElement.scrollLeft = 0;
+        }
       })
+  }
+
+  async getImageColor() {
+    this.playerImageDominatColor = await this.imgDominatColorService.getDominantColor(host + 'media/cropImage?url=' + this.audio_info.image)
+    this.imgDominatColorService.getDominantColor(host + 'media/cropImage?url=' + this.audio_info.image).then(() => {
+      this.cdr.detectChanges();
+    })
   }
 
   setAudioOrVideo() {
@@ -360,6 +373,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
   async load() {
     // clearInterval(this.hapticInterval);
     this.playerImageDominatColor = 'rgb(36 36 36)';
+    this.cdr.detectChanges();
     this.pause();
     this.isLoaded = false;
     this.media.currentTime = 0;
@@ -371,15 +385,11 @@ export class PlayerComponent implements OnDestroy, OnInit {
     //   .subscribe(data => {
     //     this.authorId = data.authorId;
     //   })
-    this.requestService.post<any>(environment.setPlayHistory, {
-      access_token: this.token,
-      trackId: this.audio_info.videoId
-    }).subscribe()
     this.updateSeekBarOpenPlayer();
     this.updateSeekBar();
 
     const cachedAudio = await this.audioCacheService.get(this.audio_info.videoId);
-    this.playerImageDominatColor = await this.imgDominatColorService.getDominantColor(host + 'media/cropImage?url=' + this.audio_info.image)
+    setTimeout(() => this.getImageColor(), 0);
 
     if (cachedAudio && this.type === 'audio') {
       this.media.src = URL.createObjectURL(cachedAudio);
@@ -393,13 +403,17 @@ export class PlayerComponent implements OnDestroy, OnInit {
           this.info = '';
           this.infoTopBlockIsOpened = false;}, 4000)
       })
-      console.log('cache')
+      this.requestService.post<any>(environment.setPlayHistory, {
+        access_token: this.token,
+        trackId: this.audio_info.videoId
+      }).subscribe()
 
       // await Haptics.impact({ style: ImpactStyle.Light });
     } else {
       const query: string = `?type=${this.type}&quality=highestaudio`
 
       this.media.src = environment.getStream + this.audio_info.videoId + query;
+
 
       this.media.load();
       this.media.addEventListener('error', e => {
@@ -513,6 +527,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
         const newTime = (progress + this.startProgress - this.startProgress) * this.media.duration;
 
         this.media.currentTime = Math.max(0, Math.min(newTime, this.media.duration));
+        setTimeout(() => Haptics.impact({ style: ImpactStyle.Light }), 0);
         this.updateSeekBarOpenPlayer();
       }
     }
@@ -560,15 +575,15 @@ export class PlayerComponent implements OnDestroy, OnInit {
     if (this.trackIndex != 0) {
       this.pause();
       this.trackIndex--
-      this.playerController.setTrackId(this.audio_info.videoId);
       this.audio_info = this.trackList[this.trackIndex];
+      this.playerController.setTrackId(this.audio_info.videoId);
       this.load();
       this.getPlayerInfo();
     } else {
       this.pause();
       this.trackIndex = this.trackList.length - 1;
-      this.playerController.setTrackId(this.audio_info.videoId);
       this.audio_info = this.trackList[this.trackIndex];
+      this.playerController.setTrackId(this.audio_info.videoId);
       this.load();
       this.getPlayerInfo();
     }
@@ -635,6 +650,12 @@ export class PlayerComponent implements OnDestroy, OnInit {
             access_token: this.token,
             trackId: this.audio_info.videoId
           }).subscribe(() => {
+          this.info = 'Track removed in favorites';
+          this.infoTopBlockIsOpened = true;
+          this.playerController.addFavoriteTrack(this.audio_info);
+          setTimeout(() => {
+            this.info = '';
+            this.infoTopBlockIsOpened = false;}, 2000)
           this.isSetFavorite = false;
           this.playerController.addFavoriteTrack(this.audio_info);
         })

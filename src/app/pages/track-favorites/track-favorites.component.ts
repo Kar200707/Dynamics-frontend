@@ -101,7 +101,9 @@ export class TrackFavoritesComponent implements OnInit {
           const sortedTrackList = tracksList.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
           this.trackList = sortedTrackList;
           await localforage.setItem('favoritesTracksList', JSON.stringify(sortedTrackList));
-          await Haptics.impact({ style: ImpactStyle.Light });
+          if (!cachedHistoryList) {
+            await Haptics.impact({ style: ImpactStyle.Light });
+          }
         }
       });
     } catch (e) {

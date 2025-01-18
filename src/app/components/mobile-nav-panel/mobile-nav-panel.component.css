@@ -1,11 +1,11 @@
 .main_block {
   width: 100%;
-  height: 70px;
   background-color: #0f0f0f;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 25px;
+  padding-top: 10px;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
 }
 
 .main_block > .nav_box {

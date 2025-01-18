@@ -16,15 +16,15 @@
     [style.background-color]="playerImageDominatColor"
     [style.border-radius]="isOpenedMobilePlayer ? '25px 25px 0 0' : '20px'" class="layer">
     <div
-      [style.background-image]="isOpenedMobilePlayer ? 'linear-gradient(to bottom, rgb(47 47 47 / 20%), rgb(0 0 0 / 77%))' : 'unset'"
-      [style.background-color]="!isOpenedMobilePlayer ? 'rgb(25 25 25 / 68%)' : 'unset'"
-      [style.padding]="isOpenedMobilePlayer ? '0' : '0 9px'"
+      [style.background-image]="isOpenedMobilePlayer ? 'linear-gradient(to bottom, rgb(47 47 47 / 0%), rgb(0 0 0 / 77%))' : 'unset'"
+      [style.background-color]="!isOpenedMobilePlayer ? 'rgba(25,25,25,0.15)' : 'unset'"
+      [style.padding]="isOpenedMobilePlayer ? '0' : '0 8px'"
       class="layer_2">
       <div
         *ngIf="!isOpenedMobilePlayer"
         #seekBarContainer
         class="slider_bar">
-        <div *ngIf="innerWidth < 850" style="background-color: transparent" class="track">
+        <div *ngIf="innerWidth < 850" style="background-color: transparent;" class="track">
           <div *ngIf="!isLoaded && audio_info.title != '--'" class="slider_loader"></div>
           <div #seekBarProgress style="height: 2px; background-color: white; background-image: unset" class="swapper"></div>
         </div>
@@ -69,7 +69,7 @@
                   [style.width]="innerWidth > 850 ? '38px' : '40px'"
                   [style.height]="innerWidth > 850 ? '38px' : '40px'"
                   (click)="playPause()" title="play" class="play_pause_button">
-                  <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+                  <mat-icon [style.color]="playerImageDominatColor">{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
                 </button>
                 <div (click)="next()" class="next">
                   <img src="assets/images/icons/next.svg">
@@ -156,21 +156,28 @@
                 (touchend)="isLoaded ? this.play() : false;
                 moveLimit = 0;
                 seekBarProgressOpenPlayer.style.transition = '.2s linear';
-                seekBarContainerOpenPlayer.style.height = '10px'"
+                seekBarProgressOpenPlayer.style.backgroundColor = 'hsla(0, 0%, 100%, .65)';
+                seekBarContainerOpenPlayer.style.overflow = 'hidden';
+                circle.style.display = 'none';"
                 (touchstart)="isClickUp = false;
                 this.pause();
+                seekBarProgressOpenPlayer.style.backgroundColor = 'white';
+                seekBarContainerOpenPlayer.style.overflow = 'visible';
+                circle.style.display = 'block';
                 seekMoveOpenPlayer($event, 'touch');
                 seekBarProgressOpenPlayer.style.transition = 'unset';"
                 (touchmove)="!isClickUp ? seekMoveOpenPlayer($event, 'touch') : false; $event.preventDefault(); this.pause();"
                 (mousemove)="!isClickUp ? seekMoveOpenPlayer($event, 'mouse') : false"
                 class="slider_box_open_player">
-                <div *ngIf="!isLoaded && audio_info.title != '--'" style="height: 10px; border-radius: 10px" class="slider_loader"></div>
+                <div *ngIf="!isLoaded && audio_info.title != '--'" style="height: 6px; border-radius: 10px" class="slider_loader"></div>
                 <div
                   [style.display]="isLoaded ? 'block' : 'none'"
                   #seekBarContainerOpenPlayer
                   class="slider-1">
                   <div class="track">
-                    <div #seekBarProgressOpenPlayer class="swapper"></div>
+                    <div #seekBarProgressOpenPlayer class="swapper">
+                      <div #circle class="circle"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -189,7 +196,7 @@
                   [style.rotate]="isPlaying ? '180deg' : '0deg'"
                   [style.color]="trackThemeColor ? trackThemeColor : 'black'"
                   (click)="playPause()" title="play" class="play_pause_button_open_player">
-                  <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+                  <mat-icon [style.color]="playerImageDominatColor">{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
                 </button>
                 <div (click)="next()" class="next_open_player">
                   <img src="assets/images/icons/next.svg">
@@ -217,7 +224,6 @@
               @if (audio_info) {
                 @if (audio_recommended_list) {
                   <div class="recommended-block">
-                    <h4>Recommended</h4>
                     <div #recTracksBlock class="scroll_box">
                       @if (audio_recommended_list[0] !== 0) {
                         @for (track of audio_recommended_list; track audio_recommended_list) {

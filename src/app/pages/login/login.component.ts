@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
-import { Router, RouterLink } from "@angular/router";
-import { MatInputModule } from "@angular/material/input";
-import { FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from "@angular/forms";
-import { MatButtonModule } from "@angular/material/button";
-import { RequestService } from "../../services/request.service";
-import { HttpClientModule } from "@angular/common/http";
-import { MatIconModule } from "@angular/material/icon";
+import {Component} from '@angular/core';
+import {Router, RouterLink} from "@angular/router";
+import {MatInputModule} from "@angular/material/input";
+import {FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators} from "@angular/forms";
+import {MatButtonModule} from "@angular/material/button";
+import {RequestService} from "../../services/request.service";
+import {HttpClientModule} from "@angular/common/http";
+import {MatIconModule} from "@angular/material/icon";
 import {LoaderMainComponent} from "../../loaders/loader-main/loader-main.component";
 import {environment} from "../../../environment/environment";
+import {Haptics, NotificationType} from "@capacitor/haptics";
 
 @Component({
   selector: 'app-login',
@@ -47,12 +48,13 @@ export class LoginComponent {
       this.requestService.post<any>(environment.signIn, this.form.value).subscribe((d) => {
         this.mainLoader = false;
         localStorage.setItem('token', d.accses_token);
+        setTimeout(() => Haptics.notification({ type: NotificationType.Success }), 0);
         this.router.navigate(['./']);
-
       }, (error) => {
         if (error.status == 400) {
           this.mainLoader = false;
           this.isFalseLogin = true;
+          setTimeout(() => Haptics.notification({ type: NotificationType.Error }));
         }
       })
       formDirective.resetForm();

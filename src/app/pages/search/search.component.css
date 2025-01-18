@@ -74,7 +74,7 @@ h1 {
 .search {
   width: 100%;
   font-size: 17px;
-  padding: 10px 14px;
+  padding: 10px 45px 10px 14px;
   border-radius: 20px;
   background-color: #1b1b1b;
   font-weight: normal;
@@ -155,6 +155,7 @@ input[type="search"]:not(:placeholder-shown) ~ .clear-btn {
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: lighter;
+  width: 100%;
   font-size: 1rem;
   color: white;
   margin-left: 15px;

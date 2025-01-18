@@ -6,7 +6,6 @@ import {PlayerComponent} from "./components/player/player.component";
 import {LayoutComponent} from "./layout/layout.component";
 import localforage from "localforage";
 import { App, URLOpenListenerEvent } from '@capacitor/app';
-import { Keyboard } from '@capacitor/keyboard';
 
 @Component({
   selector: 'app-root',

@@ -8,6 +8,7 @@ import { RequestService } from "../../services/request.service";
 import { environment } from "../../../environment/environment";
 import { HttpClientModule } from "@angular/common/http";
 import {LoaderMainComponent} from "../../loaders/loader-main/loader-main.component";
+import {Haptics, NotificationType} from "@capacitor/haptics";
 
 @Component({
   selector: 'app-register',
@@ -55,12 +56,13 @@ export class RegisterComponent {
       this.requestService.post<any>(environment.signUp, this.form.value).subscribe((d) => {
         this.mainLoader = false;
         localStorage.setItem('token', d.accses_token);
+        setTimeout(() => Haptics.notification({ type: NotificationType.Success }));
         this.router.navigate(['./']);
-
       }, (error) => {
         if (error.status == 400) {
           this.mainLoader = false;
           this.isFalseRegister = true;
+          setTimeout(() => Haptics.notification({ type: NotificationType.Error }));
         }
       })
       formDirective.resetForm();

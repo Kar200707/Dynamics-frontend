@@ -13,6 +13,8 @@ import {NavigationEnd, Router, RouterOutlet} from "@angular/router";
 import {HttpClientModule} from "@angular/common/http";
 import {RequestService} from "../../services/request.service";
 import {Keyboard} from "@capacitor/keyboard";
+import {Capacitor} from "@capacitor/core";
+import {NgStyle} from "@angular/common";
 
 @Component({
   selector: 'app-main',
@@ -29,6 +31,7 @@ import {Keyboard} from "@capacitor/keyboard";
     HttpClientModule,
     MatIcon,
     RouterOutlet,
+    NgStyle,
   ],
   providers: [ RequestService ],
   templateUrl: './main.component.html',
@@ -67,12 +70,14 @@ export class MainComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await Keyboard.addListener('keyboardWillShow', (info: any) => {
-      this.keyboardHeight = info.keyboardHeight;
-    });
-    await Keyboard.addListener('keyboardWillHide', () => {
-      this.keyboardHeight = 0;
-    });
+    if (Capacitor.getPlatform() === 'ios' || Capacitor.getPlatform() === 'android') {
+      await Keyboard.addListener('keyboardWillShow', (info: any) => {
+        this.keyboardHeight = info.keyboardHeight;
+      });
+      await Keyboard.addListener('keyboardWillHide', () => {
+        this.keyboardHeight = 0;
+      });
+    }
   }
 
   protected readonly innerHeight = innerHeight;

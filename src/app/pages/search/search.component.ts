@@ -12,6 +12,7 @@ import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {Keyboard} from "@capacitor/keyboard";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-search',
@@ -70,7 +71,7 @@ export class SearchComponent implements OnInit {
     private playerController: PlayerControllerService,
     private reqServ: RequestService) {
     this.searchSubject.pipe(
-      debounceTime(400),
+      debounceTime(350),
       switchMap((value: string) => this.reqServ.post<SearchListModel[]>(environment.searchTracksList, { searchText: value }))
     ).subscribe(async (data: SearchListModel[]) => {
       this.search = data;
@@ -84,12 +85,15 @@ export class SearchComponent implements OnInit {
       this.isOpenedSearchResBlock = true;
     }
     this.getSearchHistory();
-    await Keyboard.addListener('keyboardWillShow', () => {
-      this.isOpenedKeyBoard = true;
-    });
-    await Keyboard.addListener('keyboardWillHide', () => {
-      this.isOpenedKeyBoard = false;
-    });
+    if (Capacitor.getPlatform() === 'ios' || Capacitor.getPlatform() === 'android') {
+      await Keyboard.addListener('keyboardWillShow', () => {
+        this.isOpenedKeyBoard = true;
+      });
+
+      await Keyboard.addListener('keyboardWillHide', () => {
+        this.isOpenedKeyBoard = false;
+      });
+    }
   }
 
   handleBlur(): void {

@@ -6,10 +6,15 @@
   box-sizing: border-box;
   -webkit-user-drag: none;
   user-select: none;
+  -webkit-touch-callout: none;
   -moz-user-focus: ignore;
   -ms-user-select: none;
   zoom: 1;
   -webkit-tap-highlight-color: transparent;
+}
+
+image {
+  pointer-events: none;
 }
 
 :root {

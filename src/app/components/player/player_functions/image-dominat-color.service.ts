@@ -9,10 +9,11 @@ export class ImageDominantColorService {
   async getDominantColor(imageUrl: string): Promise<string> {
     try {
       const image = await this.loadImage(imageUrl);
-      const dominantColor = this.getAverageColor(image);
-      return `rgb(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b})`;
+      const vibrantColor = this.getMostVibrantColor(image);
+      return `rgb(${vibrantColor.r}, ${vibrantColor.g}, ${vibrantColor.b})`;
     } catch (error) {
-      throw new Error(`Failed to get dominant color: ${error}`);
+      console.error('Error extracting dominant color:', error);
+      return 'rgb(0, 0, 0)';
     }
   }
 
@@ -22,51 +23,76 @@ export class ImageDominantColorService {
       img.crossOrigin = 'Anonymous';
       img.src = imageUrl;
       img.onload = () => resolve(img);
-      img.onerror = () => reject('Error loading image');
+      img.onerror = () => reject(new Error('Error loading image'));
     });
   }
 
-  private getAverageColor(imgEl: HTMLImageElement) {
-    const blockSize = 5; // Process every 5th pixel
-    const defaultRGB = { r: 0, g: 0, b: 0 }; // Default color for non-supporting environments
+  private getMostVibrantColor(imgEl: HTMLImageElement) {
     const canvas = document.createElement('canvas');
-    const context = canvas.getContext && canvas.getContext('2d');
-    let data, width, height;
-    let i = -4;
-    let length;
-    let rgb = { r: 0, g: 0, b: 0 };
-    let count = 0;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Canvas not supported');
 
-    if (!context) {
-      return defaultRGB;
-    }
-
-    height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
-    width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
-
-    context.drawImage(imgEl, 0, 0);
+    canvas.width = imgEl.naturalWidth || imgEl.width;
+    canvas.height = imgEl.naturalHeight || imgEl.height;
+    context.drawImage(imgEl, 0, 0, canvas.width, canvas.height);
 
     try {
-      data = context.getImageData(0, 0, width, height);
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      return this.findMostVibrantColor(imageData.data);
     } catch (e) {
-      return defaultRGB; // Security error when image is from a different domain
+      throw new Error('Unable to access image data, possible cross-origin issue');
+    }
+  }
+
+  private findMostVibrantColor(data: Uint8ClampedArray) {
+    let maxSaturation = 0;
+    let vibrantColor = { r: 0, g: 0, b: 0 };
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      const { s, l } = this.rgbToHsl(r, g, b);
+
+      // Условия для выбора приятного цвета
+      if (s > maxSaturation && l > 0.3 && l < 0.6) {
+        maxSaturation = s;
+        vibrantColor = this.adjustBrightness({ r, g, b }, 0.8); // Приглушаем цвет
+      }
     }
 
-    length = data.data.length;
+    return vibrantColor;
+  }
 
-    // Loop over every blockSize-th pixel
-    while ((i += blockSize * 4) < length) {
-      ++count;
-      rgb.r += data.data[i];
-      rgb.g += data.data[i + 1];
-      rgb.b += data.data[i + 2];
+  private adjustBrightness(color: { r: number; g: number; b: number }, factor: number) {
+    return {
+      r: Math.min(255, color.r * factor),
+      g: Math.min(255, color.g * factor),
+      b: Math.min(255, color.b * factor),
+    };
+  }
+
+  private rgbToHsl(r: number, g: number, b: number) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const delta = max - min;
+
+    let h = 0;
+    if (delta) {
+      if (max === r) h = (g - b) / delta + (g < b ? 6 : 0);
+      else if (max === g) h = (b - r) / delta + 2;
+      else h = (r - g) / delta + 4;
+      h /= 6;
     }
 
-    // Average the RGB values and return the result
-    rgb.r = ~~(rgb.r / count);
-    rgb.g = ~~(rgb.g / count);
-    rgb.b = ~~(rgb.b / count);
+    const l = (max + min) / 2;
+    const s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
 
-    return rgb;
+    return { h, s, l };
   }
 }

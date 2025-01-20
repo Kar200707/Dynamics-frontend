@@ -161,8 +161,6 @@ export class PlaylistsBlockComponent implements OnInit {
               await Haptics.impact({ style: ImpactStyle.Light });
               const sortedTrackList = list.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
               this.historyList = sortedTrackList;
-              this.playerController.setTrackIndex(0);
-              this.playerController.setList(sortedTrackList);
               this.cdr.detectChanges();
               await localforage.setItem('historyList', JSON.stringify(sortedTrackList));
             }, () => { this.trackListLoaded = false; });

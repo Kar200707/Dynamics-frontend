@@ -56,7 +56,7 @@
               <div (click)="setTrack(track.videoId, $index)" style="display: flex; align-items: center; width: 100%">
                 <div class="track_image">
                   <div>
-                    <div [style.background-color]="track.videoId === trackPlayId ? 'unset' : 'rgb(0 0 0 / 50%)'">
+                    <div [style.background-color]="track.videoId === trackPlayId ? 'unset' : 'rgb(0 0 0 / 30%)'">
                       @if (track.videoId !== trackPlayId && listIsPlay) {
                         <mat-icon style="">play_arrow</mat-icon>
                       } @else {

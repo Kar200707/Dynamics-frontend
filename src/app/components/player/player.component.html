@@ -15,6 +15,11 @@
   <div
     [style.background-color]="playerImageDominatColor"
     [style.border-radius]="isOpenedMobilePlayer ? '25px 25px 0 0' : '20px'" class="layer">
+    @if (isOpenedMobilePlayer) {
+      <div class="animation">
+        <div [style.background-color]="playerImageDominatColor2" style="width: 120%; height: 60vh; background-color: rgb(36 36 36); position: absolute; border-radius: 50%; bottom: -30vh; left: -10%"></div>
+      </div>
+    }
     <div
       [style.background-image]="isOpenedMobilePlayer ? 'linear-gradient(to bottom, rgb(47 47 47 / 0%), rgb(0 0 0 / 77%))' : 'unset'"
       [style.background-color]="!isOpenedMobilePlayer ? 'rgba(25,25,25,0.15)' : 'unset'"
@@ -186,9 +191,9 @@
                 <span>- {{ endOfTrack }}</span>
               </div>
               <div class="track_controller_open_player">
-                <div (click)="previous_10s()" class="change_10s_icon">
-                  <img src="assets/images/icons/10s-back.svg">
-                </div>
+<!--                <div (click)="previous_10s()" class="change_10s_icon">-->
+<!--                  <img src="assets/images/icons/10s-back.svg">-->
+<!--                </div>-->
                 <div (click)="prev()" class="prev_open_player">
                   <img src="assets/images/icons/prev.svg">
                 </div>
@@ -196,14 +201,14 @@
                   [style.rotate]="isPlaying ? '180deg' : '0deg'"
                   [style.color]="trackThemeColor ? trackThemeColor : 'black'"
                   (click)="playPause()" title="play" class="play_pause_button_open_player">
-                  <mat-icon [style.color]="playerImageDominatColor">{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+                  <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
                 </button>
                 <div (click)="next()" class="next_open_player">
                   <img src="assets/images/icons/next.svg">
                 </div>
-                <div (click)="next_10s()" class="change_10s_icon">
-                  <img src="assets/images/icons/10s-next.svg">
-                </div>
+<!--                <div (click)="next_10s()" class="change_10s_icon">-->
+<!--                  <img src="assets/images/icons/10s-next.svg">-->
+<!--                </div>-->
               </div>
             </div>
             <div *ngIf="audio_recommended_list[0] !== 0" class="track_info_block">

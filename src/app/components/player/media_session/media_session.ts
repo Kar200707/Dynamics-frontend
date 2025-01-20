@@ -1,4 +1,5 @@
 import {host} from "../../../../environment/environment";
+import {Title} from "@angular/platform-browser";
 
 export function setupMediaSession(
   play: () => void, pause: () => void, prev: () => void,
@@ -16,8 +17,9 @@ export function setupMediaSession(
   }
 }
 
-export async function updateMediaSessionMetadata(audio_info: any) {
+export async function updateMediaSessionMetadata(audio_info: any, titleService: Title) {
   if ('mediaSession' in navigator) {
+    titleService.setTitle(`${audio_info.title} - ${audio_info.author.name}`);
     navigator.mediaSession.metadata = new MediaMetadata({
       title: audio_info.title,
       artist: audio_info.author.name,

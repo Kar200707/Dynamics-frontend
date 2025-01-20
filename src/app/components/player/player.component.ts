@@ -18,6 +18,7 @@ import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {PlayerKeyboardPluginService} from "./player_functions/player-keyboard-plugin.service";
 import {ImageDominantColorService} from "./player_functions/image-dominat-color.service";
 import {filter} from "rxjs";
+import {Title} from "@angular/platform-browser";
 
 
 @Component({
@@ -79,6 +80,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
   startProgress:number = 0;
   isClickUp: boolean = true;
   playerImageDominatColor!: string;
+  playerImageDominatColor2!: string;
   currentTime: string = '--:--';
   endOfTrack: string = '--:--';
   isNextCalled: boolean = false;
@@ -113,6 +115,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
   ]
 
   constructor(
+    private titleService: Title,
     private cdr: ChangeDetectorRef,
     private requestService: RequestService,
     private router: Router,
@@ -186,7 +189,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
               this.type = 'audio';
               this.trackList = list;
               this.audio_info = list[this.trackIndex];
-              updateMediaSessionMetadata(this.audio_info);
+              updateMediaSessionMetadata(this.audio_info, titleService);
               this.load();
               this.getPlayerInfo();
             }
@@ -234,7 +237,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
           this.pause();
           this.next();
         }
-      });
+      }, 0);
     });
   }
 
@@ -351,10 +354,11 @@ export class PlayerComponent implements OnDestroy, OnInit {
   }
 
   async getImageColor() {
-    this.playerImageDominatColor = await this.imgDominatColorService.getDominantColor(host + 'media/cropImage?url=' + this.audio_info.image)
-    this.imgDominatColorService.getDominantColor(host + 'media/cropImage?url=' + this.audio_info.image).then(() => {
-      this.cdr.detectChanges();
-    })
+    const colorsArray: string[] = await this.imgDominatColorService.getDominantColors(host + 'media/cropImage?url=' + this.audio_info.image);
+    this.playerImageDominatColor = colorsArray[0];
+    this.playerImageDominatColor2 = colorsArray[1];
+    console.log(colorsArray[1]);
+    this.cdr.detectChanges();
   }
 
   setAudioOrVideo() {
@@ -373,6 +377,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
   async load() {
     // clearInterval(this.hapticInterval);
     this.playerImageDominatColor = 'rgb(36 36 36)';
+    this.playerImageDominatColor2 = 'rgb(36 36 36)';
     this.cdr.detectChanges();
     this.pause();
     this.isLoaded = false;
@@ -490,6 +495,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
       if (this.isPlaying) {
         this.pause();
       } else {
+        this.titleService.setTitle(`${this.audio_info.title} - ${this.audio_info.author.name}`);
         this.play();
       }
     }
@@ -566,7 +572,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
       this.load();
       this.getPlayerInfo();
     }
-    updateMediaSessionMetadata(this.audio_info);
+    updateMediaSessionMetadata(this.audio_info, this.titleService);
   }
 
   prev() {
@@ -587,7 +593,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
       this.load();
       this.getPlayerInfo();
     }
-    updateMediaSessionMetadata(this.audio_info);
+    updateMediaSessionMetadata(this.audio_info, this.titleService);
   }
 
   formatTime(seconds: number): string {

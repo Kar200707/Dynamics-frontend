@@ -46,9 +46,24 @@ app-timer-bottom-sheet {
   width: 100%;
 }
 
+.animation {
+  animation: anim 8s infinite alternate-reverse ease-in-out;
+  transition: 1s background-color;
+}
+
+@keyframes anim {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100vh);
+  }
+}
+
 .layer {
   background: center;
   background-size: cover;
+  position: relative;
   overflow: hidden;
   transition: 1s background-color;
   width: 100%;
@@ -58,7 +73,7 @@ app-timer-bottom-sheet {
 .layer_2 {
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(60px);
   background-image: linear-gradient(to bottom, rgb(47 47 47 / 20%), rgb(0 0 0 / 77%));
   display: flex;
   align-self: center;
@@ -166,6 +181,7 @@ app-timer-bottom-sheet {
   width: 30px;
   height: 30px;
   font-size: 30px;
+  color: #4b4b4b;
 }
 
 .prev, .next {
@@ -361,7 +377,7 @@ input[type="range"]::-moz-range-thumb {
   padding-top: 20px;
   margin: 14px;
   margin-bottom: calc(14px + env(safe-area-inset-top));
-  background: #0b0b0b;
+  background: #0b0b0bc7;
 }
 
 .track_info_block_anim {
@@ -505,6 +521,9 @@ input[type="range"]::-moz-range-thumb {
 
 .track_controllers_block {
   padding: 20px 23px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .open_player_track_img_block {
@@ -560,7 +579,7 @@ input[type="range"]::-moz-range-thumb {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 270px;
   margin-top: 25px;
   padding: 0 30px;
 }
@@ -595,6 +614,7 @@ input[type="range"]::-moz-range-thumb {
 
 .play_pause_button_open_player > mat-icon {
   transition: 1s color;
+  color: #016eff;
 }
 
 .play_pause_button_open_player:active,

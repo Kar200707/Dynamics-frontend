@@ -52,16 +52,7 @@ export class TrackFavoritesComponent implements OnInit {
   constructor(
     private imgColorService: ImageDominantColorService,
     private requestService: RequestService,
-    private playerController: PlayerControllerService) {
-    this.playerController.trackId$.subscribe(id => {
-      this.trackList.forEach(async (track: any) => {
-        if (track.videoId === id) {
-          this.trackImageBackgroundColor = await imgColorService.getDominantColor(host + 'media/cropImage?url=' + track.image);
-        }
-      })
-      this.trackPlayId = id;
-    })
-  }
+    private playerController: PlayerControllerService) {  }
 
   ngOnInit() {
     this.getFavoriteTracksList();
@@ -89,6 +80,16 @@ export class TrackFavoritesComponent implements OnInit {
     try {
       if (cachedHistoryList) {
         this.trackList = JSON.parse(cachedHistoryList as string);
+        this.playerController.trackId$.subscribe(id => {
+          this.trackList.forEach(async (track: any) => {
+            if (track.videoId === id) {
+              console.log(track.videoId);
+              const colorsArray:string[] = await this.imgColorService.getDominantColors(host + 'media/cropImage?url=' + track.image);
+              this.trackImageBackgroundColor = colorsArray[0];
+            }
+          })
+          this.trackPlayId = id;
+        })
       } else {
         this.trackList = null;
       }
@@ -100,6 +101,16 @@ export class TrackFavoritesComponent implements OnInit {
         if (this.trackList !== tracksList || !cachedHistoryList) {
           const sortedTrackList = tracksList.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
           this.trackList = sortedTrackList;
+          this.playerController.trackId$.subscribe(id => {
+            this.trackList.forEach(async (track: any) => {
+              if (track.videoId === id) {
+                console.log(track.videoId);
+                const colorsArray:string[] = await this.imgColorService.getDominantColors(host + 'media/cropImage?url=' + track.image);
+                this.trackImageBackgroundColor = colorsArray[0];
+              }
+            })
+            this.trackPlayId = id;
+          })
           await localforage.setItem('favoritesTracksList', JSON.stringify(sortedTrackList));
           if (!cachedHistoryList) {
             await Haptics.impact({ style: ImpactStyle.Light });

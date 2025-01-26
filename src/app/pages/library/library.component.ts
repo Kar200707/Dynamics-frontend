@@ -4,7 +4,7 @@ import {Router, RouterLink} from "@angular/router";
 import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
 import {environment} from "../../../environment/environment";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import localforage from "localforage";
@@ -20,7 +20,8 @@ import {AudioCacheService} from "../../services/audio-cache.service";
     HttpClientModule,
     MatButton,
     NgIf,
-    MatIcon
+    MatIcon,
+    MatIconButton
   ],
   providers: [
     RequestService,

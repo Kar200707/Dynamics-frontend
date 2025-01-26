@@ -1,0 +1,95 @@
+<div class="main-div">
+  @if (confirm) {
+    <div class="confirm">
+      <div class="confirm_windows">
+        <h3>Are you sure you want to delete this chat?</h3>
+        <div class="yes_no_block">
+          <button (click)="deleteChat()" style="color: #ff5454;" mat-button>yes</button>
+          <button (click)="confirm = false" mat-button>no</button>
+        </div>
+      </div>
+    </div>
+  }
+  <div class="chat_header">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: env(safe-area-inset-top);">
+      <button mat-icon-button>
+        <mat-icon style="color: white" routerLink="/home/dynamics-ai">arrow_back_ios</mat-icon>
+      </button>
+      <div style="display: flex; align-items: center">
+        <button
+          (click)="clickDeleteChatButton()"
+          class="create_chat_btn"><mat-icon style="color: #ff6e6e; width: 25px; height: 25px; font-size: 25px; margin-bottom: 1px">delete</mat-icon></button>
+        <button
+          (click)="createNewChat()"
+          class="create_chat_btn"><mat-icon style="color: #a6a6a6; width: 31px; height: 31px; font-size: 31px">add</mat-icon></button>
+      </div>
+    </div>
+  </div>
+  <div #chatScroll class="chat_messages_scroll">
+    @if (chat) {
+      @for(message of chat.chat; track chat) {
+        <div
+          [style.justify-content]="message.role === 'user' ? 'flex-end' : 'flex-start'"
+          class="message_row">
+          <div
+            [style.background-color]="message.role === 'user' ? 'rgb(35 35 35)' : 'unset'"
+            [style.padding]="message.role === 'user' ? '10px 15px' : 'unset'"
+            class="message">
+            @if (message.role === 'assistant') {
+              <img class="dynamics_icon" src="assets/images/icon-384x384.svg" alt="dynamics icon">
+              @for(item of classifyText(message.content); track $index) {
+                @if (item.type === 'text') {
+                  <pre class="text_pre">{{ item.text }}</pre>
+                } @else {
+                  <div class="code-block">
+                    <div class="code_type">
+                      <span>{{ item.type }}</span>
+                      <button (click)="copy(item.text, $index)" class="copy_button">
+                        @if ($index === textCopiedIndex && textCopied) {
+                          <div style="display: flex; align-items: center">
+                            <span>copied</span>
+                            <mat-icon style="width: 18px; height: 18px; font-size: 18px; color: #8f8f8f">check</mat-icon>
+                          </div>
+                        } @else {
+                          <mat-icon>content_copy</mat-icon>
+                        }
+                      </button>
+                    </div>
+                    <pre class="code_pre" [style.width]="windowWidth - 20 + 'px'">{{ item.text }}</pre>
+                  </div>
+                }
+              }
+            } @else {
+              <p>{{ message.content }}</p>
+            }
+          </div>
+        </div>
+      }
+      @if (aiMessageLoading) {
+        <div class="load_block">
+          <img class="dynamics_icon" src="assets/images/icon-384x384.svg" alt="dynamics icon">
+          <span
+            [style.color]="isRequestError ? 'rgb(231,67,67)' : '#a1a1a1'"
+            [class]="isRequestError ? '' : 'gradient-text'">{{ isRequestError ? 'Error ai send again' : 'Dynamics Ai Generation...' }}</span>
+        </div>
+      }
+      @if (chat.chat.length === 0) {
+        <div class="chat_empty_block">
+          <h2>Dynamics Ai</h2>
+          <h3>It’s Quiet Here...</h3>
+          <p>You can start the chat by sending a message! We can’t wait to hear from you!</p>
+        </div>
+      }
+    }
+  </div>
+  <div class="text_send_block">
+    <form #form (submit)="sendMessageChat(send_input.value, $event)">
+      <input
+        #send_input
+        placeholder="Ask Dynamics I somet..." type="text" class="text_send_input">
+      <button [class]="send_input.value.length === 0 ? 'send_btn' : 'send_btn active_send_btn'">
+        <mat-icon style="color: white; height: 28px; width: 28px; font-size: 28px">arrow_upward</mat-icon>
+      </button>
+    </form>
+  </div>
+</div>

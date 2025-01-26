@@ -38,7 +38,7 @@ import {NgStyle} from "@angular/common";
   styleUrl: './main.component.css'
 })
 export class MainComponent implements OnInit {
-  routePath!: string;
+  routePath!: any;
   navPanelTimeOff: boolean = true;
   isOpenedPlayer: boolean = false;
   keyboardHeight: number = 0;
@@ -49,7 +49,7 @@ export class MainComponent implements OnInit {
     private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.routePath = event.urlAfterRedirects.split('/')[1];
+        this.routePath = event.urlAfterRedirects;
       }
     });
 

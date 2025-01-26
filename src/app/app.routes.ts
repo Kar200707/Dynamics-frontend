@@ -30,6 +30,16 @@
           loadComponent: () => import('./pages/library/library.component').then(x => (x.LibraryComponent)),
         },
         {
+          title: 'Dynamics Ai',
+          path: 'dynamics-ai',
+          loadComponent: () => import('./pages/dynamics-ai/dynamics-ai.component').then(x => (x.DynamicsAiComponent)),
+        },
+        {
+          title: 'Dynamics Ai',
+          path: 'dynamics-ai/chat/:id',
+          loadComponent: () => import('./pages/dynamics-ai-chat/dynamics-ai-chat.component').then(x => (x.DynamicsAiChatComponent)),
+        },
+        {
           title: 'Dynamics search',
           path: 'search',
           loadComponent: () => import('./pages/search/search.component').then(x => (x.SearchComponent)),

@@ -16,4 +16,8 @@ export class RequestService {
   post<T>(url: string, data: any): Observable<T> {
     return this.http.post<T>(url, data);
   }
+
+  delete<T>(url: string, data: any): Observable<any> {
+    return this.http.delete<T>(url, data);
+  }
 }

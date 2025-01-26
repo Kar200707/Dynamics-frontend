@@ -12,16 +12,11 @@
   margin-top: env(safe-area-inset-top);
 }
 
-mat-tab-group {
-  margin-top: 50px;
-  color: white;
-  border-bottom: none ;
-}
-
-.account_block > h2 {
+.main_block > h2 {
   color: white;
   font-family: "Nunito", sans-serif;
-  font-size: 30px;
+  font-size: 40px;
+  margin-top: 50px;
 }
 
 .account {
@@ -49,13 +44,22 @@ mat-tab-group {
   justify-content: center;
   background-color: #1a1a1a;
   border-radius: 20px;
-  margin-top: 30px;
+  margin-top: 15px;
 }
 
-.favorites {
+.favorites, .dynamics_ai {
   width: 100%;
   display: flex;
   align-items: center;
+}
+
+.dynamics_ai > div > h3 {
+  font-weight: bold;
+  font-family: "Nunito", sans-serif;
+  background: linear-gradient(90deg, #001ee5, #246dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
 }
 
 .favorites > div > h3 {
@@ -68,7 +72,7 @@ mat-tab-group {
   font-family: "Nunito", sans-serif;
 }
 
-.favorites > img {
+.favorites > img, .dynamics_ai > img {
   width: 60px;
   height: 60px;
   border-radius: 10px;

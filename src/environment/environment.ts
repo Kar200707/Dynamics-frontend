@@ -1,5 +1,5 @@
-// export const host = 'http://localhost:8080/';
-export const host = 'https://dynamics-backend-production.up.railway.app/';
+export const host = 'http://localhost:8080/';
+// export const host = 'https://dynamics-backend-production.up.railway.app/';
 
 
 export const environment = {
@@ -21,4 +21,9 @@ export const environment = {
   getChannelInfo: host + 'youtube-base/get-channel-info/',
   getAuthorIdByVideoId: host + 'youtube-base/get-author-id-by-video-id/',
   getPlayerInfoByVideoId: host + 'media/getPlayerInfoByVideoId',
+  getAiChat: host + 'dynamics-ai/get-chat/',
+  getAiModels: host + 'dynamics-ai/getModels',
+  createAiChat: host + 'dynamics-ai/create-chat',
+  sendMessageChat: host + 'dynamics-ai/chat/',
+  deleteChat: host + 'dynamics-ai/chat/delete/',
 }

@@ -5,8 +5,6 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
-import {Capacitor} from "@capacitor/core";
-import {Keyboard} from "@capacitor/keyboard";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
 
 @Component({
@@ -33,6 +31,8 @@ export class DynamicsAiChatComponent implements OnInit {
   confirm: boolean = false;
   aiMessageLoading: boolean = false;
   isRequestError: boolean = false;
+  aiModel: string = 'gpt-4o-mini';
+  aiModels: string[] = [];
   message: string = '';
   textCopied: boolean = false;
   @HostListener('window:resize', ['$event'])
@@ -51,16 +51,11 @@ export class DynamicsAiChatComponent implements OnInit {
 
   async ngOnInit() {
     this.getChat();
-    if (Capacitor.getPlatform() === 'ios' || Capacitor.getPlatform() === 'android') {
-      await Keyboard.addListener('keyboardWillShow', (info: any) => {
-        setTimeout(() => {this.scrollToBottom()}, 100);
-        this.chatScroll.nativeElement.style.height = 'calc(100vh - 129px - env(safe-area-inset-bottom) - env(safe-area-inset-top))';
-      });
-      await Keyboard.addListener('keyboardWillHide', () => {
-        setTimeout(() => {this.scrollToBottom()}, 100);
-        this.chatScroll.nativeElement.style.height = 'calc(100vh - 188px - env(safe-area-inset-bottom) - env(safe-area-inset-top))';
-      });
-    }
+    this.getAiModels();
+  }
+
+  modelSelectOnChange(e: Event) {
+    this.aiModel = (e.target as HTMLSelectElement).value
   }
 
   private scrollToBottom(): void {
@@ -87,7 +82,6 @@ export class DynamicsAiChatComponent implements OnInit {
 
       const language = match[1].toLowerCase();
       const codeContent = match[2];
-
       result.push({ text: codeContent, type: language });
 
       lastIndex = codePattern.lastIndex;
@@ -98,26 +92,7 @@ export class DynamicsAiChatComponent implements OnInit {
       result.push({ text: remainingText, type: 'text' });
     }
 
-    const titlePattern = /^(#\s+)(.*)/gm;
-    const titles = [];
-    let titleMatch;
-
-    while ((titleMatch = titlePattern.exec(text)) !== null) {
-      titles.push({ text: titleMatch[2], type: 'title' });
-    }
-
-    let finalResult: { text: string, type: string }[] = [];
-    let titleIndex = 0;
-
-    for (let item of result) {
-      if (item.type === 'text' && titleIndex < titles.length) {
-        finalResult.push(titles[titleIndex]);
-        titleIndex++;
-      }
-      finalResult.push(item);
-    }
-
-    return finalResult;
+    return result;
   }
 
   copy(text: string, index: number) {
@@ -139,6 +114,14 @@ export class DynamicsAiChatComponent implements OnInit {
       .subscribe(data => {
         this.chat = data.chat;
         setTimeout(() => {this.scrollToBottom()}, 100);
+      }, () => { this.router.navigate(['home/dynamics-ai']) })
+  }
+
+  getAiModels() {
+    this.reqService.post<any>(environment.getAiModels, { token: this.token })
+      .subscribe(data => {
+        this.aiModels = data.models;
+        setTimeout(() => {this.scrollToBottom()}, 100);
       })
   }
 
@@ -151,15 +134,21 @@ export class DynamicsAiChatComponent implements OnInit {
     if (this.sendInput.nativeElement.value.length !== 0) {
       this.chat.chat.push({ role: "user", content: message, });
       setTimeout(() => {this.scrollToBottom()}, 100);
-      this.reqService.post<any>(environment.sendMessageChat + this.chatId, { token: this.token, aiModel: "gpt-4o-mini", message })
+      this.reqService.post<any>(environment.sendMessageChat + this.chatId, { token: this.token, aiModel: this.aiModel, message })
         .subscribe(data => {
           this.aiMessageLoading = false;
           this.chat.chat.push({ role: "assistant", content: data.aiMessage, });
-          setTimeout(() => {this.scrollToBottom()}, 100);
+          setTimeout(() => {this.scroll100()}, 100);
           setTimeout(() => {Haptics.impact({ style: ImpactStyle.Light })})
         }, () => { this.isRequestError = true; })
       this.sendInput.nativeElement.value = "";
     }
+  }
+
+  scroll100() {
+    const scrollTop = this.chatScroll.nativeElement.scrollTop;
+
+    this.chatScroll.nativeElement.scrollTop = scrollTop + 300;
   }
 
   createNewChat() {
@@ -169,6 +158,7 @@ export class DynamicsAiChatComponent implements OnInit {
           this.aiMessageLoading = false;
           this.router.navigate(['home/dynamics-ai/chat/', data.chatId]).then(() => {
             this.getChat();
+            this.getAiModels();
           });
         }, () => {
           this.isRequestError = true;

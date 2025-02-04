@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {PlayerControllerService} from "../../services/player-controller.service";
@@ -38,7 +38,11 @@ export class TrackFavoritesComponent implements OnInit {
   trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
   listIsPlay:boolean = false;
-  trackImageBackgroundColor: string = 'rgb(84 38 199)'
+  trackImageBackgroundColor: string = 'rgb(84 38 199)';
+  filteredTrackList?: any[];
+  searchQuery: string = '';
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @ViewChild('favoritesTitle') favoritesTitle!: ElementRef;
   loadArray = [
     1,
     2,
@@ -50,11 +54,12 @@ export class TrackFavoritesComponent implements OnInit {
   ]
 
   constructor(
+    private renderer: Renderer2,
     private imgColorService: ImageDominantColorService,
     private requestService: RequestService,
     private playerController: PlayerControllerService) {  }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.getFavoriteTracksList();
     this.playerController.actPlayer$.subscribe(act => {
       if (act === 'pause') {
@@ -64,6 +69,25 @@ export class TrackFavoritesComponent implements OnInit {
         this.listIsPlay = true;
       }
     })
+  }
+
+  onScroll() {
+    const scrollTop = this.scrollContainer.nativeElement.scrollTop;
+    if (scrollTop > 35) {
+      this.renderer.setStyle(this.favoritesTitle.nativeElement, 'transform', 'translate(30px, -40px)');
+    } else {
+      this.renderer.setStyle(this.favoritesTitle.nativeElement, 'transform', 'translate(0, 0)');
+    }
+  }
+
+  onSearch(query: string) {
+    this.searchQuery = query.toLowerCase().trim();
+    if (!this.trackList) return;
+
+    this.filteredTrackList = this.trackList.filter((track: any) =>
+      track.title.toLowerCase().includes(this.searchQuery) ||
+      track.author.name.toLowerCase().includes(this.searchQuery)
+    );
   }
 
   formatTime(seconds: number): string {

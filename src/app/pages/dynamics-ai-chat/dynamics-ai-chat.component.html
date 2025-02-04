@@ -15,6 +15,16 @@
       <button mat-icon-button>
         <mat-icon style="color: white" routerLink="/home/dynamics-ai">arrow_back_ios</mat-icon>
       </button>
+      <div class="select_box">
+        <select (change)="modelSelectOnChange($event)" class="model_select">
+          @for (model of aiModels; track $index) {
+            <option [selected]="model === aiModel" [value]="model">
+              {{ model !== aiModel ? model : (model.length > 15 ? model.slice(0, 15) + '..' : model) }}
+            </option>
+          }
+        </select>
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </div>
       <div style="display: flex; align-items: center">
         <button
           (click)="clickDeleteChatButton()"
@@ -32,8 +42,9 @@
           [style.justify-content]="message.role === 'user' ? 'flex-end' : 'flex-start'"
           class="message_row">
           <div
+            [style.max-width]="message.role === 'user' ? '70%' : 'unset'"
             [style.background-color]="message.role === 'user' ? 'rgb(35 35 35)' : 'unset'"
-            [style.padding]="message.role === 'user' ? '10px 15px' : 'unset'"
+            [style.padding]="message.role === 'user' ? '7px 12px' : 'unset'"
             class="message">
             @if (message.role === 'assistant') {
               <img class="dynamics_icon" src="assets/images/icon-384x384.svg" alt="dynamics icon">

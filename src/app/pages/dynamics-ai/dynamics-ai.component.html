@@ -1,13 +1,13 @@
 <div class="main_block">
-  <h1>Dynamics Ai</h1>
+  <h1>{{ title }}</h1>
   <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 50px">
     <h2>Chats</h2>
     <button
       (click)="createNewChat()"
-      class="create_chat_btn"><mat-icon style="color: #a6a6a6; width: 31px; height: 31px; font-size: 31px">add</mat-icon></button>
+      class="create_chat_btn"><mat-icon style="color: #0070f3; width: 31px; height: 31px; font-size: 31px">add</mat-icon></button>
   </div>
   @if (chats) {
-    <div appResizeHeight [size]="380" class="chats_block">
+    <div class="chats_block">
       @for (item of chats; track chats) {
         @if ($index !== 0 && $index !== chats.length) {
           <div class="line"></div>

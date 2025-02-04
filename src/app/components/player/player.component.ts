@@ -85,6 +85,8 @@ export class PlayerComponent implements OnDestroy, OnInit {
   endOfTrack: string = '--:--';
   isNextCalled: boolean = false;
   audio_recommended_list: any = [0];
+  seekCircleShow: boolean = false;
+  seekCircleTimeOut: any;
   views!: number | null;
   likes!: number | null;
   description!: string | null;
@@ -252,6 +254,16 @@ export class PlayerComponent implements OnDestroy, OnInit {
       this.media.load();
       this.media.remove();
     }
+  }
+
+  seekCircleSetTimeOut() {
+    clearTimeout(this.seekCircleTimeOut);
+
+    this.seekCircleShow = true;
+    this.seekCircleTimeOut = setTimeout(() => {
+        this.seekCircleShow = false;
+        this.seekBarContainerOpenPlayer.nativeElement.style.overflow = 'hidden';
+      }, 1000);
   }
 
   getFormattedInt(int: number, text: string): string {

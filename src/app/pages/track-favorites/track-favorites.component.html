@@ -1,16 +1,18 @@
 <div class="main_block">
   <div
-    [style.background-color]="trackImageBackgroundColor"
     class="layer">
     <div
       class="scroll_box">
       @if (trackList && trackList.length !== 0) {
-        <div (click)="setTrack(trackList[0].videoId, 0)" class="play_list">
-          @if (listIsPlay) {
-            <img class="music_playGIF" src="assets/images/icons/music_play.gif">
-          } @else {
-            <mat-icon>play_arrow</mat-icon>
-          }
+        <div class="search_play_block">
+          <h1 #favoritesTitle>Favorites</h1>
+          <div (click)="setTrack(trackList[0].videoId, 0)" class="play_list">
+            @if (listIsPlay) {
+              <img class="music_playGIF" src="assets/images/icons/music_play.gif">
+            } @else {
+              <mat-icon>play_arrow</mat-icon>
+            }
+          </div>
         </div>
       }
       <div class="header_block">
@@ -22,10 +24,18 @@
       </div>
       <div
         class="block"
+        #scrollContainer
+        (scroll)="onScroll()"
         style="overflow-y: auto; padding-bottom: 150px; padding-top: 45px"
-        appResizeHeight [size]="216">
+        appResizeHeight [size]="116">
         <div class="title_block">
-          <h1>Favorites</h1>
+          <div class="search_block">
+            <input
+              #searchInput
+              (input)="onSearch(searchInput.value)"
+              type="text" placeholder="Search in Favorites" class="search">
+            <img src="assets/images/icons/search.png">
+          </div>
           @if (trackList && trackList.length !== 0) {
             <span>{{ trackList.length }} {{ trackList.length === 1 ? 'track' : 'tracks' }}</span>
           }
@@ -47,40 +57,44 @@
             </div>
           }
         }
-        @for (track of trackList; track $index) {
+        @for (track of searchQuery !== '' ? filteredTrackList : trackList; track $index) {
           <div class="track_block">
             <div
               [style.outline]="track.videoId === trackPlayId ? 'rgb(255 255 255 / 10%) solid 1px' : 'none'"
-              [style.background-color]="track.videoId === trackPlayId ? 'rgb(49 49 49)' : '#1a1a1a'"
+              [style.background-color]="track.videoId === trackPlayId ? trackImageBackgroundColor : '#1a1a1a'"
               class="track_box">
-              <div (click)="setTrack(track.videoId, $index)" style="display: flex; align-items: center; width: 100%">
-                <div class="track_image">
-                  <div>
-                    <div [style.background-color]="track.videoId === trackPlayId ? 'unset' : 'rgb(0 0 0 / 30%)'">
-                      @if (track.videoId !== trackPlayId && listIsPlay) {
-                        <mat-icon style="">play_arrow</mat-icon>
-                      } @else {
-                        @if (!listIsPlay) {
-                          <mat-icon style="">play_arrow</mat-icon>
-                        } @else {
-                          <img src="assets/images/icons/music_play.gif">
-                        }
-                      }
-                    </div>
-                    <img class="image" [src]="track.image" alt="track image">
-                  </div>
-                </div>
-                <div class="track_info_box">
-                  <h4>{{ track.title }}</h4>
-                  <span>{{ track.author.name.length > 20 ? track.author.name.slice(0, 20) + '...' : track.author.name }}</span>
-                </div>
-              </div>
-              <div class="control_box">
-                <button (click)="remFavoriteTrack(track.videoId)" class="favorite_button">
-                  <img src="assets/images/icons/favorite.png">
-                </button>
-                <span class="track_duration">{{ formatTime(track.track_duration) }}</span>
-              </div>
+             <div
+               [style.background-color]="track.videoId === trackPlayId ? 'rgb(0 0 0 / 83%)' : '#1a1a1a'"
+               class="track_box_layer">
+               <div (click)="setTrack(track.videoId, $index)" style="display: flex; align-items: center; width: 100%">
+                 <div class="track_image">
+                   <div>
+                     <div [style.background-color]="track.videoId === trackPlayId ? 'unset' : 'rgb(0 0 0 / 30%)'">
+                       @if (track.videoId !== trackPlayId && listIsPlay) {
+                         <mat-icon style="">play_arrow</mat-icon>
+                       } @else {
+                         @if (!listIsPlay) {
+                           <mat-icon style="">play_arrow</mat-icon>
+                         } @else {
+                           <img src="assets/images/icons/music_play.gif">
+                         }
+                       }
+                     </div>
+                     <img class="image" [src]="track.image" alt="track image">
+                   </div>
+                 </div>
+                 <div class="track_info_box">
+                   <h4>{{ track.title }}</h4>
+                   <span>{{ track.author.name.length > 20 ? track.author.name.slice(0, 20) + '...' : track.author.name }}</span>
+                 </div>
+               </div>
+               <div class="control_box">
+                 <button (click)="remFavoriteTrack(track.videoId)" class="favorite_button">
+                   <img src="assets/images/icons/favorite.png">
+                 </button>
+                 <span class="track_duration">{{ formatTime(track.track_duration) }}</span>
+               </div>
+             </div>
             </div>
           </div>
         }

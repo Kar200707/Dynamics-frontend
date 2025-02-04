@@ -114,31 +114,36 @@
           </div>
           <div (scroll)="trackBlockScroll($event)" class="track_block">
             <div class="track_controllers_block">
-              <div class="slide_box">
-                <div
-                  [style.scale]="isPlaying ? '1' : '0.9'"
-                  (click)="playPause()"
-                  [style.background-color]="type === 'video' ? '#0f0f0f' : 'unset'"
-                  [style.width]="type === 'video' ? '100%' : '310px'"
-                  [style.height]="type === 'video' ? '174px' : '310px'"
-                  class="open_player_track_img_block">
-                  @if (type === 'audio') {
-                    <img
-                      [style.display]="audio_info.image != '' ? 'block' : 'none'"
-                      class="open_player_track_image"
-                      [src]="audio_info.image" alt="track image">`
-                  }
-                  <video [style.display]="type === 'video' ? 'block' : 'none'" #videoElement></video>
-                </div>
-                <div style="height: 100px">
-                  <h2
-                    style="margin-top: 14px; font-size: 23px;"
-                    class="track_name">{{ audio_info.title }}</h2>
-                  <h4
-                    style="font-size: 16px; font-weight: lighter"
-                    class="track_artist">{{ audio_info.author.name }}</h4>
-                </div>
-              </div>
+<!--              <div class="track_next_prev_slide_box">-->
+<!--                @for (item of trackList; track item) {-->
+                  <div
+                    class="slide_box">
+                    <div
+                      [style.scale]="isPlaying ? '1' : '0.9'"
+                      (click)="playPause()"
+                      [style.background-color]="type === 'video' ? '#0f0f0f' : 'unset'"
+                      [style.width]="type === 'video' ? '100%' : '330px'"
+                      [style.height]="type === 'video' ? '174px' : '330px'"
+                      class="open_player_track_img_block">
+                      @if (type === 'audio') {
+                        <img
+                          [style.display]="audio_info.image != '' ? 'block' : 'none'"
+                          class="open_player_track_image"
+                          [src]="audio_info.image" alt="track image">`
+                      }
+                      <video [style.display]="type === 'video' ? 'block' : 'none'" #videoElement></video>
+                    </div>
+                    <div style="height: 100px">
+                      <h2
+                        style="margin-top: 14px; font-size: 23px;"
+                        class="track_name">{{ audio_info.title }}</h2>
+                      <h4
+                        style="font-size: 16px; font-weight: lighter"
+                        class="track_artist">{{ audio_info.author.name }}</h4>
+                    </div>
+                  </div>
+<!--                }-->
+<!--              </div>-->
               <div class="media_all_button_block">
                 <div style="display: flex">
                   <button (click)="share()" class="share_button" mat-icon-button>
@@ -162,13 +167,12 @@
                 moveLimit = 0;
                 seekBarProgressOpenPlayer.style.transition = '.2s linear';
                 seekBarProgressOpenPlayer.style.backgroundColor = 'hsla(0, 0%, 100%, .65)';
-                seekBarContainerOpenPlayer.style.overflow = 'hidden';
-                circle.style.display = 'none';"
+                seekCircleSetTimeOut();"
                 (touchstart)="isClickUp = false;
                 this.pause();
                 seekBarProgressOpenPlayer.style.backgroundColor = 'white';
                 seekBarContainerOpenPlayer.style.overflow = 'visible';
-                circle.style.display = 'block';
+                seekCircleShow = true;
                 seekMoveOpenPlayer($event, 'touch');
                 seekBarProgressOpenPlayer.style.transition = 'unset';"
                 (touchmove)="!isClickUp ? seekMoveOpenPlayer($event, 'touch') : false; $event.preventDefault(); this.pause();"
@@ -181,7 +185,9 @@
                   class="slider-1">
                   <div class="track">
                     <div #seekBarProgressOpenPlayer class="swapper">
-                      <div #circle class="circle"></div>
+                      <div
+                        [style.display]="seekCircleShow ? 'block' : 'none'"
+                        class="circle"></div>
                     </div>
                   </div>
                 </div>
@@ -201,7 +207,7 @@
                   [style.rotate]="isPlaying ? '180deg' : '0deg'"
                   [style.color]="trackThemeColor ? trackThemeColor : 'black'"
                   (click)="playPause()" title="play" class="play_pause_button_open_player">
-                  <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+                  <img [src]=" isPlaying ? 'assets/images/icons/pause_circle_icon.png' : 'assets/images/icons/play_circle_icon.png'">
                 </button>
                 <div (click)="next()" class="next_open_player">
                   <img src="assets/images/icons/next.svg">
@@ -211,54 +217,58 @@
 <!--                </div>-->
               </div>
             </div>
-            <div *ngIf="audio_recommended_list[0] !== 0" class="track_info_block">
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 20px">
-                @if (views !== 0 && views) {
-                  <div class="views">
-                    <span>{{ getFormattedInt(views, 'listeners') }}</span>
-                    <img src="assets/images/icons/headphone.svg" alt="headphone icon">
-                  </div>
-                }
-                @if (likes !== 0 && likes) {
-                  <div class="likes">
-                    <span>{{ getFormattedInt(likes, 'likes') }}</span>
-                    <mat-icon>thumb_up</mat-icon>
-                  </div>
-                }
-              </div>
-              @if (audio_info) {
-                @if (audio_recommended_list) {
-                  <div class="recommended-block">
-                    <div #recTracksBlock class="scroll_box">
-                      @if (audio_recommended_list[0] !== 0) {
-                        @for (track of audio_recommended_list; track audio_recommended_list) {
-                          <div (click)="setTrack(track.videoId, $index, audio_recommended_list)" class="track_rec_block">
-                            <img [src]="track.image" alt="">
-                            <h3>{{ track.title.length > 60 ? track.title.slice(0, 60) + '...' : track.title }}</h3>
-                            <span>{{ track.author.name.length > 23 ? track.author.name.slice(0, 23) + '...' : track.author.name }}</span>
-                          </div>
-                        }
-                      } @else {
-                        @for (num of loadArray; track loadArray) {
-                          <div class="track_rec_block">
-                            <div style="width: 130px; height: 130px; background-color: #2a2a2a; border-radius: 13px"></div>
-                            <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
-                            <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
-                          </div>
-                        }
-                      }
-                    </div>
-                  </div>
-                }
-                @if (description) {
-                  <div #description_block class="description-block">
-                    <p [style.max-height]="isOpenedDescription ? 'unset' : '170px'">{{ description }}</p>
-                    <button (click)="isOpenedDescription = !isOpenedDescription" mat-button>{{ isOpenedDescription ? 'Hide' : 'View all' }}</button>
-                  </div>
-                } @else {
-                  <div style="height: 170px" class="description-block"></div>
-                }
-              }
+            <div
+              [style.background-color]="playerImageDominatColor2"
+              *ngIf="audio_recommended_list[0] !== 0" class="track_info_block">
+             <div class="track_info_block_layer">
+               <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 20px">
+                 @if (views !== 0 && views) {
+                   <div class="views">
+                     <span>{{ getFormattedInt(views, 'listeners') }}</span>
+                     <img src="assets/images/icons/headphone.svg" alt="headphone icon">
+                   </div>
+                 }
+                 @if (likes !== 0 && likes) {
+                   <div class="likes">
+                     <span>{{ getFormattedInt(likes, 'likes') }}</span>
+                     <mat-icon>thumb_up</mat-icon>
+                   </div>
+                 }
+               </div>
+               @if (audio_info) {
+                 @if (audio_recommended_list) {
+                   <div class="recommended-block">
+                     <div #recTracksBlock class="scroll_box">
+                       @if (audio_recommended_list[0] !== 0) {
+                         @for (track of audio_recommended_list; track audio_recommended_list) {
+                           <div (click)="setTrack(track.videoId, $index, audio_recommended_list)" class="track_rec_block">
+                             <img [src]="track.image" alt="">
+                             <h3>{{ track.title.length > 60 ? track.title.slice(0, 60) + '...' : track.title }}</h3>
+                             <span>{{ track.author.name.length > 23 ? track.author.name.slice(0, 23) + '...' : track.author.name }}</span>
+                           </div>
+                         }
+                       } @else {
+                         @for (num of loadArray; track loadArray) {
+                           <div class="track_rec_block">
+                             <div style="width: 130px; height: 130px; background-color: #2a2a2a; border-radius: 13px"></div>
+                             <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
+                             <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
+                           </div>
+                         }
+                       }
+                     </div>
+                   </div>
+                 }
+                 @if (description) {
+                   <div #description_block class="description-block">
+                     <p [style.max-height]="isOpenedDescription ? 'unset' : '170px'">{{ description }}</p>
+                     <button (click)="isOpenedDescription = !isOpenedDescription" mat-button>{{ isOpenedDescription ? 'Hide' : 'View all' }}</button>
+                   </div>
+                 } @else {
+                   <div style="height: 170px" class="description-block"></div>
+                 }
+               }
+             </div>
             </div>
           </div>
           @if (isOpenedTimerBottomSheet) {

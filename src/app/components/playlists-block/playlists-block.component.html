@@ -36,12 +36,36 @@
 <!--      </div>-->
 <!--    </div>-->
 <!--  </div>-->
+  <div style="margin-bottom: 150px" class="right_block">
+    <div class="categories">
+      <div class="block">
+        <div routerLink="/home/category/rap" class="box rap">
+          <h5>Rap</h5>
+          <img src="assets/images/categories/rap.png">
+        </div>
+        <div routerLink="/home/category/hip-hop" class="box pop-hiphop">
+          <h5>Hip hop</h5>
+          <img src="assets/images/categories/hip-hop.png">
+        </div>
+      </div>
+      <div style="margin-top: 10px" class="block">
+        <div routerLink="/home/category/rock" class="box rock">
+          <h5>Rock</h5>
+          <img src="../../../assets/images/categories/rock.png">
+        </div>
+        <div routerLink="/home/category/jazz" class="box jazz">
+          <h5>Jazz</h5>
+          <img src="assets/images/categories/jazz.png">
+        </div>
+      </div>
+    </div>
+  </div>
   @if (innerWidth > 850) {
     <div style="width: 95%; text-align: end">
       <button (click)="isOpenedViewAll3 = !isOpenedViewAll3; listen_again_block3.style.height = isOpenedViewAll3 ? 'unset' : '212px'" mat-button>View all</button>
     </div>
   }
-  <div #listen_again_block3 style="margin-bottom: 150px" class="listen_again_block">
+  <div #listen_again_block3 class="listen_again_block">
     @if (newTrackListLoaded) {
       @for (track of newReleasesList; track newReleasesList) {
         <div (click)="setTrack(track.videoId, $index, newReleasesList)" class="track_block">
@@ -53,7 +77,7 @@
     } @else {
       @for (num of loadArray; track loadArray) {
         <div class="track_block">
-          <div style="width: 150px; height: 150px; background-color: #2a2a2a; border-radius: 13px"></div>
+          <div style="width: 150px; height: 150px; background-color: #2a2a2a; border-radius: 6px"></div>
           <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
           <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
         </div>
@@ -78,7 +102,7 @@
     } @else {
       @for (num of loadArray; track loadArray) {
         <div class="track_block">
-          <div style="width: 150px; height: 150px; background-color: #2a2a2a; border-radius: 13px"></div>
+          <div style="width: 150px; height: 150px; background-color: #2a2a2a; border-radius: 6px"></div>
           <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
           <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
         </div>
@@ -86,30 +110,6 @@
     }
   </div>
   <h2 class="title_playlists">Armenian New Collections</h2>
-  <div class="right_block">
-    <div class="categories">
-      <div class="block">
-        <div routerLink="/home/category/rap" class="box rap">
-          <h5>Rap</h5>
-          <img src="assets/images/categories/rap.png">
-        </div>
-        <div routerLink="/home/category/hip-hop" class="box pop-hiphop">
-          <h5>Hip hop</h5>
-          <img src="assets/images/categories/hip-hop.png">
-        </div>
-      </div>
-      <div style="margin-top: 10px" class="block">
-        <div routerLink="/home/category/rock" class="box rock">
-          <h5>Rock</h5>
-          <img src="../../../assets/images/categories/rock.png">
-        </div>
-        <div routerLink="/home/category/jazz" class="box jazz">
-          <h5>Jazz</h5>
-          <img src="assets/images/categories/jazz.png">
-        </div>
-      </div>
-    </div>
-  </div>
   @if (historyList?.length !== 0) {
     @if (innerWidth > 850) {
       <div style="width: 95%; text-align: end">
@@ -128,7 +128,7 @@
       } @else {
         @for (num of loadArray; track loadArray) {
           <div class="track_block">
-            <div style="width: 150px; height: 150px; background-color: #2a2a2a; border-radius: 13px"></div>
+            <div style="width: 150px; height: 150px; background-color: #2a2a2a; border-radius: 6px"></div>
             <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
             <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
           </div>

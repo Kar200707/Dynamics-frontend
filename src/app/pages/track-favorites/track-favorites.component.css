@@ -6,7 +6,7 @@
 .back_button_block {
   width: 100%;
   display: flex;
-  align-items: start;
+  align-items: center;
   margin-top: env(safe-area-inset-top);
 }
 
@@ -20,6 +20,47 @@
   color: white;
 }
 
+h1 {
+  transition: transform 0.3s ease-in-out;
+}
+
+.search_play_block {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  right: 20px;
+  top: calc(40px + env(safe-area-inset-top));
+  z-index: 4;
+  width: calc(100% - 40px);
+}
+
+.search_block {
+  position: relative;
+  width: calc(100% - 100px);
+}
+
+.search_block > img {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 11px;
+  right: 10px;
+}
+
+.search {
+  width: 100%;
+  background-color: #1a1b1f;
+  padding: 8px 13px;
+  border-radius: 10px;
+  border: none;
+  font-size: 17px;
+  outline: none;
+  font-family: "Nunito", sans-serif;
+  color: white;
+  padding-right: 40px;
+}
+
 .play_list {
   width: 55px;
   height: 55px;
@@ -28,16 +69,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  right: 20px;
-  top: calc(40px + env(safe-area-inset-top));
-  z-index: 4;
 }
 
 .play_list > mat-icon {
-  font-size: 44px;
-  width: 45px;
-  height: 44px;
+  font-size: 39px;
+  width: 40px;
+  height: 39px;
   color: white;
 }
 
@@ -48,10 +85,11 @@
 .title_block {
   width: 100%;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   margin-top: 15px;
   padding: 0 20px;
+  margin-bottom: 30px;
 }
 
 .title_block > span {
@@ -84,11 +122,15 @@ h1 {
   background-color: #1a1a1a;
   border-radius: 15px;
   overflow: hidden;
+}
+
+.track_box_layer {
   position: relative;
   display: flex;
   transition: .3s background-color;
   align-items: center;
   justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.55);
 }
 
 .track_image {
@@ -132,7 +174,6 @@ h1 {
 
 .music_playGIF {
   position: absolute;
-  inset: 0;
   margin: auto;
   width: 27px;
   height: 27px;
@@ -170,7 +211,7 @@ h1 {
 }
 
 .track_duration {
-  margin-right: 3px;
+  margin-right: 12px;
   color: #b2b2b2;
   font-size: 15px;
   font-weight: lighter;

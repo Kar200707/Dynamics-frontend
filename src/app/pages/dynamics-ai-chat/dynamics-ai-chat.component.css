@@ -2,6 +2,8 @@
   background-color: #111111;
   padding: 10px;
   width: 100%;
+  position: relative;
+  border-radius: 0 0 30px 30px;
 }
 
 pre {
@@ -17,7 +19,8 @@ pre::-webkit-scrollbar {
   border-radius: 0 0 30px 30px;
   border-bottom: 1px solid #161616;
   padding-top: 30%;
-  height: calc(100vh - 188px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
+  margin-top: -6px;
+  height: calc(100vh - 128px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
 }
 
 .chat_messages_scroll::-webkit-scrollbar {
@@ -108,7 +111,7 @@ pre::-webkit-scrollbar {
 
 .text_send_block > form {
   width: calc(100% - 20px);
-  margin: 9px 10px;
+  margin: 11px 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,7 +121,7 @@ pre::-webkit-scrollbar {
   outline: none;
   background-color: #262626;
   width: 100%;
-  padding: 10px 15px 11px 15px;
+  padding: 8px 15px 9px 15px;
   font-family: "Nunito", sans-serif;
   font-size: 20px;
   border-radius: 30px;
@@ -127,13 +130,7 @@ pre::-webkit-scrollbar {
 }
 
 .text_send_input::placeholder {
-  color: #aaa;
-  font-weight: normal;
-  transition: all 0.3s ease;
-}
-
-.text_send_input:focus::placeholder {
-  transform: translateY(50px);
+  color: #797979;
 }
 
 .send_btn {
@@ -144,7 +141,7 @@ pre::-webkit-scrollbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 8px;
   transition: background-color ease 0.2s;
 }
 
@@ -156,8 +153,6 @@ pre::-webkit-scrollbar {
   width: 25px;
   height: 25px;
   margin-left: 5px;
-  padding: 3px;
-  background-color: rgb(45,45,45);
   border-radius: 50%;
 }
 
@@ -270,4 +265,35 @@ pre::-webkit-scrollbar {
   width: 100%;
   justify-content: center;
   align-items: center;
+}
+
+.select_box {
+  position: absolute;
+  left: 50%;
+  transform: translate(calc(-50% - 10px));
+  top: calc(env(safe-area-inset-top) + 0);
+  display: flex;
+  align-items: center;
+}
+
+.model_select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: center;
+  -moz-appearance: none;
+  background-color: transparent;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-size: 16px;
+  border: none;
+  color: #dcdcdc;
+  outline: none;
+  cursor: pointer;
+}
+
+.select_box > mat-icon {
+  pointer-events: none;
+  font-size: 25px;
+  color: #ffffff;
 }

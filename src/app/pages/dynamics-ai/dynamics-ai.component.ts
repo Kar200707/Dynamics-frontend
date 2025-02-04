@@ -5,6 +5,7 @@ import { ResizeHeightDirective } from "../../directives/resize-height.directive"
 import {Router, RouterLink} from "@angular/router";
 import { ChatsCacheService } from "../../services/chats-cache.service";
 import {MatIcon} from "@angular/material/icon";
+import {BleClient} from "@capacitor-community/bluetooth-le";
 
 @Component({
   selector: 'app-dynamics-ai',
@@ -19,6 +20,7 @@ import {MatIcon} from "@angular/material/icon";
 })
 export class DynamicsAiComponent implements OnInit {
   token: string | null = localStorage.getItem('token');
+  title: string = "Dynamics Ai";
   chats: any[] = [];
 
   constructor(
@@ -30,6 +32,7 @@ export class DynamicsAiComponent implements OnInit {
   async ngOnInit() {
     await this.loadChatsFromCache();
     this.updateChatsFromServer();
+
   }
 
   private async loadChatsFromCache() {

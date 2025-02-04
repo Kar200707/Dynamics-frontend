@@ -4,18 +4,20 @@
 
 h1 {
   color: white;
-  margin-top: 40px;
+  margin-top: calc(40px + env(safe-area-inset-top));
   font-size: 35px;
   font-weight: bold;
   font-family: "Nunito", sans-serif;
   background: linear-gradient(90deg, #0022ff, #0578f8);
   -webkit-background-clip: text;
+  text-align: center;
   -webkit-text-fill-color: transparent;
 }
 
 .chats_block {
   margin-top: 30px;
   overflow-y: scroll;
+  height: calc(100vh - 380px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
 }
 
 h2 {
@@ -31,7 +33,7 @@ h2 {
 
 .chat {
   width: 100%;
-  padding: 10px 0;
+  padding: 10px 20px;
   margin-top: 5px;
   height: 80px;
   overflow: hidden;
@@ -41,15 +43,17 @@ h2 {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
+  background-color: #0e0e0e;
+  border-radius: 12px;
 }
 
 .line {
   content: "";
   display: block;
-  width: 100%;
+  width: calc(100% - 20px);
   height: 1px;
   background: rgba(255, 255, 255, 0.08);
-  margin-top: 10px;
+  margin: 8px 10px;
 }
 
 .chat > h3 {
@@ -67,7 +71,7 @@ h2 {
 .create_chat_btn {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.13);
+  background-color: rgba(255, 255, 255, 0.06);
   justify-content: center;
   border: none;
   padding: 5px;

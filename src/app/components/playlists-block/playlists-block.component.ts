@@ -4,12 +4,13 @@ import {Router, RouterLink} from "@angular/router";
 import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
 import localforage from 'localforage';
-import {environment} from "../../../environment/environment";
+import {environment, host} from "../../../environment/environment";
 import {MatIcon} from "@angular/material/icon";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {MatButton} from "@angular/material/button";
 import {AudioCacheService} from "../../services/audio-cache.service";
+import {ImageDominantColorService} from "../player/player_functions/image-dominat-color.service";
 
 @Component({
   selector: 'app-playlists-block',
@@ -35,13 +36,16 @@ export class PlaylistsBlockComponent implements OnInit {
   devices: any[] = [];
   newReleasesList?: any[];
   newCollectionsList?: any[];
+  isPlaying: boolean = false;
   trackListLoaded: boolean = false;
+  trackPlayId: string = '';
   newTrackListLoaded: boolean = false;
   newCollectionsListLoaded: boolean = false;
   isOpenedViewAll1:boolean = false;
   isOpenedViewAll2:boolean = false;
   isOpenedViewAll3:boolean = false;
-  loadArray = [
+  typesListDictionary: number[] = [1, 2, 3];
+  loadArray: number[] = [
     1,
     2,
     3,
@@ -57,6 +61,7 @@ export class PlaylistsBlockComponent implements OnInit {
     private cacheService: AudioCacheService,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    private imgColorService: ImageDominantColorService,
     private requestService: RequestService,
     private playerController: PlayerControllerService) {}
 
@@ -67,6 +72,20 @@ export class PlaylistsBlockComponent implements OnInit {
     await this.loadNewCollectionsList();
 
     let lastUpdateTime = new Date();
+
+    this.playerController.trackId$.subscribe(id => {
+      this.trackPlayId = id;
+    })
+
+    this.playerController.actPlayer$.subscribe(act => {
+      console.log(act)
+      if (act === 'pause') {
+        this.isPlaying = false;
+      }
+      if (act === 'play') {
+        this.isPlaying = true;
+      }
+    })
 
     document.addEventListener('visibilitychange', async () => {
       if (document.visibilityState === 'visible') {
@@ -92,6 +111,10 @@ export class PlaylistsBlockComponent implements OnInit {
         }
       }
     });
+  }
+
+  async getImageColor(trackImage: string) {
+   return await this.imgColorService.getDominantColors(host + 'media/cropImage?url=' + trackImage);
   }
 
   async loadNewReleasesList() {

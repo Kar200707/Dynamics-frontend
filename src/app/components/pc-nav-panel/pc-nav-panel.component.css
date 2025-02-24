@@ -149,3 +149,17 @@
   font-size: 15px;
   font-weight: lighter;
 }
+
+.dynamics_ai {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  background-color: #4b4b4b;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.dynamics_ai > img {
+  width: 38px;
+  height: 38px;
+}

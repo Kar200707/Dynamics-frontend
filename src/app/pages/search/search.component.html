@@ -54,7 +54,7 @@
           </div>
         } @else {
           <div class="search_history_block">
-            @for (search of searchHistory; track searchHistory) {
+            @for (search of searchHistory; track $index) {
               <div style="display: flex; align-items: center">
                 <button (click)="setSearchHistory(search.text)" class="history_block">
                   <mat-icon>search</mat-icon>

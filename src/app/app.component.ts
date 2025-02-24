@@ -6,6 +6,7 @@ import {PlayerComponent} from "./components/player/player.component";
 import {LayoutComponent} from "./layout/layout.component";
 import localforage from "localforage";
 import { App, URLOpenListenerEvent } from '@capacitor/app';
+import {Browser} from "@capacitor/browser";
 
 @Component({
   selector: 'app-root',
@@ -27,12 +28,29 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private zone: NgZone) { this.initializeApp() }
 
   async ngOnInit() {
+    this.setupDeepLinkListener();
     await localforage.removeItem("historyList");
     await localforage.removeItem("newReleasesList");
     await localforage.removeItem("newCollectionsList");
     document.addEventListener('DOMContentLoaded', this.setSafeAreaInsets);
     const safeAreaInsetTop = window.innerHeight - document.documentElement.clientHeight;
     document.documentElement.style.setProperty('--safe-area-inset-top', `${safeAreaInsetTop}px`);
+  }
+
+  async setupDeepLinkListener() {
+    await App.addListener('appUrlOpen', async (event: any) => {
+      const url = event.url;
+
+      const urlParams = new URLSearchParams(new URL(url).search);
+      const token = urlParams.get('token');
+
+      if (token) {
+        localStorage.setItem('token', token);
+        this.router.navigate(['/']);
+        await Browser.close();
+        console.log(token)
+      }
+    });
   }
 
   setSafeAreaInsets () {

@@ -21,8 +21,8 @@
       </div>
     }
     <div
-      [style.background-image]="isOpenedMobilePlayer ? 'linear-gradient(to bottom, rgb(47 47 47 / 0%), rgb(0 0 0 / 77%))' : 'unset'"
-      [style.background-color]="!isOpenedMobilePlayer ? 'rgba(25,25,25,0.15)' : 'unset'"
+      [style.background-image]="isOpenedMobilePlayer ? 'linear-gradient(to bottom, rgb(47 47 47 / 20%), rgb(0 0 0 / 77%))' : 'unset'"
+      [style.background-color]="!isOpenedMobilePlayer ? 'rgb(25 25 25 / 50%)' : 'unset'"
       [style.padding]="isOpenedMobilePlayer ? '0' : '0 8px'"
       class="layer_2">
       <div
@@ -71,10 +71,10 @@
                 <button
                   [style.rotate]="isPlaying ? '180deg' : '0deg'"
                   [style.color]="trackThemeColor ? trackThemeColor : 'black'"
-                  [style.width]="innerWidth > 850 ? '38px' : '40px'"
-                  [style.height]="innerWidth > 850 ? '38px' : '40px'"
+                  [style.width]="innerWidth > 850 ? '38px' : '50px'"
+                  [style.height]="innerWidth > 850 ? '38px' : '50px'"
                   (click)="playPause()" title="play" class="play_pause_button">
-                  <mat-icon [style.color]="playerImageDominatColor">{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+                  <img [src]=" isPlaying ? 'assets/images/icons/pause_circle_icon.png' : 'assets/images/icons/play_circle_icon.png'">
                 </button>
                 <div (click)="next()" class="next">
                   <img src="assets/images/icons/next.svg">
@@ -167,7 +167,8 @@
                 moveLimit = 0;
                 seekBarProgressOpenPlayer.style.transition = '.2s linear';
                 seekBarProgressOpenPlayer.style.backgroundColor = 'hsla(0, 0%, 100%, .65)';
-                seekCircleSetTimeOut();"
+                seekCircleShow = false;
+                seekBarContainerOpenPlayer.style.overflow = 'hidden';"
                 (touchstart)="isClickUp = false;
                 this.pause();
                 seekBarProgressOpenPlayer.style.backgroundColor = 'white';
@@ -218,7 +219,6 @@
               </div>
             </div>
             <div
-              [style.background-color]="playerImageDominatColor2"
               *ngIf="audio_recommended_list[0] !== 0" class="track_info_block">
              <div class="track_info_block_layer">
                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 20px">
@@ -240,7 +240,7 @@
                    <div class="recommended-block">
                      <div #recTracksBlock class="scroll_box">
                        @if (audio_recommended_list[0] !== 0) {
-                         @for (track of audio_recommended_list; track audio_recommended_list) {
+                         @for (track of audio_recommended_list; track $index) {
                            <div (click)="setTrack(track.videoId, $index, audio_recommended_list)" class="track_rec_block">
                              <img [src]="track.image" alt="">
                              <h3>{{ track.title.length > 60 ? track.title.slice(0, 60) + '...' : track.title }}</h3>
@@ -278,4 +278,7 @@
         </div>
     </div>
   </div>
+  @if (isOpenedMobilePlayer) {
+    <div class="bottom_nav_layer_gradient"></div>
+  }
 </div>

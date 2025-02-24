@@ -3,20 +3,22 @@
     <button mat-icon-button style="margin-top: env(safe-area-inset-top);">
       <mat-icon style="color: white" routerLink="/home">arrow_back_ios</mat-icon>
     </button>
-    <div (click)="toggleAccountInfoBlock($event)" class="account">
-      <img src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg">
-      <div *ngIf="isOpenedAccountInfoBlock" class="layer">
-        <div class="account_info_block" (click)="$event.stopPropagation()">
-          <h3>{{ account.name }}</h3>
-          <p>{{ account.email }}</p>
-          <span>{{ account.bio }}</span>
-          <button mat-button color="warn" (click)="logout()">Logout <mat-icon>logout</mat-icon></button>
-          @if (role === 'admin') {
-            <button style="margin-left: 10px" mat-button routerLink="/admin">
-              Admin <mat-icon>shield_person</mat-icon>
-            </button>
-          }
-        </div>
+    @if (avatar) {
+      <div (click)="toggleAccountInfoBlock()" class="account">
+        <img [src]="avatar">
+      </div>
+    }
+    <div *ngIf="isOpenedAccountInfoBlock" (click)="isOpenedAccountInfoBlock = false" class="layer">
+      <div class="account_info_block" (click)="$event.stopPropagation()">
+        <h3>{{ account.name }}</h3>
+        <p>{{ account.email }}</p>
+        <span>{{ account.bio }}</span>
+        <button mat-button color="warn" (click)="logout()">Logout <mat-icon>logout</mat-icon></button>
+        @if (role === 'admin') {
+          <button style="margin-left: 10px" mat-button routerLink="/admin">
+            Admin <mat-icon>shield_person</mat-icon>
+          </button>
+        }
       </div>
     </div>
   </div>

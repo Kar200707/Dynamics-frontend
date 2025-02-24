@@ -1,6 +1,10 @@
 <div class="main_block">
-  <h1>{{ title }}</h1>
-  <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 50px">
+  @if (innerWidth < 850) {
+    <h1>{{ title }}</h1>
+  }
+  <div
+    [style.margin-top]="innerWidth < 850 ? '50px' : '20px'"
+    style="display: flex; align-items: center; justify-content: space-between;">
     <h2>Chats</h2>
     <button
       (click)="createNewChat()"
@@ -8,11 +12,11 @@
   </div>
   @if (chats) {
     <div class="chats_block">
-      @for (item of chats; track chats) {
+      @for (item of chats; track $index) {
         @if ($index !== 0 && $index !== chats.length) {
           <div class="line"></div>
         }
-        <div [routerLink]="'chat/' + item._id" class="chat">
+        <div (click)="innerWidth > 850 ? setChat(item._id) : router.navigate(['chat/', item._id])" class="chat">
           <h3>{{ item.chat.length !== 0 ? item.chat[0].content : 'Empty chat' }}</h3>
           <p>{{ item.chat.length !== 0 ? item.chat[1].content : 'Click here for messaging' }}</p>
         </div>

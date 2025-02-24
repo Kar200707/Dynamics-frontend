@@ -5,6 +5,8 @@ PODS:
     - Capacitor
   - CapacitorApp (6.0.1):
     - Capacitor
+  - CapacitorBrowser (6.0.5):
+    - Capacitor
   - CapacitorCommunityBluetoothLe (6.1.0):
     - Capacitor
   - CapacitorCordova (6.2.0)
@@ -18,11 +20,22 @@ PODS:
     - Capacitor
   - CapacitorStatusBar (6.0.1):
     - Capacitor
+  - CocoaLumberjack (3.8.5):
+    - CocoaLumberjack/Core (= 3.8.5)
+  - CocoaLumberjack/Core (3.8.5)
+  - JusticointeractiveCapacitorCarAudio (0.0.1-beta1):
+    - Capacitor
+    - Kingfisher (~> 6.0)
+    - SVGKit
+  - Kingfisher (6.3.1)
+  - SVGKit (3.0.0):
+    - CocoaLumberjack (~> 3.0)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorActionSheet (from `../../node_modules/@capacitor/action-sheet`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
   - "CapacitorCommunityBluetoothLe (from `../../node_modules/@capacitor-community/bluetooth-le`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
@@ -30,6 +43,13 @@ DEPENDENCIES:
   - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - "JusticointeractiveCapacitorCarAudio (from `../../node_modules/@justicointeractive/capacitor-car-audio`)"
+
+SPEC REPOS:
+  trunk:
+    - CocoaLumberjack
+    - Kingfisher
+    - SVGKit
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -38,6 +58,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/action-sheet"
   CapacitorApp:
     :path: "../../node_modules/@capacitor/app"
+  CapacitorBrowser:
+    :path: "../../node_modules/@capacitor/browser"
   CapacitorCommunityBluetoothLe:
     :path: "../../node_modules/@capacitor-community/bluetooth-le"
   CapacitorCordova:
@@ -52,11 +74,14 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/splash-screen"
   CapacitorStatusBar:
     :path: "../../node_modules/@capacitor/status-bar"
+  JusticointeractiveCapacitorCarAudio:
+    :path: "../../node_modules/@justicointeractive/capacitor-car-audio"
 
 SPEC CHECKSUMS:
   Capacitor: 1f3c7b9802d958cd8c4eb63895fff85dff2e1eea
   CapacitorActionSheet: 653276dc474be8914db13293a987915f16148d00
   CapacitorApp: 0bc633b4eae40a1f32cd2834788fad3bc42da6a1
+  CapacitorBrowser: cba79e25007fbe9bdac8c0568060b21abbb8f453
   CapacitorCommunityBluetoothLe: d6fc1f6f8d6f0ef722c0817a7533ce35d42dc4f9
   CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
   CapacitorHaptics: fe689ade56ef20ec9b041a753c6da70c5d8ec9a9
@@ -64,7 +89,11 @@ SPEC CHECKSUMS:
   CapacitorShare: 7af6ca761ce62030e8e9fbd2eb82416f5ceced38
   CapacitorSplashScreen: 68893659d77b5f82d753b3a70475082845e3039c
   CapacitorStatusBar: b81d4fb5d4e0064c712018071b3ab4b810b39a63
+  CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
+  JusticointeractiveCapacitorCarAudio: f975f25d02129313a197311dc795cf497979a9bb
+  Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
+  SVGKit: 1ad7513f8c74d9652f94ed64ddecda1a23864dea
 
-PODFILE CHECKSUM: 075111d4ec2936fcbc6f9d0b8c1506bb07f265f0
+PODFILE CHECKSUM: 8909758913cf3902e76e65546867133e25b15b37
 
 COCOAPODS: 1.15.2

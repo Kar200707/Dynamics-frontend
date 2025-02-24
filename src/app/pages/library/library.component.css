@@ -1,5 +1,5 @@
 .main_block {
-  padding: 16px 20px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
 }
@@ -15,7 +15,7 @@
 .main_block > h2 {
   color: white;
   font-family: "Nunito", sans-serif;
-  font-size: 40px;
+  font-size: 28px;
   margin-top: 50px;
 }
 
@@ -27,6 +27,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .account > img {
@@ -43,7 +44,7 @@
   flex-direction: column;
   justify-content: center;
   background-color: #1a1a1a;
-  border-radius: 20px;
+  border-radius: 13px;
   margin-top: 15px;
 }
 
@@ -55,6 +56,7 @@
 
 .dynamics_ai > div > h3 {
   font-weight: bold;
+  font-size: 26px;
   font-family: "Nunito", sans-serif;
   background: linear-gradient(90deg, #001ee5, #246dff);
   -webkit-background-clip: text;
@@ -68,22 +70,24 @@
 }
 
 .favorites > div > p {
-  color: #6e6e6e;
+  color: #b5b5b5;
   font-family: "Nunito", sans-serif;
 }
 
 .favorites > img, .dynamics_ai > img {
   width: 60px;
   height: 60px;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .account_info_block {
-  padding: 15px 15px 40px 15px;
-  right: 0;
+  padding: 20px;
   width: 100%;
-  background-color: #333333;
-  border-radius: 20px;
+  max-width: 350px;
+  background-color: #333;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .layer {
@@ -91,10 +95,14 @@
   z-index: 2;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.46);
-  padding: 100px 16px 16px 16px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  padding-top: calc(20px + env(safe-area-inset-top));
   left: 0;
   top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: start;
 }
 
 .account_info_block > h3,
@@ -105,7 +113,24 @@
 }
 
 .account_info_block > button {
-  background-color: white;
+  background-color: #ff4e50;
+  color: white;
   border-radius: 10px;
   margin-top: 30px;
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.account_info_block > button:hover {
+  background-color: #ff2a2f;
+}
+
+.account_info_block > button.mat-button {
+  text-transform: none;
+}
+
+button[mat-button].routerLink {
+  margin-left: 10px;
 }

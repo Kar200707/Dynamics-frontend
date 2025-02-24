@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { RequestService } from "../../services/request.service";
-import { environment } from "../../../environment/environment";
-import { ResizeHeightDirective } from "../../directives/resize-height.directive";
+import { RequestService } from "../../../services/request.service";
+import { environment } from "../../../../environment/environment";
+import { ResizeHeightDirective } from "../../../directives/resize-height.directive";
 import {Router, RouterLink} from "@angular/router";
-import { ChatsCacheService } from "../../services/chats-cache.service";
+import { ChatsCacheService } from "../../../services/chats-cache.service";
 import {MatIcon} from "@angular/material/icon";
 import {BleClient} from "@capacitor-community/bluetooth-le";
+import {ChatControllerService} from "../chat-controller.service";
 
 @Component({
   selector: 'app-dynamics-ai',
@@ -24,7 +25,8 @@ export class DynamicsAiComponent implements OnInit {
   chats: any[] = [];
 
   constructor(
-    private router: Router,
+    public router: Router,
+    private chatController: ChatControllerService,
     private chatCacheService: ChatsCacheService,
     private reqService: RequestService
   ) {}
@@ -52,10 +54,17 @@ export class DynamicsAiComponent implements OnInit {
       })
   }
 
+  setChat(id: string) {
+    this.chatController.setId(id);
+  }
+
   createNewChat() {
     this.reqService.post<any>(environment.createAiChat, { token: this.token })
       .subscribe(data => {
         this.router.navigate(['home/dynamics-ai/chat/', data.chatId]);
       });
   }
+
+  protected readonly innerWidth = innerWidth;
+  protected readonly Navigator = Navigator;
 }

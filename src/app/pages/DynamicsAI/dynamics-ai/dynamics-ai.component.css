@@ -17,7 +17,14 @@ h1 {
 .chats_block {
   margin-top: 30px;
   overflow-y: scroll;
-  height: calc(100vh - 380px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
+  height: calc(100vh - 285px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
+  padding-bottom: 50px;
+}
+
+@media screen and (min-width: 850px) {
+  .chats_block {
+    height: calc(100vh - 105px);
+  }
 }
 
 h2 {

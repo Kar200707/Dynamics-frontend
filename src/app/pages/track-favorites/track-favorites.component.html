@@ -26,7 +26,6 @@
         class="block"
         #scrollContainer
         (scroll)="onScroll()"
-        style="overflow-y: auto; padding-bottom: 150px; padding-top: 45px"
         appResizeHeight [size]="116">
         <div class="title_block">
           <div class="search_block">
@@ -41,7 +40,7 @@
           }
         </div>
         @if (!trackList) {
-          @for (num of loadArray; track loadArray) {
+          @for (num of loadArray; track $index) {
             <div class="track_block">
               <div class="track_box">
                 <div style="display: flex; align-items: center">

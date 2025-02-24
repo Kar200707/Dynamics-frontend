@@ -123,11 +123,12 @@ h1 {
   -webkit-text-fill-color: transparent;
   text-decoration: none;
   text-align: center;
+  margin-top: 20px;
 }
 
 .send_button {
   background: linear-gradient(to left, #9900ff, #7300ff);
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   margin-top: 20px;
   font-family: 'Nunito', sans-serif;
   font-size: 22px;
@@ -193,3 +194,41 @@ h1 {
     padding: 5px;
   }
 }
+
+
+.google-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #222222;
+  color: white;
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  padding: 12px 25px;
+  border-radius: 10px;
+  border: none;
+  width: 100%;
+  max-width: 350px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  text-transform: none;
+  margin-top: 15px;
+}
+
+.google-button:hover {
+  background-color: #333333;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.google-button .google-logo {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+}
+
+.google-button span {
+  font-weight: 500;
+  color: white;
+}
+

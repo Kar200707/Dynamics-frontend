@@ -7,6 +7,9 @@ const config: CapacitorConfig = {
   plugins: {
     'KeyBoard': {
       resize: "body"
+    },
+    App: {
+      handleDeeplinks: true,
     }
   }
 };

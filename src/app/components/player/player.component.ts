@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
 import {PlayerControllerService} from "../../services/player-controller.service";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
@@ -19,6 +19,8 @@ import {PlayerKeyboardPluginService} from "./player_functions/player-keyboard-pl
 import {ImageDominantColorService} from "./player_functions/image-dominat-color.service";
 import {filter} from "rxjs";
 import {Title} from "@angular/platform-browser";
+import {Capacitor} from "@capacitor/core";
+import { CarAudio } from '@justicointeractive/capacitor-car-audio';
 
 
 @Component({
@@ -42,7 +44,7 @@ import {Title} from "@angular/platform-browser";
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
 })
-export class PlayerComponent implements OnDestroy, OnInit {
+export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   @ViewChild('seekBarContainer') seekBarContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('seekBarProgress') seekBarProgress!: ElementRef<HTMLDivElement>;
   @ViewChild('seekBarContainerOpenPlayer') seekBarContainerOpenPlayer!: ElementRef<HTMLDivElement>;
@@ -200,6 +202,7 @@ export class PlayerComponent implements OnDestroy, OnInit {
               this.trackList = list;
             }
             this.openMobilePlayer();
+            this.play();
           }
         }
     });
@@ -230,7 +233,6 @@ export class PlayerComponent implements OnDestroy, OnInit {
     this.media.addEventListener('ended', () => {
       this.isClickUp = true;
       this.touchStart = false;
-      console.log('hello');
       setTimeout(() => {
         if (this.replay) {
           this.media.currentTime = 0;
@@ -241,6 +243,10 @@ export class PlayerComponent implements OnDestroy, OnInit {
         }
       }, 0);
     });
+  }
+
+  ngAfterViewInit() {
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy() {
@@ -433,6 +439,17 @@ export class PlayerComponent implements OnDestroy, OnInit {
 
 
       this.media.load();
+
+      if (Capacitor.isNativePlatform()) {
+
+        CarAudio.setRoot({
+          url: this.media.src
+        }).then(() => {
+          console.log('CarPlay interface is ready for audio');
+        }).catch((error) => {
+          console.error('Error setting CarPlay root:', error);
+        });
+      }
       this.media.addEventListener('error', e => {
         this.info = 'Audio Listening Error 1';
         this.infoTopBlockIsOpened = true;

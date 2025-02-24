@@ -32,12 +32,22 @@
         {
           title: 'Dynamics Ai',
           path: 'dynamics-ai',
-          loadComponent: () => import('./pages/dynamics-ai/dynamics-ai.component').then(x => (x.DynamicsAiComponent)),
+          loadComponent: () => import('./pages/DynamicsAI/dynamics-ai/dynamics-ai.component').then(x => (x.DynamicsAiComponent)),
         },
         {
           title: 'Dynamics Ai',
           path: 'dynamics-ai/chat/:id',
-          loadComponent: () => import('./pages/dynamics-ai-chat/dynamics-ai-chat.component').then(x => (x.DynamicsAiChatComponent)),
+          loadComponent: () => import('./pages/DynamicsAI/dynamics-ai-chat/dynamics-ai-chat.component').then(x => (x.DynamicsAiChatComponent)),
+        },
+        {
+          title: 'Dynamics Ai',
+          path: 'dynamics-ai-pc/chat/:id',
+          loadComponent: () => import('./pages/DynamicsAI/pc-ai-chat/pc-ai-chat.component').then(x => (x.PcAiChatComponent)),
+        },
+        {
+          title: 'Dynamics Ai',
+          path: 'dynamics-ai-pc/chat',
+          loadComponent: () => import('./pages/DynamicsAI/pc-ai-chat/pc-ai-chat.component').then(x => (x.PcAiChatComponent)),
         },
         {
           title: 'Dynamics search',

@@ -122,6 +122,7 @@ h1 {
   background-color: #1a1a1a;
   border-radius: 15px;
   overflow: hidden;
+  transition: .3s background-color;
 }
 
 .track_box_layer {
@@ -131,6 +132,12 @@ h1 {
   align-items: center;
   justify-content: space-between;
   background-color: rgba(0, 0, 0, 0.55);
+}
+
+.block {
+  overflow-y: auto;
+  padding-bottom: calc(150px + env(safe-area-inset-top) + env(safe-area-inset-bottom));
+  padding-top: 45px
 }
 
 .track_image {

@@ -4,9 +4,9 @@
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{
-    "src": "assets/imgs/logo.png",
+    "src": "/icons/icon-192.webp",
     "sizes": "512x512",
-    "type": "image/png"
+    "type": "image/webp"
   }],
   "background_color": "#31d53d",
   "theme_color": "#31d53d"

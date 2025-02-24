@@ -38,7 +38,7 @@ export class TrackFavoritesComponent implements OnInit {
   trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
   listIsPlay:boolean = false;
-  trackImageBackgroundColor: string = 'rgb(84 38 199)';
+  trackImageBackgroundColor: string = 'rgb(51,51,51)';
   filteredTrackList?: any[];
   searchQuery: string = '';
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -107,7 +107,7 @@ export class TrackFavoritesComponent implements OnInit {
         this.playerController.trackId$.subscribe(id => {
           this.trackList.forEach(async (track: any) => {
             if (track.videoId === id) {
-              console.log(track.videoId);
+              this.trackImageBackgroundColor = 'rgb(51,51,51)';
               const colorsArray:string[] = await this.imgColorService.getDominantColors(host + 'media/cropImage?url=' + track.image);
               this.trackImageBackgroundColor = colorsArray[0];
             }

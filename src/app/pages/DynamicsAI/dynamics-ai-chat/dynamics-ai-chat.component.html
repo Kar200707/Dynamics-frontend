@@ -37,7 +37,7 @@
   </div>
   <div #chatScroll class="chat_messages_scroll">
     @if (chat) {
-      @for(message of chat.chat; track chat) {
+      @for(message of chat.chat; track $index) {
         <div
           [style.justify-content]="message.role === 'user' ? 'flex-end' : 'flex-start'"
           class="message_row">
@@ -47,7 +47,7 @@
             [style.padding]="message.role === 'user' ? '7px 12px' : 'unset'"
             class="message">
             @if (message.role === 'assistant') {
-              <img class="dynamics_icon" src="assets/images/icon-384x384.svg" alt="dynamics icon">
+              <img class="dynamics_icon" src="../../../../assets/images/icon-384x384.svg" alt="dynamics icon">
               @for(item of classifyText(message.content); track $index) {
                 @if (item.type === 'text') {
                   <pre class="text_pre">{{ item.text }}</pre>
@@ -78,7 +78,7 @@
       }
       @if (aiMessageLoading) {
         <div class="load_block">
-          <img class="dynamics_icon" src="assets/images/icon-384x384.svg" alt="dynamics icon">
+          <img class="dynamics_icon" src="../../../../assets/images/icon-384x384.svg" alt="dynamics icon">
           <span
             [style.color]="isRequestError ? 'rgb(231,67,67)' : '#a1a1a1'"
             [class]="isRequestError ? '' : 'gradient-text'">{{ isRequestError ? 'Error ai send again' : 'Dynamics Ai Generation...' }}</span>

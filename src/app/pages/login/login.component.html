@@ -6,7 +6,7 @@
   <div class="layer"></div>
   <div class="container">
     <div class="images_box">
-      <img class="messgae_image" src="assets/images/message2.gif">
+<!--      <img class="messgae_image" src="assets/images/message2.gif">-->
     </div>
     <div class="login_block">
       <form #formDirective="ngForm" [formGroup]="form" (ngSubmit)="send(formDirective)">
@@ -39,8 +39,17 @@
             style="margin-top: 5px; color: #d23b3b; font-family: Poppins"
           >Incorrect email or password</strong>
         }
-        <button [disabled]="form.invalid" class="send_button">SEND</button>
+        <button [disabled]="form.invalid" class="send_button">Sign in</button>
       </form>
+      <div style="display: flex; align-items: center; justify-content: center; padding: 0 20px">
+        <hr style="flex-grow: 1; border: 1px solid rgba(255,255,255,0.22);">
+        <p style="color: rgba(255,255,255,0.6); font-family: 'Nunito', sans-serif; margin: 0 10px;">Or</p>
+        <hr style="flex-grow: 1; border: 1px solid rgba(255,255,255,0.22);">
+      </div>
+      <button class="google-button" (click)="loginWithGoogle()">
+        <img src="assets/images/google-icon-2048x2048-czn3g8x8.png" alt="Google logo" class="google-logo" />
+        <span>Sign in with Google</span>
+      </button>
       <a class="dont_acc_link" routerLink="/register">don't have an account? - register</a>
     </div>
   </div>

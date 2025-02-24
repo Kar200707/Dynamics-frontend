@@ -1,17 +1,13 @@
 <div class="main-block">
   <div class="layer">
     <div>
-      <div style="display: flex; align-items: center; justify-content: start">
-        <img class="nav_icon" title="Home" style="height: 30px; width: 30px; margin-left: -3px" src="../../../assets/images/icons/home-white.svg">
+      <div style="display: flex; align-items: center; justify-content: start; margin-left: 7px">
+        <img  class="nav_icon" title="Home" style="height: 30px; width: 30px; margin-left: -3px" src="../../../assets/images/icons/home-white.svg">
         <span style="color: white; margin-left: 20px">Home</span>
       </div>
-      <div style="display: flex; align-items: center; margin-top: 20px">
-        <img class="nav_icon" title="Home" style="height: 25px; width: 25px" src="../../../assets/images/icons/search.png">
-        <span style="color: white; margin-left: 21px">Search</span>
-      </div>
-      <div style="display: flex; align-items: center; margin-top: 20px">
+      <div style="display: flex; align-items: center; margin-top: 12px">
         <svg
-          style="outline: none; width: 27px; height: 27px"
+          style="outline: none; width: 27px; height: 27px; margin-left: 6px"
           data-encore-id="icon"
           role="img"
           fill="white"
@@ -20,6 +16,12 @@
           <path d="M14.5 2.134a1 1 0 0 1 1 0l6 3.464a1 1 0 0 1 .5.866V21a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1V3a1 1 0 0 1 .5-.866zM16 4.732V20h4V7.041l-4-2.309zM3 22a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1zm6 0a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1z"></path></svg>
         <span style="color: white; margin-left: 20px">Library</span>
       </div>
+      <div routerLink="/home/dynamics-ai" class="dynamics_ai">
+        <img src="assets/images/icon-384x384.svg">
+        <div style="margin-left: 5px">
+          <span style="color: white; margin-left: 10px">Dynamics Ai</span>
+        </div>
+      </div>
     </div>
     <div appResizeHeight [size]="284" class="favorites_block">
       <div style="display: flex; align-items: center">
@@ -27,7 +29,7 @@
         <h4 style="margin-left: 7px">Favorite tracks</h4>
       </div>
       @if (!trackList) {
-        @for (num of loadArray; track loadArray) {
+        @for (num of loadArray; track $index) {
           <div class="track_block">
             <div class="track_box">
               <div style="display: flex; align-items: center">

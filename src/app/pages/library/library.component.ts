@@ -1,11 +1,11 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {Router, RouterLink} from "@angular/router";
 import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
 import {environment} from "../../../environment/environment";
 import {MatButton, MatIconButton} from "@angular/material/button";
-import {NgIf} from "@angular/common";
+import {NgIf, NgOptimizedImage} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import localforage from "localforage";
 import {AudioCacheService} from "../../services/audio-cache.service";
@@ -21,7 +21,8 @@ import {AudioCacheService} from "../../services/audio-cache.service";
     MatButton,
     NgIf,
     MatIcon,
-    MatIconButton
+    MatIconButton,
+    NgOptimizedImage
   ],
   providers: [
     RequestService,
@@ -36,20 +37,46 @@ export class LibraryComponent implements OnInit {
   token: string | null = localStorage.getItem('token');
   isOpenedAccountInfoBlock: boolean = false;
   role!: string;
+  avatar!: string;
 
   constructor(
     private cacheService: AudioCacheService,
     private router: Router,
     private requestService: RequestService) {  }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const cacheAvatar: any = await localforage.getItem("avatarBlob");
+    if (cacheAvatar) {
+      this.avatar = URL.createObjectURL(cacheAvatar);
+    }
+
     this.requestService.post<any>(environment.getAccount, { acsses_token: this.token })
-      .subscribe(account => {
+      .subscribe(async account => {
         this.account = account;
         this.role = account.role;
+        if (!cacheAvatar) {
+          this.cacheAvatar(account.avatar);
+        }
       })
 
     this.getFavoritePlaylistsLength();
+  }
+
+  cacheAvatar(avatarUrl: string) {
+    fetch(avatarUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch image');
+        }
+        return response.blob();
+      })
+      .then(async blob => {
+        await localforage.setItem('avatarBlob', blob);
+        this.avatar = URL.createObjectURL(blob);
+      })
+      .catch(error => {
+        console.error('Error while fetching avatar:', error);
+      });
   }
 
   async getFavoritePlaylistsLength () {
@@ -76,14 +103,8 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-  toggleAccountInfoBlock(event: Event) {
-    event.stopPropagation();
+  toggleAccountInfoBlock() {
     this.isOpenedAccountInfoBlock = !this.isOpenedAccountInfoBlock;
-  }
-
-  @HostListener('document:click', ['$event'])
-  closeAccountInfoBlock(event: Event) {
-    this.isOpenedAccountInfoBlock = false;
   }
 
   async logout() {
@@ -91,7 +112,6 @@ export class LibraryComponent implements OnInit {
     try {
       await localforage.clear();
       await this.cacheService.clear();
-      console.log('localforage cleared');
     } catch (error) {
       console.error('Error clearing localforage:', error);
     }

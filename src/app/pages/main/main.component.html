@@ -1,5 +1,7 @@
 <div style="overflow: hidden" class="main-background">
-  <router-outlet></router-outlet>
+<!--  <div [@routeAnimations]="prepareRoute(outlet)">-->
+    <router-outlet #outlet="outlet"></router-outlet>
+<!--  </div>-->
 <!--  <ion-router-outlet></ion-router-outlet>-->
   <app-player
     [style.display]="this.routePath.slice(0, 14) === '/home/dynamics' ? 'none' : 'unset'"

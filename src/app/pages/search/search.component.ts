@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {RequestService} from "../../services/request.service";
 import {environment} from "../../../environment/environment";
@@ -31,7 +31,7 @@ import {Capacitor} from "@capacitor/core";
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, AfterViewInit {
   @Input('place') place: any;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   private searchSubject: Subject<any> = new Subject<string>();
@@ -78,6 +78,12 @@ export class SearchComponent implements OnInit {
       this.isLoaded = true;
       await Haptics.impact({ style: ImpactStyle.Light });
     });
+  }
+
+  ngAfterViewInit() {
+    if (this.place !== 'home') {
+      setTimeout(() => this.searchInput.nativeElement.focus(), 100);
+    }
   }
 
   async ngOnInit() {

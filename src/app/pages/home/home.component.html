@@ -38,9 +38,29 @@
 
       <!--            </div>-->
       <!--          </label>-->
+        }
+      </div>
+      @if (innerWidth > 850) {
+        @if (avatar) {
+          <div (click)="toggleAccountInfoBlock()" class="account">
+            <img [src]="avatar">
+          </div>
+        }
+        <div *ngIf="isOpenedAccountInfoBlock" (click)="isOpenedAccountInfoBlock = false" class="layer">
+          <div class="account_info_block" (click)="$event.stopPropagation()">
+            <h3>{{ account.name }}</h3>
+            <p>{{ account.email }}</p>
+            <span>{{ account.bio }}</span>
+            <button mat-button color="warn" (click)="logout()">Logout <mat-icon>logout</mat-icon></button>
+            @if (role === 'admin') {
+              <button style="margin-left: 10px" mat-button routerLink="/admin">
+                Admin <mat-icon>shield_person</mat-icon>
+              </button>
+            }
+          </div>
+        </div>
       }
     </div>
-  </div>
   <div class="box">
     <!--      <app-news-block style="width: 100%"></app-news-block>-->
   </div>

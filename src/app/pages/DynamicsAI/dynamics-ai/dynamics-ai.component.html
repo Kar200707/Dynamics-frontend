@@ -6,9 +6,11 @@
     [style.margin-top]="innerWidth < 850 ? '50px' : '20px'"
     style="display: flex; align-items: center; justify-content: space-between;">
     <h2>Chats</h2>
-    <button
-      (click)="createNewChat()"
-      class="create_chat_btn"><mat-icon style="color: #0070f3; width: 31px; height: 31px; font-size: 31px">add</mat-icon></button>
+    @if (place !== 'pc-component') {
+      <button
+        (click)="createNewChat()"
+        class="create_chat_btn"><mat-icon style="color: #0070f3; width: 31px; height: 31px; font-size: 31px">add</mat-icon></button>
+    }
   </div>
   @if (chats) {
     <div class="chats_block">
@@ -16,7 +18,8 @@
         @if ($index !== 0 && $index !== chats.length) {
           <div class="line"></div>
         }
-        <div (click)="innerWidth > 850 ? setChat(item._id) : router.navigate(['chat/', item._id])" class="chat">
+        <div (click)="router.navigate(
+        [place === 'pc-component' ? 'home/dynamics-ai-pc/chat/' : 'home/dynamics-ai/chat/', item._id])" class="chat">
           <h3>{{ item.chat.length !== 0 ? item.chat[0].content : 'Empty chat' }}</h3>
           <p>{{ item.chat.length !== 0 ? item.chat[1].content : 'Click here for messaging' }}</p>
         </div>

@@ -3,7 +3,7 @@
   (touchstart)="onTouchStart($event);"
   (touchmove)="onTouchMove($event)"
   (touchend)="onTouchEnd($event); main_block.style.transition = '.23s cubic-bezier(0.6, 0.03, 0.2, 1)'"
-  [style.padding]="!isOpenedMobilePlayer ? '15px 8px' : '0'"
+  [style.padding]="!isOpenedMobilePlayer ? innerWidth > 850 ? '10px 11px' : '15px 8px' : '0'"
   [style.height]="isOpenedMobilePlayer ? '100vh' : '100px'"
   #main_block
   class="main_block">
@@ -74,7 +74,11 @@
                   [style.width]="innerWidth > 850 ? '38px' : '50px'"
                   [style.height]="innerWidth > 850 ? '38px' : '50px'"
                   (click)="playPause()" title="play" class="play_pause_button">
-                  <img [src]=" isPlaying ? 'assets/images/icons/pause_circle_icon.png' : 'assets/images/icons/play_circle_icon.png'">
+                  @if (isPlaying) {
+                    <img src="assets/images/icons/pause_circle_icon.png">
+                  } @else {
+                    <img src="assets/images/icons/play_circle_icon.png">
+                  }
                 </button>
                 <div (click)="next()" class="next">
                   <img src="assets/images/icons/next.svg">

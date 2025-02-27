@@ -13,7 +13,7 @@ import {NgIf} from "@angular/common";
 import {SearchListModel} from "../../../models/search_list.model";
 import {updateMediaSessionMetadata} from "./media_session/media_session";
 import {AudioCacheService} from "../../services/audio-cache.service";
-import {audio} from "../../../main";
+import { audio, audio2 } from "../../../main";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {PlayerKeyboardPluginService} from "./player_functions/player-keyboard-plugin.service";
 import {ImageDominantColorService} from "./player_functions/image-dominat-color.service";
@@ -54,6 +54,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   @ViewChild('main_block') mainBlock!: ElementRef<HTMLDivElement>;
   @ViewChild('image_track') image!: ElementRef<HTMLImageElement>;
   audio: HTMLAudioElement = audio;
+  audio2: HTMLAudioElement = audio2;
   media: HTMLAudioElement | HTMLVideoElement = this.audio;
   token: string | null = localStorage.getItem('token');
   backgroundImage: string = '';
@@ -486,6 +487,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
 
         this.currentTime = this.formatTime(this.media.currentTime);
         this.endOfTrack = this.formatTime(remainingTime);
+
       } else {
         this.currentTime = '--:--';
         this.endOfTrack = '--:--';
@@ -501,6 +503,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
 
   play() {
     if (this.isLoaded) {
+      this.media.volume = 1;
       this.playerController.onActPlayer('play');
       this.media.play()
       this.isPlaying = true;

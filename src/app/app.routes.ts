@@ -17,16 +17,19 @@
         {
           title: 'Dynamics Home',
           path: '',
+          data: { animation: 'HomePage' },
           loadComponent: () => import('./pages/home/home.component').then(x => (x.HomeComponent)),
         },
         {
           title: 'Dynamics Home',
           path: 'track/:id',
+          data: { animation: 'HomePage' },
           loadComponent: () => import('./pages/home/home.component').then(x => (x.HomeComponent)),
         },
         {
           title: 'Dynamics library',
           path: 'library',
+          data: { animation: 'LibraryPage' },
           loadComponent: () => import('./pages/library/library.component').then(x => (x.LibraryComponent)),
         },
         {
@@ -52,6 +55,7 @@
         {
           title: 'Dynamics search',
           path: 'search',
+          data: { animation: 'SearchPage' },
           loadComponent: () => import('./pages/search/search.component').then(x => (x.SearchComponent)),
         },
         {

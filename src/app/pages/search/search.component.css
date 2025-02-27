@@ -75,7 +75,7 @@ h1 {
   width: 100%;
   font-size: 17px;
   padding: 10px 45px 10px 14px;
-  border-radius: 20px;
+  border-radius: 12px;
   background-color: #1b1b1b;
   font-weight: normal;
   color: white;
@@ -94,18 +94,26 @@ input[type="search"] {
   font-size: 16px;
   box-sizing: border-box;
 }
-.clear-btn {
+.clear-btn, .search-btn {
   position: absolute;
   right: 5px;
-  top: 21px;
+  top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 18px;
   color: white;
   background: none;
   border: none;
+}
+
+.clear-btn {
   display: none;
 }
+
+input[type="search"]:not(:placeholder-shown) ~ .search-btn {
+  display: none;
+}
+
 input[type="search"]:not(:placeholder-shown) ~ .clear-btn {
   display: block;
 }

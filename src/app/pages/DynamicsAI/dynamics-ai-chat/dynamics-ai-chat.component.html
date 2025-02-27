@@ -10,10 +10,12 @@
       </div>
     </div>
   }
-  <div class="chat_header">
+  <div
+    [style.background-color]="place === 'pc-component' ? 'transparent' : '#111111'"
+    class="chat_header">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-top: env(safe-area-inset-top);">
       <button mat-icon-button>
-        <mat-icon style="color: white" routerLink="/home/dynamics-ai">arrow_back_ios</mat-icon>
+        <mat-icon style="color: white" [routerLink]="place === 'pc-component' ? '/home' : '/home/dynamics-ai'">arrow_back_ios</mat-icon>
       </button>
       <div class="select_box">
         <select (change)="modelSelectOnChange($event)" class="model_select">
@@ -66,7 +68,7 @@
                         }
                       </button>
                     </div>
-                    <pre class="code_pre" [style.width]="windowWidth - 20 + 'px'">{{ item.text }}</pre>
+                    <pre class="code_pre" [style.width]="place !== 'pc-component' ? windowWidth - 20 + 'px' : '100%'">{{ item.text }}</pre>
                   </div>
                 }
               }

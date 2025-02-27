@@ -15,6 +15,8 @@ import {RequestService} from "../../services/request.service";
 import {Keyboard} from "@capacitor/keyboard";
 import {Capacitor} from "@capacitor/core";
 import {NgStyle} from "@angular/common";
+import {animate, style, transition, trigger} from "@angular/animations";
+import {slideInAnimation} from "../../services/route.anim";
 
 @Component({
   selector: 'app-main',
@@ -32,6 +34,9 @@ import {NgStyle} from "@angular/common";
     MatIcon,
     RouterOutlet,
     NgStyle,
+  ],
+  animations: [
+    // slideInAnimation
   ],
   providers: [ RequestService ],
   templateUrl: './main.component.html',
@@ -78,6 +83,10 @@ export class MainComponent implements OnInit {
         this.keyboardHeight = 0;
       });
     }
+  }
+
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.['animation'];
   }
 
   protected readonly innerHeight = innerHeight;

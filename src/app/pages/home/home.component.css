@@ -22,7 +22,7 @@
 }
 
 app-search {
-  width: 40%;
+  width: 30%;
   position: absolute;
   left: 50%;
   margin: 10px 0;
@@ -182,4 +182,48 @@ app-pc-nav-panel {
   app-pc-nav-panel {
     display: block;
   }
+}
+
+.account_info_block > h3,
+.account_info_block > span,
+.account_info_block > p {
+  color: white;
+  font-family: "Nunito", sans-serif;
+}
+
+.account_info_block > button {
+  background-color: #ff4e50;
+  color: white;
+  border-radius: 10px;
+  margin-top: 30px;
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.account_info_block > button:hover {
+  background-color: #ff2a2f;
+}
+
+.account_info_block > button.mat-button {
+  text-transform: none;
+}
+
+.account {
+  width: 40px;
+  height: 40px;
+  background-color: #1b1b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.account > img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
 }

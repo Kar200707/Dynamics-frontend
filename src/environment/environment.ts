@@ -1,5 +1,5 @@
-// export const host = 'http://localhost:8080/';
-export const host = 'https://dynamics-backend-production.up.railway.app/';
+export const host = 'http://localhost:8080/';
+// export const host = 'https://dynamics-backend-production.up.railway.app/';
 
 
 export const environment = {

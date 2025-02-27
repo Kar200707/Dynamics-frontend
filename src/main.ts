@@ -6,3 +6,4 @@ bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));
 
 export const audio = new Audio();
+export const audio2 = new Audio();

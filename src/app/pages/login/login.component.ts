@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
   }
 
   async loginWithGoogle() {
-    await Browser.open({ url: host + 'auth/google?prompt=select_account', presentationStyle: "popover" });
+    await Browser.open({ url: host + 'auth/google?prompt=select_account&access_type=offline', presentationStyle: "popover" });
   }
 
   send(formDirective: FormGroupDirective) {

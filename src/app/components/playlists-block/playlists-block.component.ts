@@ -78,7 +78,6 @@ export class PlaylistsBlockComponent implements OnInit {
     })
 
     this.playerController.actPlayer$.subscribe(act => {
-      console.log(act)
       if (act === 'pause') {
         this.isPlaying = false;
       }

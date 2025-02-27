@@ -878,3 +878,21 @@ input[type="range"]::-moz-range-thumb {
     background-color: rgba(255, 255, 255, 0.19);
   }
 }
+
+/* browser animation */
+
+.slider_box, .slider-1, .swapper {
+  will-change: transform, width;
+}
+
+.play_pause_button, .play_pause_button_open_player {
+  will-change: transform, opacity, rotate;
+}
+
+.open_player_track_img_block img, video {
+  will-change: transform, opacity, scale;
+}
+
+.main_block, .mobile_player_block {
+  will-change: transform, height, width;
+}

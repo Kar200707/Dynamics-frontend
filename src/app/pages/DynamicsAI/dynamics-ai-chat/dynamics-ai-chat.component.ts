@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import {RequestService} from "../../../services/request.service";
 import {environment} from "../../../../environment/environment";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
@@ -6,7 +6,6 @@ import {MatIcon} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {ResizeHeightDirective} from "../../../directives/resize-height.directive";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
-import {ChatControllerService} from "../chat-controller.service";
 
 @Component({
   selector: 'app-dynamics-ai-chat',
@@ -36,6 +35,7 @@ export class DynamicsAiChatComponent implements OnInit {
   aiModels: string[] = [];
   message: string = '';
   textCopied: boolean = false;
+  @Input('place') place!: string;
   @HostListener('window:resize', ['$event'])
   resize () {
     this.windowWidth = innerWidth;
@@ -43,16 +43,15 @@ export class DynamicsAiChatComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private chatController: ChatControllerService,
     private route: ActivatedRoute,
     private reqService: RequestService) {
     this.route.paramMap.subscribe(params => {
       this.chatId = params.get('id');
+      this.getChat();
     });
   }
 
   async ngOnInit() {
-    this.getChat();
     this.getAiModels();
   }
 
@@ -112,23 +111,13 @@ export class DynamicsAiChatComponent implements OnInit {
   }
 
   getChat() {
-    if (innerWidth < 850) {
-      this.reqService.post<any>(environment.getAiChat + this.chatId, { token: this.token })
-        .subscribe(data => {
-          this.chat = data.chat;
-          setTimeout(() => {this.scrollToBottom()}, 100);
-        }, () => { this.router.navigate(['home/dynamics-ai']) })
-    } else {
-      this.chatController.chatId$.subscribe((id) => {
-        if (id) {
-          this.reqService.post<any>(environment.getAiChat + id, { token: this.token })
-            .subscribe(data => {
-              this.chat = data.chat;
-              setTimeout(() => {this.scrollToBottom()}, 100);
-            })
-        }
-      })
-    }
+     if (this.chatId) {
+       this.reqService.post<any>(environment.getAiChat + this.chatId, { token: this.token })
+         .subscribe(data => {
+           this.chat = data.chat;
+           setTimeout(() => {this.scrollToBottom()}, 100);
+         }, () => { this.router.navigate([this.place === 'pc-component' ? 'home/dynamics-ai-pc/chat' : 'home/dynamics-ai']) })
+     }
   }
 
   getAiModels() {
@@ -170,7 +159,7 @@ export class DynamicsAiChatComponent implements OnInit {
       this.reqService.post<any>(environment.createAiChat, { token: this.token })
         .subscribe(data => {
           this.aiMessageLoading = false;
-          this.router.navigate(['home/dynamics-ai/chat/', data.chatId]).then(() => {
+          this.router.navigate([this.place === 'pc-component' ? 'home/dynamics-ai-pc/chat/' : 'home/dynamics-ai/chat/', data.chatId]).then(() => {
             this.getChat();
             this.getAiModels();
           });
@@ -188,7 +177,7 @@ export class DynamicsAiChatComponent implements OnInit {
     this.reqService.post<any>(environment.deleteChat + this.chatId, { token: this.token })
       .subscribe(data => {
         this.confirm = false;
-        this.router.navigate(['home/dynamics-ai']);
+        this.router.navigate([this.place === 'pc-component' ? 'home/dynamics-ai-pc/chat' : 'home/dynamics-ai',]);
       }, () => {
         this.isRequestError = true;
       });

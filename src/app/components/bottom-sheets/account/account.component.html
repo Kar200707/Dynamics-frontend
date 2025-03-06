@@ -1,0 +1,26 @@
+<div class="main_div">
+  <div class="account_info_block" (click)="$event.stopPropagation()">
+    <div style="display: flex; align-items: center;">
+      <img [src]="account.avatar">
+      <div>
+        <h3>{{ account.name }}</h3>
+        <p>{{ account.email }}</p>
+      </div>
+    </div>
+    <span>{{ account.bio }}</span>
+    <button mat-button color="warn" (click)="logout()">Logout <mat-icon>logout</mat-icon></button>
+    @if (account.role === 'admin') {
+      <button style="margin-left: 10px" mat-button routerLink="/admin">
+        Admin <mat-icon>shield_person</mat-icon>
+      </button>
+    }
+    <div class="list_block">
+      <div routerLink="/home/dynamics-ai" (click)="closeSheet()" class="dynamics_ai">
+        <img src="assets/images/icon-384x384.svg">
+        <div style="margin-left: 5px">
+          <h3>Dynamic Ai</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

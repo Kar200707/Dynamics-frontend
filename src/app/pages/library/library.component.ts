@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, inject, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {Router, RouterLink} from "@angular/router";
 import {RequestService} from "../../services/request.service";
@@ -9,6 +9,11 @@ import {NgIf, NgOptimizedImage} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import localforage from "localforage";
 import {AudioCacheService} from "../../services/audio-cache.service";
+import {MatBottomSheet, MatBottomSheetRef} from "@angular/material/bottom-sheet";
+import {AdminComponent} from "../admin/admin.component";
+import {AddPlaylistComponent} from "../../components/bottom-sheets/add-playlist/add-playlist.component";
+import {ResizeHeightDirective} from "../../directives/resize-height.directive";
+import {AccountComponent} from "../../components/bottom-sheets/account/account.component";
 
 @Component({
   selector: 'app-library',
@@ -22,7 +27,8 @@ import {AudioCacheService} from "../../services/audio-cache.service";
     NgIf,
     MatIcon,
     MatIconButton,
-    NgOptimizedImage
+    NgOptimizedImage,
+    ResizeHeightDirective
   ],
   providers: [
     RequestService,
@@ -32,19 +38,24 @@ import {AudioCacheService} from "../../services/audio-cache.service";
   styleUrl: './library.component.css'
 })
 export class LibraryComponent implements OnInit {
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @ViewChild('titleElement') titleElement!: ElementRef;
   favoritePlayListLength: number = 0;
   account: any;
   token: string | null = localStorage.getItem('token');
   isOpenedAccountInfoBlock: boolean = false;
   role!: string;
   avatar!: string;
+  playlists!: any[];
+  private _bottomSheetPlaylistAdd = inject(MatBottomSheet);
+  private _bottomSheetAccount = inject(MatBottomSheet);
 
   constructor(
-    private cacheService: AudioCacheService,
-    private router: Router,
+    private renderer: Renderer2,
     private requestService: RequestService) {  }
 
   async ngOnInit() {
+    this.getPlaylists();
     const cacheAvatar: any = await localforage.getItem("avatarBlob");
     if (cacheAvatar) {
       this.avatar = URL.createObjectURL(cacheAvatar);
@@ -53,13 +64,32 @@ export class LibraryComponent implements OnInit {
     this.requestService.post<any>(environment.getAccount, { acsses_token: this.token })
       .subscribe(async account => {
         this.account = account;
-        this.role = account.role;
         if (!cacheAvatar) {
           this.cacheAvatar(account.avatar);
         }
       })
 
     this.getFavoritePlaylistsLength();
+  }
+
+  openBottomSheet(): void {
+    const bottomSheetRef = this._bottomSheetPlaylistAdd.open(AddPlaylistComponent, {
+      panelClass: "bottom-sheet",
+      data: {
+        hello: "true"
+      }
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(() => {
+      this.getPlaylists();
+    });
+  }
+
+  getPlaylists() {
+    this.requestService.post<any>(environment.playlistGet, { token: this.token })
+    .subscribe(data => {
+      this.playlists = data.playlists;
+    })
   }
 
   cacheAvatar(avatarUrl: string) {
@@ -104,17 +134,21 @@ export class LibraryComponent implements OnInit {
   }
 
   toggleAccountInfoBlock() {
+    const bottomSheetRef = this._bottomSheetAccount.open(AccountComponent, {
+      panelClass: "bottom-sheet",
+      data: this.account
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(() => {});
     this.isOpenedAccountInfoBlock = !this.isOpenedAccountInfoBlock;
   }
 
-  async logout() {
-    localStorage.removeItem('token');
-    try {
-      await localforage.clear();
-      await this.cacheService.clear();
-    } catch (error) {
-      console.error('Error clearing localforage:', error);
+  onScroll() {
+    const scrollTop = this.scrollContainer.nativeElement.scrollTop;
+    if (scrollTop > 10) {
+      this.renderer.setStyle(this.titleElement.nativeElement, 'transform', 'translate(0, 0)');
+    } else {
+      this.renderer.setStyle(this.titleElement.nativeElement, 'transform', 'translate(-40px, 60px)');
     }
-    this.router.navigate(['/login']);
   }
 }

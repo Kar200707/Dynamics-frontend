@@ -67,25 +67,33 @@ export class DynamicsAiChatComponent implements OnInit {
     }
   }
 
-  classifyText(text: string): { text: string, type: string }[] {
+  classifyText(text: string): { text: string; type: string }[] {
     const codePattern = /```(\w+)\n([\s\S]+?)```/g;
-    const result: { text: string, type: string }[] = [];
-    let match;
+    const thinkPattern = /<think>(\w+)\n([\s\S]+?)<\/think>/g;
+    const result: { text: string; type: string }[] = [];
     let lastIndex = 0;
+    let match;
 
-    while ((match = codePattern.exec(text)) !== null) {
+    while (
+      (match = codePattern.exec(text)) !== null ||
+      (match = thinkPattern.exec(text)) !== null
+      ) {
       if (match.index > lastIndex) {
-        const regularText = text.slice(lastIndex, match.index).trim();
-        if (regularText) {
-          result.push({ text: regularText, type: 'text' });
-        }
+        const textChunk = text.slice(lastIndex, match.index).trim();
+        if (textChunk) result.push({ text: textChunk, type: 'text' });
       }
 
-      const language = match[1].toLowerCase();
-      const codeContent = match[2];
-      result.push({ text: codeContent, type: language });
+      if (match[0].startsWith('```')) {
+        const language = match[1].toLowerCase();
+        const codeContent = match[2].trim();
+        result.push({ text: codeContent, type: language });
+      } else if (match[0].startsWith('<think>')) {
+        const blockType = match[1].toLowerCase();
+        const thinkContent = match[2].trim();
+        result.push({ text: thinkContent, type: blockType });
+      }
 
-      lastIndex = codePattern.lastIndex;
+      lastIndex = match.index + match[0].length;
     }
 
     const remainingText = text.slice(lastIndex).trim();
@@ -95,7 +103,6 @@ export class DynamicsAiChatComponent implements OnInit {
 
     return result;
   }
-
   copy(text: string, index: number) {
     navigator.clipboard.writeText(text).then(() => {
       console.log('Text successfully copied to clipboard');

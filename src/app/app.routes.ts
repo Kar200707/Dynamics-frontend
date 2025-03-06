@@ -65,8 +65,8 @@
         },
         {
           title: 'Dynamics Favorites',
-          path: 'track-favorites',
-          loadComponent: () => import('./pages/track-favorites/track-favorites.component').then(x => (x.TrackFavoritesComponent)),
+          path: 'folder/:id',
+          loadComponent: () => import('./pages/folder/folder.component').then(x => (x.FolderComponent)),
         },
         {
           title: 'Dynamics Channels',

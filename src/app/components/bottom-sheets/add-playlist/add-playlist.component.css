@@ -1,0 +1,261 @@
+.main-block {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  position: relative;
+}
+
+.playlists {
+  overflow-x: scroll;
+  padding: 15px 20px;
+}
+
+.playlists::-webkit-scrollbar { height: 0; display: none; }
+
+.playlists::-webkit-scrollbar {
+  height: 0;
+}
+
+.playlist {
+  width: 140px;
+  height: 140px;
+  background-color: #333333;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.playlist_block_cover {
+  margin-right: 20px;
+}
+
+.playlist_block_cover > p {
+  color: white;
+  font-family: "Nunito", sans-serif;
+  margin-top: 5px;
+}
+
+.playlist > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.playlists_box {
+  width: 47%;
+  display: flex;
+  flex-direction: column;
+}
+
+.playlist > .layer {
+  width: 100%;
+  height: 100%;
+  /*background-color: rgba(54, 54, 54, 0.6);*/
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 15px;
+}
+.playlist > .layer > .play_circle {
+  width: 45px;
+  height: 45px;
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playlist > .layer > .play_circle > mat-icon {
+  color: #005cbb;
+  width: 36px;
+  height: 36px;
+  font-size: 36px;
+  display: block;
+}
+
+.playlists_box > .box {
+  display: flex;
+}
+
+h2 {
+  font-family: "Nunito", sans-serif;
+  color: white;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+/* media */
+
+@media screen and (max-width: 1270px) {
+  .artists > .artist_block {
+    width: 100px;
+    height: 100px;
+  }
+
+  .artists > .artist_block > img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .artists > .artist_block {
+    width: 80px;
+    height: 80px;
+  }
+
+  .artists > .artist_block > img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.title_playlists {
+  margin: 20px 0 0 20px;
+}
+
+.right_block {
+  width: 100%;
+  margin-left: 0;
+}
+
+@media screen and (max-width: 850px) {
+
+  .category_title,
+  .artist_title {
+    text-align: start;
+  }
+
+
+  .artists > .artist_block {
+    width: 130px;
+    height: 130px;
+  }
+
+  .artists > .artist_block > img {
+    width: 110px;
+    height: 110px;
+  }
+
+  .playlists_box {
+    width: 100%;
+  }
+}
+
+.listen_again_block {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 20px;
+  display: flex;
+  margin-top: 15px;
+}
+
+.listen_again_block::-webkit-scrollbar { height: 0; display: none; }
+
+.track_block {
+  margin-right: 15px;
+  transition: .1s;
+  height: 200px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.track_block:active {
+  scale: .97;
+}
+
+.track_block > .img_block {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.track_block > .img_block > img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.track_block > h3 {
+  overflow: hidden;
+  display: -webkit-box;
+  font-weight: lighter;
+  font-size: 0.7rem;
+  font-family: "Nunito", sans-serif;
+  color: white;
+  text-align: start;
+  margin-top: 5px;
+  width: 120px;
+}
+
+.track_block > span {
+  width: 100%;
+  overflow: hidden;
+  display: -webkit-box;
+  font-family: "Nunito", sans-serif;
+  font-weight: lighter;
+  font-size: 0.8rem;
+  color: #919191;
+  display: none;
+  text-align: start;
+}
+
+.bottom-sheet .mat-bottom-sheet-container {
+  width: 100% !important;   /* На всю ширину экрана */
+  height: 30% !important;   /* Высота 50% экрана */
+  max-height: 50vh;         /* Ограничение по высоте (50% от видимой области экрана) */
+  padding: 20px;            /* Отступы внутри bottom sheet */
+  border-radius: 20px;      /* Скругленные углы */
+  overflow: auto;           /* Прокрутка, если контент не помещается */
+  animation: slideUp 0.3s ease-in-out;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%); /* Начинаем с нижней части экрана */
+  }
+  100% {
+    transform: translateY(0); /* Завершаем на обычной позиции */
+  }
+}
+
+.search_block {
+  padding: 0 20px;
+  margin-top: 10px;
+}
+
+.search {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  outline: none;
+  background-color: #0c0c0c;
+  width: 100%;
+}
+
+.float_button {
+  margin: 13px 20px 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.float_button > button {
+  padding: 12px 20px;
+  background-image: linear-gradient(to right, #002fc5, #003bff);
+  border-radius: 20px;
+  font-size: 20px;
+  color: white;
+  outline: none;
+  border: none;
+}
+
+.float_button > button:disabled {
+  opacity: 0.5;
+}

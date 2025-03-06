@@ -1,43 +1,59 @@
 <div class="main_block">
   <div class="account_block">
-    <button mat-icon-button style="margin-top: env(safe-area-inset-top);">
-      <mat-icon style="color: white" routerLink="/home">arrow_back_ios</mat-icon>
-    </button>
+    <div>
+      <button mat-icon-button style="margin-top: env(safe-area-inset-top);">
+        <mat-icon style="color: white" routerLink="/home">arrow_back_ios</mat-icon>
+      </button>
+      <h2 #titleElement>Your Library</h2>
+    </div>
     @if (avatar) {
       <div (click)="toggleAccountInfoBlock()" class="account">
         <img [src]="avatar">
       </div>
     }
-    <div *ngIf="isOpenedAccountInfoBlock" (click)="isOpenedAccountInfoBlock = false" class="layer">
-      <div class="account_info_block" (click)="$event.stopPropagation()">
-        <h3>{{ account.name }}</h3>
-        <p>{{ account.email }}</p>
-        <span>{{ account.bio }}</span>
-        <button mat-button color="warn" (click)="logout()">Logout <mat-icon>logout</mat-icon></button>
-        @if (role === 'admin') {
-          <button style="margin-left: 10px" mat-button routerLink="/admin">
-            Admin <mat-icon>shield_person</mat-icon>
-          </button>
-        }
+  </div>
+  <div #scrollContainer (scroll)="onScroll()" class="scroll_box">
+    <div class="list_block">
+      <div routerLink="/home/folder/track-favorites" class="favorites">
+        <img src="assets/images/favorites.png">
+        <div style="margin-left: 15px">
+          <h3>Favorites</h3>
+          <p>{{ favoritePlayListLength != 0 ? favoritePlayListLength : '' }} {{ favoritePlayListLength > 0 ? 'songs' : 'song' }}</p>
+        </div>
       </div>
     </div>
-  </div>
-  <h2>Your Library</h2>
-  <div class="list_block">
-    <div routerLink="/home/track-favorites" class="favorites">
-      <img src="assets/images/favorites.png">
-      <div style="margin-left: 20px">
-        <h3>Favorites</h3>
-        <p>Playlist - {{ favoritePlayListLength != 0 ? favoritePlayListLength : '' }} songs</p>
-      </div>
-    </div>
-  </div>
-  <div class="list_block">
-    <div routerLink="/home/dynamics-ai" class="dynamics_ai">
-      <img src="assets/images/icon-384x384.svg">
-      <div style="margin-left: 5px">
-        <h3>Dynamic Ai</h3>
-      </div>
+    <span style="margin-top: 20px; font-size: 15px; color: #9c9c9c; font-weight: normal; display: block">Playlists</span>
+    @if (playlists) {
+      @for (playlist of playlists; track $index) {
+        <div [routerLink]="'/home/folder/' + playlist._id" class="playlist">
+          <div class="images_row">
+            <div>
+              <img
+                [style.height]="playlist.tracks.length < 2 ? '70px' : '35px'"
+                [src]="playlist.tracks[0].image">
+              @if (playlist.tracks.length >= 1) {
+                <img
+                  [style.height]="playlist.tracks.length < 2 ? '70px' : '35px'"
+                  [src]="playlist.tracks[1].image">
+              }
+            </div>
+            @if (playlist.tracks.length > 2) {
+              <div>
+                <img [src]="playlist.tracks[2].image">
+                <img [src]="playlist.tracks[3].image">
+              </div>
+            }
+          </div>
+          <div style="margin-left: 15px;">
+            <h3>{{ playlist.playlistName }}</h3>
+            <span>Playlist - {{ playlist.tracks.length }} {{ playlist.tracks.length > 0 ? 'songs' : 'song' }}</span>
+          </div>
+        </div>
+      }
+    }
+    <div (click)="openBottomSheet()" style="width: 100%; display: flex; align-items: center; margin-top: 15px;">
+      <button mat-button class="add_playlist_block"></button>
+      <p style="color: white; margin-left: 15px">Create New Playlist</p>
     </div>
   </div>
 </div>

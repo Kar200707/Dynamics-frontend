@@ -1,0 +1,110 @@
+<div class="main-block">
+  @if (innerWidth > 850) {
+    <div style="width: 95%; text-align: end">
+      <button (click)="isOpenedViewAll3 = !isOpenedViewAll3; listen_again_block3.style.height = isOpenedViewAll3 ? 'unset' : '212px'" mat-button>View all</button>
+    </div>
+  }
+  @if (historyList?.length !== 0) {
+    @if (innerWidth > 850) {
+      <div style="width: 95%; text-align: end">
+        <button (click)="isOpenedViewAll1 = !isOpenedViewAll1; listen_again_block1.style.height = isOpenedViewAll1 ? 'unset' : '212px'" mat-button>View all</button>
+      </div>
+    }
+    <h2 style="margin: 30px 0 0 20px">Select Track for Playlist</h2>
+    <div class="search_block">
+      <input #playlistNameInput placeholder="Playlist Name" style="font-size: 20px" class="search">
+    </div>
+    <div class="float_button">
+      <button
+        (click)="createPlaylist()"
+        [disabled]="playlistNameInput.value === '' || selectedTracks.length === 0">Create</button>
+    </div>
+    <p style="color: #b9b9b9; margin-left: 20px; font-weight: lighter; margin-top: 15px">selected tracks {{ selectedTracks.length }}</p>
+    <div class="search_block">
+      <input placeholder="Search Tracks..." class="search">
+    </div>
+    <div #listen_again_block1 class="listen_again_block">
+      @if (trackListLoaded) {
+        @for (track of historyList; track $index) {
+          <div
+            [style.background-color]="isSelected(track) ? '#ffffff12' : 'unset'"
+            (click)="select(track, $index)" class="track_block">
+            <div class="img_block">
+              <img [src]="track.image" alt="">
+            </div>
+            <h3>{{ track.title.length > 60 ? track.title.slice(0, 60) + '...' : track.title }}</h3>
+            <span>{{ track.author.name.length > 23 ? track.author.name.slice(0, 23) + '...' : track.author.name }}</span>
+            @if (isSelected(track)) {
+              <mat-icon style="color: white; position: absolute; top: 8px; right: 10px; filter: drop-shadow(0px 0px 1px black)">check_circle</mat-icon>
+            }
+          </div>
+        }
+      } @else {
+        @for (num of loadArray; track $index) {
+          <div class="track_block">
+            <div style="width: 120px; height: 120px; background-color: #2a2a2a; border-radius: 6px"></div>
+            <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
+            <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
+          </div>
+        }
+      }
+    </div>
+  }
+  <div #listen_again_block3 class="listen_again_block">
+    @if (newTrackListLoaded) {
+      @for (track of newReleasesList; track $index) {
+        <div
+          [style.background-color]="isSelected(track) ? '#ffffff12' : 'unset'"
+          (click)="select(track, $index)" class="track_block">
+          <div class="img_block">
+            <img [src]="track.image" alt="">
+          </div>
+          <h3>{{ track.title.length > 60 ? track.title.slice(0, 60) + '...' : track.title }}</h3>
+          <span>{{ track.author.name.length > 23 ? track.author.name.slice(0, 23) + '...' : track.author.name }}</span>
+          @if (isSelected(track)) {
+            <mat-icon style="color: white; position: absolute; top: 8px; right: 10px; filter: drop-shadow(0px 0px 1px black)">check_circle</mat-icon>
+          }
+        </div>
+      }
+    } @else {
+      @for (num of loadArray; track $index) {
+        <div class="track_block">
+          <div style="width: 120px; height: 120px; background-color: #2a2a2a; border-radius: 6px"></div>
+          <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
+          <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
+        </div>
+      }
+    }
+  </div>
+  @if (innerWidth > 850) {
+    <div style="width: 95%; text-align: end">
+      <button (click)="isOpenedViewAll2 = !isOpenedViewAll2; listen_again_block2.style.height = isOpenedViewAll2 ? 'unset' : '212px'" mat-button>View all</button>
+    </div>
+  }
+  <div #listen_again_block2 class="listen_again_block">
+    @if (newCollectionsListLoaded) {
+      @for (track of newCollectionsList; track $index) {
+        <div
+          [style.background-color]="isSelected(track) ? '#ffffff12' : 'unset'"
+          (click)="select(track, $index)" class="track_block">
+          <div class="img_block">
+            <img [src]="track.image" alt="">
+          </div>
+          <h3>{{ track.title.length > 60 ? track.title.slice(0, 60) + '...' : track.title }}</h3>
+          <span>{{ track.author.name.length > 23 ? track.author.name.slice(0, 23) + '...' : track.author.name }}</span>
+          @if (isSelected(track)) {
+            <mat-icon style="color: white; position: absolute; top: 8px; right: 10px; filter: drop-shadow(0px 0px 1px black)">check_circle</mat-icon>
+          }
+        </div>
+      }
+    } @else {
+      @for (num of loadArray; track $index) {
+        <div class="track_block">
+          <div style="width: 120px; height: 120px; background-color: #2a2a2a; border-radius: 6px"></div>
+          <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
+          <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
+        </div>
+      }
+    }
+  </div>
+</div>

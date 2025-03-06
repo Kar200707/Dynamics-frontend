@@ -1,7 +1,9 @@
 <div class="main-div">
   @if (confirm) {
     <div class="confirm">
-      <div class="confirm_windows">
+      <div
+        [style.width]="place === 'pc-component' ? '400px' : '80%'"
+        class="confirm_windows">
         <h3>Are you sure you want to delete this chat?</h3>
         <div class="yes_no_block">
           <button (click)="deleteChat()" style="color: #ff5454;" mat-button>yes</button>

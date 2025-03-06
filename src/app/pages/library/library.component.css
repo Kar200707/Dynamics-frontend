@@ -4,6 +4,21 @@
   flex-direction: column;
 }
 
+.scroll_box {
+  overflow-y: scroll;
+  height: calc(100vh - 150px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  margin-top: 5px;
+  width: 100%;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  padding-top: 35px;
+}
+
+.scroll_box::-webkit-scrollbar {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
 .account_block {
   width: 100%;
   display: flex;
@@ -12,11 +27,17 @@
   margin-top: env(safe-area-inset-top);
 }
 
-.main_block > h2 {
+.account_block > div {
+  display: flex;
+  align-items: center;
+}
+
+.account_block > div > h2 {
   color: white;
   font-family: "Nunito", sans-serif;
-  font-size: 28px;
-  margin-top: 50px;
+  transform: translate(-40px, 60px);
+  transition: transform 0.3s ease-in-out;
+  font-size: 25px;
 }
 
 .account {
@@ -39,29 +60,17 @@
 
 .list_block {
   width: 100%;
-  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #1a1a1a;
   border-radius: 13px;
   margin-top: 15px;
 }
 
-.favorites, .dynamics_ai {
+.favorites {
   width: 100%;
   display: flex;
   align-items: center;
-}
-
-.dynamics_ai > div > h3 {
-  font-weight: bold;
-  font-size: 26px;
-  font-family: "Nunito", sans-serif;
-  background: linear-gradient(90deg, #001ee5, #246dff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-align: center;
 }
 
 .favorites > div > h3 {
@@ -74,9 +83,9 @@
   font-family: "Nunito", sans-serif;
 }
 
-.favorites > img, .dynamics_ai > img {
-  width: 60px;
-  height: 60px;
+.favorites > img {
+  width: 70px;
+  height: 70px;
   border-radius: 8px;
 }
 
@@ -88,6 +97,7 @@
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, opacity 0.3s ease;
+  padding-top: calc(20px + env(safe-area-inset-top));
 }
 
 .layer {
@@ -97,7 +107,6 @@
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
-  padding-top: calc(20px + env(safe-area-inset-top));
   left: 0;
   top: 0;
   display: flex;
@@ -133,4 +142,53 @@
 
 button[mat-button].routerLink {
   margin-left: 10px;
+}
+
+.add_playlist_block {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  background-color: #1b1b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add_playlist_block:before {
+  display: block;
+  content: "+";
+  color: white;
+  font-weight: lighter;
+  font-size: 45px;
+  margin-bottom: 5px;
+}
+
+.playlist {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.playlist > div > h3,
+.playlist > div > span {
+  color: white;
+}
+
+.images_row {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 8px;
+  width: 70px;
+}
+
+.images_row > div {
+  display: flex;
+}
+
+.images_row > div > img {
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
+  display: block;
 }

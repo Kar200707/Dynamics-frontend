@@ -27,7 +27,7 @@ export class MobileNavPanelComponent {
     ).subscribe((event: any) => {
       const currentRoutePath = event.urlAfterRedirects;
       switch (currentRoutePath) {
-        case '/home/track-favorites':
+        case '/home/folder':
           this.routePath = 'home';
           break;
         case '/home/library':

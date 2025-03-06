@@ -26,4 +26,8 @@ export const environment = {
   createAiChat: host + 'dynamics-ai/create-chat',
   sendMessageChat: host + 'dynamics-ai/chat/',
   deleteChat: host + 'dynamics-ai/chat/delete/',
+  playlistCreate: host + 'playlist/create',
+  playlistUpdate: host + 'playlist/update/',
+  playlistDelete: host + 'playlist/delete/',
+  playlistGet: host + 'playlist/get',
 }

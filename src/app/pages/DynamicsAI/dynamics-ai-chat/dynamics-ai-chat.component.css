@@ -109,6 +109,22 @@ pre::-webkit-scrollbar {
   padding: 10px;
 }
 
+pre {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+pre::selection {
+  background-color: #b6b6b6;
+  color: black;
+}
+
+pre::-moz-selection {
+  background-color: #b0b0b0;
+  color: black;
+}
+
+
 .text_send_block > form {
   width: calc(100% - 20px);
   margin: 11px 10px;

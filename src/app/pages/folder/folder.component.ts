@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
-import {RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {PlayerControllerService} from "../../services/player-controller.service";
 import localforage from 'localforage';
 import {MatButton} from "@angular/material/button";
@@ -15,7 +15,7 @@ import {CdkListbox} from "@angular/cdk/listbox";
 import {ImageDominantColorService} from "../../components/player/player_functions/image-dominat-color.service";
 
 @Component({
-  selector: 'app-track-favorites',
+  selector: 'app-folder',
   standalone: true,
   imports: [
     MatIcon,
@@ -30,10 +30,11 @@ import {ImageDominantColorService} from "../../components/player/player_function
   providers: [
     RequestService
   ],
-  templateUrl: './track-favorites.component.html',
-  styleUrl: './track-favorites.component.css'
+  templateUrl: './folder.component.html',
+  styleUrl: './folder.component.css'
 })
-export class TrackFavoritesComponent implements OnInit {
+export class FolderComponent implements OnInit {
+  title: string = '';
   trackList?: any;
   trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
@@ -41,8 +42,10 @@ export class TrackFavoritesComponent implements OnInit {
   trackImageBackgroundColor: string = 'rgb(51,51,51)';
   filteredTrackList?: any[];
   searchQuery: string = '';
+  folderId?: string;
+  isFavoriteFolder: boolean = false;
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
-  @ViewChild('favoritesTitle') favoritesTitle!: ElementRef;
+  @ViewChild('titleElement') titleElement!: ElementRef;
   loadArray = [
     1,
     2,
@@ -54,13 +57,22 @@ export class TrackFavoritesComponent implements OnInit {
   ]
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private renderer: Renderer2,
     private imgColorService: ImageDominantColorService,
     private requestService: RequestService,
-    private playerController: PlayerControllerService) {  }
+    private playerController: PlayerControllerService) { this.checkUrl(); }
 
   async ngOnInit() {
-    this.getFavoriteTracksList();
+    if (!this.isFavoriteFolder) {
+      this.route.paramMap.subscribe(params => {
+        this.folderId = params.get('id') || '';
+        this.getFolderItems();
+      });
+    } else {
+      this.getFavoriteTracksList();
+    }
     this.playerController.actPlayer$.subscribe(act => {
       if (act === 'pause') {
         this.listIsPlay = false;
@@ -71,12 +83,71 @@ export class TrackFavoritesComponent implements OnInit {
     })
   }
 
+  checkUrl() {
+    if (this.router.url.includes('folder/track-favorites')) {
+      this.title = "Favorites";
+      this.isFavoriteFolder = true;
+    }
+  }
+
+  async getFolderItems() {
+    const cachedHistoryList = await localforage.getItem('folder' + this.folderId);
+    if (!cachedHistoryList) {
+      await Haptics.impact({ style: ImpactStyle.Heavy });
+    }
+    try {
+      if (cachedHistoryList) {
+        const sortedTrackList =  JSON.parse(cachedHistoryList as string).tracks.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+        this.trackList = sortedTrackList;
+        this.title = JSON.parse(cachedHistoryList as string).playlistName;
+        this.playerController.trackId$.subscribe(id => {
+          this.trackList.forEach(async (track: any) => {
+            if (track.videoId === id) {
+              this.trackImageBackgroundColor = 'rgb(51,51,51)';
+              const colorsArray:string[] = await this.imgColorService.getDominantColors(host + 'media/cropImage?url=' + track.image);
+              this.trackImageBackgroundColor = colorsArray[0];
+            }
+          })
+          this.trackPlayId = id;
+        })
+      } else {
+        this.trackList = null;
+      }
+
+      this.requestService.post<any>(
+        environment.playlistGet + '/' + this.folderId,
+        { token: this.token }
+      ).subscribe(async data => {
+        if (this.trackList !== data.playlist.tracks || !cachedHistoryList) {
+          this.trackList = data.playlist.tracks.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+          this.title = data.playlist.playlistName;
+          this.playerController.trackId$.subscribe(id => {
+            this.trackList.forEach(async (track: any) => {
+              if (track.videoId === id) {
+                const colorsArray:string[] = await this.imgColorService.getDominantColors(host + 'media/cropImage?url=' + track.image);
+                this.trackImageBackgroundColor = colorsArray[0];
+              }
+            })
+            this.trackPlayId = id;
+          })
+          await localforage.setItem('folder' + this.folderId, JSON.stringify(data.playlist));
+          if (!cachedHistoryList) {
+            await Haptics.impact({ style: ImpactStyle.Light });
+          }
+        }
+      });
+    } catch (e) {
+      console.error('Error loading history list from cache:', e);
+      this.trackList = null;
+    }
+  }
+
   onScroll() {
     const scrollTop = this.scrollContainer.nativeElement.scrollTop;
     if (scrollTop > 35) {
-      this.renderer.setStyle(this.favoritesTitle.nativeElement, 'transform', 'translate(30px, -40px)');
+      this.renderer.setStyle(this.titleElement.nativeElement, 'transform', 'translate(30px, -40px)');
     } else {
-      this.renderer.setStyle(this.favoritesTitle.nativeElement, 'transform', 'translate(0, 0)');
+      this.renderer.setStyle(this.titleElement.nativeElement, 'transform', 'translate(0, 0)');
     }
   }
 

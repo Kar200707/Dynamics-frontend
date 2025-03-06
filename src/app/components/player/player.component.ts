@@ -18,7 +18,7 @@ import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {PlayerKeyboardPluginService} from "./player_functions/player-keyboard-plugin.service";
 import {ImageDominantColorService} from "./player_functions/image-dominat-color.service";
 import {filter} from "rxjs";
-import {Title} from "@angular/platform-browser";
+import {Meta, Title} from "@angular/platform-browser";
 import {Capacitor} from "@capacitor/core";
 import { CarAudio } from '@justicointeractive/capacitor-car-audio';
 
@@ -120,10 +120,12 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   ]
 
   constructor(
+    private meta: Meta,
     private titleService: Title,
     private cdr: ChangeDetectorRef,
     private requestService: RequestService,
     private router: Router,
+    private route: ActivatedRoute,
     private imgDominatColorService: ImageDominantColorService,
     private playerKeyBoardPlugin: PlayerKeyboardPluginService,
     private audioCacheService: AudioCacheService,
@@ -209,8 +211,14 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
     });
   }
 
-
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['play'] && !this.isPlaying) {
+        this.audio_info.videoId = params['play'];
+        this.getPlayerInfo('onInit');
+        this.isPlaying = true;
+      }
+    });
     window.addEventListener("keydown", (e) => {
       switch (e.key) {
         case 'ArrowLeft': this.previous_10s(); break;
@@ -263,14 +271,15 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
     }
   }
 
-  seekCircleSetTimeOut() {
-    clearTimeout(this.seekCircleTimeOut);
-
-    this.seekCircleShow = true;
-    this.seekCircleTimeOut = setTimeout(() => {
-        this.seekCircleShow = false;
-        this.seekBarContainerOpenPlayer.nativeElement.style.overflow = 'hidden';
-      }, 1000);
+  updateRouteParam(id: string) {
+    this.route.queryParams.subscribe(params => {
+      if (!params['play'] || params['play'] !== this.audio_info.videoId) {
+        this.router.navigate([], {
+          queryParams: { play: id },
+          queryParamsHandling: 'merge',
+        });
+      }
+    });
   }
 
   getFormattedInt(int: number, text: string): string {
@@ -354,7 +363,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
     }
   }
 
-  getPlayerInfo() {
+  getPlayerInfo(call?: string) {
     this.audio_recommended_list = [0];
     this.views = null;
     this.likes = null;
@@ -362,6 +371,15 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
     this.requestService.post<any>(environment.getPlayerInfoByVideoId, { access_token: this.token, trackId: this.audio_info.videoId })
       .subscribe((data) => {
         this.audio_info = data;
+        if (call === 'onInit') {
+          this.trackIndex = 0;
+          this.type = 'audio';
+          this.trackList = [this.audio_info];
+          this.audio_info = this.trackList[this.trackIndex];
+          updateMediaSessionMetadata(this.audio_info, this.titleService);
+          this.load();
+          this.getPlayerInfo();
+        }
         this.audio_recommended_list = data.recTracks;
         this.views = data.views;
         this.likes = data.likes;
@@ -431,13 +449,11 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
         access_token: this.token,
         trackId: this.audio_info.videoId
       }).subscribe()
-
       // await Haptics.impact({ style: ImpactStyle.Light });
     } else {
       const query: string = `?type=${this.type}&quality=highestaudio`
 
       this.media.src = environment.getStream + this.audio_info.videoId + query;
-
 
       this.media.load();
 
@@ -470,6 +486,8 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
 
     this.media.addEventListener('loadedmetadata', () => {
       this.audio_info = this.trackList[this.trackIndex];
+      this.updateRouteParam(this.audio_info.videoId);
+      this.setMetaTags();
       this.isLoaded = true;
       this.currentTime = '00:00';
       if (!isNaN(this.media.duration) && !isNaN(this.media.currentTime)) {
@@ -715,12 +733,20 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
     }
   }
 
+  setMetaTags() {
+    this.meta.updateTag({ property: 'og:title', content: this.audio_info.title });
+    this.meta.updateTag({ property: 'og:description', content: "Certainly! Here’s a suggested phrase for promoting music on Dynamics, focusing on being pleasant and free" });
+    this.meta.updateTag({ property: 'og:image', content: host + 'media/cropImage?url=' + this.audio_info.image, });
+    this.meta.updateTag({ property: 'og:url', content: "https://dynamics-9080b.web.app/home?play=" + this.audio_info.videoId });
+  }
+
   async share() {
     await Haptics.impact({ style: ImpactStyle.Heavy });
+    this.setMetaTags();
     const shareData = {
       title: 'Dynamics ' + this.audio_info.title,
       text: this.audio_info.author.name,
-      url: "https://dynamics-9080b.web.app/home",
+      url: "https://dynamics-9080b.web.app/home?play=" + this.audio_info.videoId,
     };
 
     navigator.share(shareData);

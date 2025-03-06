@@ -5,7 +5,7 @@
       class="scroll_box">
       @if (trackList && trackList.length !== 0) {
         <div class="search_play_block">
-          <h1 #favoritesTitle>Favorites</h1>
+          <h1 #titleElement>{{ title }}</h1>
           <div (click)="setTrack(trackList[0].videoId, 0)" class="play_list">
             @if (listIsPlay) {
               <img class="music_playGIF" src="assets/images/icons/music_play.gif">
@@ -32,7 +32,7 @@
             <input
               #searchInput
               (input)="onSearch(searchInput.value)"
-              type="text" placeholder="Search in Favorites" class="search">
+              type="text" placeholder="Search in {{ title }}" class="search">
             <img src="assets/images/icons/search.png">
           </div>
           @if (trackList && trackList.length !== 0) {

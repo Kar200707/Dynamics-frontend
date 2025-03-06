@@ -1,0 +1,71 @@
+.main_div {
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 100px;
+}
+
+.account_info_block {
+  padding: 20px;
+  width: 100%;
+  border-radius: 15px;
+}
+
+.account_info_block > div > img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: block;
+}
+
+.account_info_block > div > div > h3,
+.account_info_block > div > div > span,
+.account_info_block > div > div > p {
+  color: white;
+  margin-left: 10px;
+  font-family: "Nunito", sans-serif;
+}
+
+.account_info_block > button {
+  background-color: #ff4e50;
+  color: white;
+  border-radius: 10px;
+  margin-top: 30px;
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.account_info_block > button:hover {
+  background-color: #ff2a2f;
+}
+
+.account_info_block > button.mat-button {
+  text-transform: none;
+}
+
+.dynamics_ai {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  background-color: #111111;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+.dynamics_ai > div > h3 {
+  font-weight: bold;
+  font-size: 22px;
+  font-family: "Nunito", sans-serif;
+  background: linear-gradient(90deg, #001ee5, #246dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+.dynamics_ai > img {
+  width: 53px;
+  height: 53px;
+  border-radius: 8px;
+}

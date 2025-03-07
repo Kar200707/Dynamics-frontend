@@ -1,0 +1,98 @@
+.main_div {
+  padding: 20px;
+  height: 100vh;
+}
+
+h1 {
+  color: white;
+  font-size: 20px;
+  font-family: "Nunito", sans-serif;
+}
+
+.tracks_list_block {
+  width: 100%;
+  overflow-y: scroll;
+  height: calc(100vh - 270px);
+  padding-bottom: 50px;
+}
+
+.track {
+  width: 100%;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  justify-content: space-between;
+}
+
+.track > div > img {
+  width: 60px;
+  object-fit: cover;
+  height: 60px;
+  border-radius: 5px;
+}
+
+.track > div {
+  display: flex;
+  align-items: center;
+  height: 62px;
+}
+
+.track > div > div {
+  margin-left: 15px;
+}
+
+.track > div > div > h4 {
+  color: white;
+}
+
+.track > div > div > p {
+  color: #adadad;
+}
+
+.track > div > div > h4,
+.track > div > div > p {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  font-size: 13px;
+  font-family: "Nunito", sans-serif;
+}
+
+.tracks_count_block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tracks_count_block > p {
+  color: white;
+}
+
+.tracks_count_block > mat-icon {
+  color: #ff3232;
+}
+
+.select {
+  align-self: end;
+  display: flex;
+  align-items: center;
+  margin: 0 15px;
+}
+
+.select > mat-icon {
+  color: white;
+  display: block;
+}
+
+.name_input {
+  padding: 6px 8px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #101010;
+  color: white;
+}

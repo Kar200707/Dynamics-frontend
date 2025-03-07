@@ -1,7 +1,7 @@
 <div class="main_block">
   <div class="account_block">
     <div>
-      <button mat-icon-button style="margin-top: env(safe-area-inset-top);">
+      <button mat-icon-button>
         <mat-icon style="color: white" routerLink="/home">arrow_back_ios</mat-icon>
       </button>
       <h2 #titleElement>Your Library</h2>
@@ -25,34 +25,71 @@
     <span style="margin-top: 20px; font-size: 15px; color: #9c9c9c; font-weight: normal; display: block">Playlists</span>
     @if (playlists) {
       @for (playlist of playlists; track $index) {
-        <div [routerLink]="'/home/folder/' + playlist._id" class="playlist">
-          <div class="images_row">
-            <div>
-              <img
-                [style.height]="playlist.tracks.length < 2 ? '70px' : '35px'"
-                [src]="playlist.tracks[0].image">
-              @if (playlist.tracks.length >= 1) {
-                <img
-                  [style.height]="playlist.tracks.length < 2 ? '70px' : '35px'"
-                  [src]="playlist.tracks[1].image">
+        <div
+          (touchstart)="startHolding(playlist._id)"
+          (touchend)="stopHolding()"
+          (touchcancel)="stopHolding()"
+          class="playlist">
+          <div style="width: 100%;" [routerLink]="'/home/folder/' + playlist._id" >
+            <div class="images_row">
+              <div>
+                @if (playlist.tracks?.length === 1) {
+                  <img
+                    style="width: 70px; height: 70px"
+                    [src]="playlist.tracks[0].image">
+                } @else if (playlist.tracks?.length === 2) {
+                  <img
+                    style="height: 70px"
+                    [src]="playlist.tracks[0].image">
+                   <img
+                     style="height: 70px"
+                     [src]="playlist.tracks[1].image">
+                } @else if (playlist.tracks?.length === 3) {
+                  <div>
+                    <img
+                      height="35px"
+                      width="35px"
+                      style="object-fit: cover; display: block"
+                      [src]="playlist.tracks[0].image">
+                    <img
+                      height="35px"
+                      width="35px"
+                      style="object-fit: cover; display: block"
+                      [src]="playlist.tracks[1].image">
+                  </div>
+                  <img
+                    style="height: 70px"
+                    [src]="playlist.tracks[1].image">
+                }
+              </div>
+              @if (playlist.tracks?.length > 3) {
+                <div>
+                  <img
+                    [src]="playlist.tracks[0].image">
+                  <img
+                    [src]="playlist.tracks[1].image">
+                </div>
+                <div>
+                  <img
+                    [src]="playlist.tracks[2].image">
+                  <img
+                    [src]="playlist.tracks[3].image">
+                </div>
               }
             </div>
-            @if (playlist.tracks.length > 2) {
-              <div>
-                <img [src]="playlist.tracks[2].image">
-                <img [src]="playlist.tracks[3].image">
-              </div>
-            }
+            <div style="margin-left: 15px;">
+              <h3>{{ playlist.playlistName }}</h3>
+              <span>Playlist - {{ playlist.tracks?.length }} {{ playlist.tracks?.length > 0 ? 'songs' : 'song' }}</span>
+            </div>
           </div>
-          <div style="margin-left: 15px;">
-            <h3>{{ playlist.playlistName }}</h3>
-            <span>Playlist - {{ playlist.tracks.length }} {{ playlist.tracks.length > 0 ? 'songs' : 'song' }}</span>
-          </div>
+          <button (click)="openSheetPlaylistMore(playlist._id)" mat-icon-button>
+            <mat-icon style="color: white">more_vert</mat-icon>
+          </button>
         </div>
       }
     }
-    <div (click)="openBottomSheet()" style="width: 100%; display: flex; align-items: center; margin-top: 15px;">
-      <button mat-button class="add_playlist_block"></button>
+    <div (click)="openBottomSheet()" class="add_playlist_block">
+      <button mat-button></button>
       <p style="color: white; margin-left: 15px">Create New Playlist</p>
     </div>
   </div>

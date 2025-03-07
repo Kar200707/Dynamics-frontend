@@ -74,16 +74,10 @@ body {
   padding: 0 !important;
   border-radius: 20px 20px 0 0 !important;
   background: #1a1a1a !important;
-  animation: slideIn 0.3s cubic-bezier(0,-0.4,0,1.20) !important;
 }
 
-@keyframes slideIn {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+.mat-bottom-sheet-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }

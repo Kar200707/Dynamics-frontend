@@ -1,7 +1,7 @@
 <div class="main_div">
   <div class="account_info_block" (click)="$event.stopPropagation()">
     <div style="display: flex; align-items: center;">
-      <img [src]="account.avatar">
+      <img #avatarImg (error)="avatarImg.src = 'assets/images/dark-person.png'" [src]="account.avatar">
       <div>
         <h3>{{ account.name }}</h3>
         <p>{{ account.email }}</p>

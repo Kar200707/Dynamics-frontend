@@ -82,17 +82,21 @@
                      <img class="image" [src]="track.image" alt="track image">
                    </div>
                  </div>
-                 <div class="track_info_box">
+                 <div
+                   [style.padding-right]="isFavoriteFolder ? '' : '10px'"
+                   class="track_info_box">
                    <h4>{{ track.title }}</h4>
                    <span>{{ track.author.name.length > 20 ? track.author.name.slice(0, 20) + '...' : track.author.name }}</span>
                  </div>
                </div>
-               <div class="control_box">
-                 <button (click)="remFavoriteTrack(track.videoId)" class="favorite_button">
-                   <img src="assets/images/icons/favorite.png">
-                 </button>
-                 <span class="track_duration">{{ formatTime(track.track_duration) }}</span>
-               </div>
+               @if (this.isFavoriteFolder) {
+                 <div class="control_box">
+                   <button (click)="remFavoriteTrack(track.videoId)" class="favorite_button">
+                     <img src="assets/images/icons/favorite.png">
+                   </button>
+                   <!--                 <span class="track_duration">{{ formatTime(track.track_duration) }}</span>-->
+                 </div>
+               }
              </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, ElementRef, inject, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from "@angular/material/bottom-sheet";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {Router, RouterLink} from "@angular/router";
 import {AudioCacheService} from "../../../services/audio-cache.service";
 import {ImageDominantColorService} from "../../player/player_functions/image-dominat-color.service";
@@ -12,6 +12,8 @@ import {environment} from "../../../../environment/environment";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {SearchComponent} from "../../../pages/search/search.component";
 import {MatIcon} from "@angular/material/icon";
+import {debounceTime, Subject, switchMap} from "rxjs";
+import {SearchListModel} from "../../../../models/search_list.model";
 
 @Component({
   selector: 'app-add-playlist',
@@ -21,7 +23,8 @@ import {MatIcon} from "@angular/material/icon";
     RouterLink,
     HttpClientModule,
     SearchComponent,
-    MatIcon
+    MatIcon,
+    MatIconButton
   ],
   providers: [RequestService, AudioCacheService, HttpClient],
   templateUrl: './add-playlist.component.html',
@@ -44,8 +47,12 @@ export class AddPlaylistComponent implements OnInit {
   isOpenedViewAll2:boolean = false;
   isOpenedViewAll3:boolean = false;
   selectedTracks: any[] = [];
+  search: SearchListModel[] = [];
+  private searchSubject: Subject<any> = new Subject<string>();
+  searchText: string = '';
+  isOpenedSearchResultsBlock: boolean = false;
+  isLoaded: boolean = false;
   private bottomSheetRef = inject(MatBottomSheetRef<AddPlaylistComponent>);
-  typesListDictionary: number[] = [1, 2, 3];
   loadArray: number[] = [
     1,
     2,
@@ -59,13 +66,21 @@ export class AddPlaylistComponent implements OnInit {
   ]
 
   constructor(
-    private cacheService: AudioCacheService,
-    private router: Router,
     private cdr: ChangeDetectorRef,
-    private imgColorService: ImageDominantColorService,
     private requestService: RequestService,
+    private reqServ: RequestService,
     private playerController: PlayerControllerService,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {}
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {
+    this.searchSubject.pipe(
+      debounceTime(750),
+      switchMap((value: string) => this.reqServ.post<SearchListModel[]>(environment.searchTracksList, { searchText: value }))
+    ).subscribe(async (data: SearchListModel[]) => {
+      this.search = data;
+      this.isOpenedSearchResultsBlock = !!data && this.searchText !== '';
+      this.isLoaded = true;
+      await Haptics.impact({ style: ImpactStyle.Light });
+    });
+  }
 
   async ngOnInit() {
     await this.loadHistoryList();
@@ -111,6 +126,26 @@ export class AddPlaylistComponent implements OnInit {
         }
       }
     });
+  }
+
+  setTrackInSearches(trackInfo: any) {
+    this.select(trackInfo);
+    this.historyList?.unshift(trackInfo);
+  }
+
+  searchTrackList(value: string) {
+    this.searchText = value;
+    if (value.trim()) {
+      this.search = [];
+      this.isLoaded = false;
+      this.searchSubject.next(value);
+    } else {
+      this.isLoaded = false;
+      this.search = [];
+    }
+    if (value === '') {
+      this.isOpenedSearchResultsBlock = false;
+    }
   }
 
   closeSheet() {
@@ -214,7 +249,7 @@ export class AddPlaylistComponent implements OnInit {
     }
   }
 
-  async select(trackData: any, index: number) {
+  async select(trackData: any) {
     const trackIndex = this.selectedTracks.findIndex(t => t.videoId === trackData.videoId);
 
     if (trackIndex !== -1) {

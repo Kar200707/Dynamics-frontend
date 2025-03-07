@@ -13,6 +13,10 @@ export class RequestService {
     return this.http.get<T>(url);
   }
 
+  put<T>(url: string, data: any): Observable<T> {
+    return this.http.put<T>(url, data);
+  }
+
   post<T>(url: string, data: any): Observable<T> {
     return this.http.post<T>(url, data);
   }

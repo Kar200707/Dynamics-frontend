@@ -1,3 +1,7 @@
+.main-block {
+  background-color: #0a0a0a;
+}
+
 .scroll_box {
   overflow-y: scroll;
   padding: 20px 0;

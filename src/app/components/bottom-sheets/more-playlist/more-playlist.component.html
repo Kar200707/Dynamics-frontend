@@ -1,0 +1,51 @@
+<div class="main_div">
+  @if (playlist) {
+    @if (!isOpenedEditPlaylistName) {
+      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px">
+        <h1>{{ playlist.playlistName }}</h1>
+        <button (click)="isOpenedEditPlaylistName = true" style="margin-left: 13px" mat-icon-button>
+          <mat-icon style="color: white; display: block;">edit</mat-icon>
+        </button>
+      </div>
+    } @else {
+      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px">
+        <input class="name_input" #changeNameInput [value]="playlist.playlistName">
+        <button (click)="changePlaylistName(changeNameInput.value)" style="margin-left: 5px" mat-icon-button>
+          <mat-icon style="color: white; display: block;">arrow_upward</mat-icon>
+        </button>
+      </div>
+    }
+    <div class="tracks_count_block">
+      @if (selectedPlaylistItems.length === 0) {
+        <p>{{ playlist.tracks.length }} {{ playlist.tracks.length > 1 ? 'tracks' : 'track' }}</p>
+      } @else {
+        <p>{{ selectedPlaylistItems.length }} selected</p>
+      }
+
+      <button (click)="selectedPlaylistItems.length !== 0 ? update() : delete()" style="color: #ee2424" mat-button>
+        <p>Delete{{ selectedPlaylistItems.length !== 0 ? '' : ' playlist'}}</p>
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <div class="tracks_list_block">
+      @for(track of playlist.tracks; track $index) {
+        <div (click)="select(track)" class="track">
+          <div>
+            <img [src]="track.image" alt="track image">
+            <div>
+              <h4>{{ track.title }}</h4>
+              <p>{{ track.author.name }}</p>
+            </div>
+          </div>
+          <div class="select">
+            @if (isSelected(track)) {
+              <mat-icon>check_circle</mat-icon>
+            } @else {
+              <mat-icon>radio_button_unchecked</mat-icon>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -21,14 +21,32 @@
     </div>
     <p style="color: #b9b9b9; margin-left: 20px; font-weight: lighter; margin-top: 15px">selected tracks {{ selectedTracks.length }}</p>
     <div class="search_block">
-      <input placeholder="Search Tracks..." class="search">
+      <div class="search_box">
+        <input (input)="searchTrackList(searchInput.value)" #searchInput placeholder="Search Tracks..." class="search">
+        <button class="search-btn" (click)="searchInput.focus()" mat-icon-button>
+          <mat-icon>search</mat-icon>
+        </button>
+        <button class="clear-btn" (click)="searchInput.value = ''; searchInput.focus(); isOpenedSearchResultsBlock = false" mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      @if (isOpenedSearchResultsBlock) {
+        <div class="search_results">
+          @for (item of search; track $index) {
+            <div (click)="setTrackInSearches(item)" class="search_items">
+              <img [src]="item.image" alt="track image">
+              <h4>{{ item.title.length > 40 ? item.title.slice(0, 40) + '...' : item.title }}</h4>
+            </div>
+          }
+        </div>
+      }
     </div>
     <div #listen_again_block1 class="listen_again_block">
       @if (trackListLoaded) {
         @for (track of historyList; track $index) {
           <div
             [style.background-color]="isSelected(track) ? '#ffffff12' : 'unset'"
-            (click)="select(track, $index)" class="track_block">
+            (click)="select(track)" class="track_block">
             <div class="img_block">
               <img [src]="track.image" alt="">
             </div>
@@ -55,7 +73,7 @@
       @for (track of newReleasesList; track $index) {
         <div
           [style.background-color]="isSelected(track) ? '#ffffff12' : 'unset'"
-          (click)="select(track, $index)" class="track_block">
+          (click)="select(track)" class="track_block">
           <div class="img_block">
             <img [src]="track.image" alt="">
           </div>
@@ -86,7 +104,7 @@
       @for (track of newCollectionsList; track $index) {
         <div
           [style.background-color]="isSelected(track) ? '#ffffff12' : 'unset'"
-          (click)="select(track, $index)" class="track_block">
+          (click)="select(track)" class="track_block">
           <div class="img_block">
             <img [src]="track.image" alt="">
           </div>

@@ -15,7 +15,7 @@
   left: 0;
   width: 100%;
   height: env(safe-area-inset-bottom);
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.82), transparent);
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.59), transparent);
 }
 
 .alert_message {

@@ -97,7 +97,9 @@ export class LibraryComponent implements OnInit {
       }
       return data;
     }));
-    this.playlists = folders.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+    if (folders.length > 0) {
+      this.playlists = folders.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+    }
   }
 
   startHolding(id: string) {

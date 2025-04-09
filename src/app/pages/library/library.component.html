@@ -6,11 +6,9 @@
       </button>
       <h2 #titleElement>Your Library</h2>
     </div>
-    @if (avatar) {
-      <div (click)="toggleAccountInfoBlock()" class="account">
-        <img [src]="avatar">
-      </div>
-    }
+    <div (click)="toggleAccountInfoBlock()" class="account">
+      @if (avatar) { <img [src]="avatar"> }
+    </div>
   </div>
   <div #scrollContainer (scroll)="onScroll()" class="scroll_box">
     <div class="list_block">
@@ -87,7 +85,7 @@
         </div>
       }
     }
-    @if (!isLoadedPlaylists) {
+    @if (!isLoadedPlaylists && !playlists) {
       @for (num of playlistsLoadArr; track $index) {
         <div class="playlist_load">
           <div class="image"></div>

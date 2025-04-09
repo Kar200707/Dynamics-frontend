@@ -8,7 +8,7 @@
       [style.margin-bottom]="place === 'home' ? '0' : '20px'"
       style="width: 100%; display: flex; align-items: center;">
       @if (place !== 'home') {
-        <button mat-icon-button style="margin-top: env(safe-area-inset-top);">
+        <button class="back_button">
           <mat-icon style="color: white" routerLink="/home">arrow_back_ios</mat-icon>
         </button>
       }

@@ -15,10 +15,12 @@ h1 {
 }
 
 .chats_block {
-  margin-top: 30px;
+  margin-top: 20px;
   overflow-y: scroll;
-  height: calc(100vh - 285px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
+  overflow-x: hidden;
+  height: calc(100vh - 105px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
   padding-bottom: 50px;
+  border-radius: 20px 20px 0 0;
 }
 
 @media screen and (min-width: 850px) {
@@ -40,7 +42,6 @@ h2 {
 
 .chat {
   width: 100%;
-  padding: 10px 20px;
   margin-top: 5px;
   height: 80px;
   overflow: hidden;
@@ -50,22 +51,23 @@ h2 {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
-  background-color: #0e0e0e;
+  /*background-color: #0e0e0e;*/
   border-radius: 12px;
+  position: relative;
 }
 
 .line {
   content: "";
   display: block;
-  width: calc(100% - 20px);
+  width: calc(100% - 50px);
   height: 1px;
   background: rgba(255, 255, 255, 0.08);
-  margin: 8px 10px;
 }
 
 .chat > h3 {
   color: white;
   font-family: "Nunito", sans-serif;
+  max-width: 90%;
 }
 
 .chat > p {
@@ -73,6 +75,7 @@ h2 {
   font-family: "Nunito", sans-serif;
   margin-top: 5px;
   font-size: 13px;
+  max-width: 90%;
 }
 
 .create_chat_btn {
@@ -87,4 +90,35 @@ h2 {
 
 .create_chat_btn:active {
   background-color: rgba(255, 255, 255, 0.4);
+}
+
+.chat_more_button {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  z-index: 2;
+}
+
+.header {
+  margin-top: env(safe-area-inset-top);
+  display: flex;
+  flex-direction: column;
+}
+
+.list_block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.close_ai_btn {
+  padding: 10px 13px 10px 8px;
+  background: #0e0e0e;
+  border: none;
+  color: #ffffff;
+  border-radius: 10px;
+  align-self: start;
+  display: flex;
+  align-items: center;
 }

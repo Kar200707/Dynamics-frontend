@@ -1,4 +1,13 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
 import {PlayerControllerService} from "../../services/player-controller.service";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
@@ -21,6 +30,9 @@ import {filter} from "rxjs";
 import {Meta, Title} from "@angular/platform-browser";
 import {Capacitor} from "@capacitor/core";
 import { CarAudio } from '@justicointeractive/capacitor-car-audio';
+import {MorePlaylistComponent} from "../bottom-sheets/more-playlist/more-playlist.component";
+import {MatBottomSheet} from "@angular/material/bottom-sheet";
+import {AddTrackInPlaylistsComponent} from "../bottom-sheets/add-track-in-playlists/add-track-in-playlists.component";
 
 
 @Component({
@@ -53,6 +65,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   @ViewChild('videoElement', { static: false }) videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('main_block') mainBlock!: ElementRef<HTMLDivElement>;
   @ViewChild('image_track') image!: ElementRef<HTMLImageElement>;
+  private _bottomSheetAddToPlaylists = inject(MatBottomSheet);
   audio: HTMLAudioElement = audio;
   audio2: HTMLAudioElement = audio2;
   media: HTMLAudioElement | HTMLVideoElement = this.audio;
@@ -164,16 +177,17 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
       }
     })
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        let routePath:string = event.urlAfterRedirects.split('/')[1];
-
-        if (routePath != 'home') {
-          this.isOpenedMobilePlayer = false;
-          this.isOpenedMobilePlayerAnim = false;
-        }
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     let routePath:string = event.urlAfterRedirects.split('/')[1];
+    //
+    //     if (routePath != 'home') {
+    //       console.log('hello')
+    //       this.isOpenedMobilePlayer = false;
+    //       this.isOpenedMobilePlayerAnim = false;
+    //     }
+    //   }
+    // });
 
     this.playerController.backgroundUrl$.subscribe(bgUrl => {
       if (bgUrl) {
@@ -212,6 +226,10 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.media.addEventListener("playing", () => {
+      this.setMediaController();
+    })
+
     this.route.queryParams.subscribe(params => {
       if (params['play'] && !this.isPlaying) {
         this.audio_info.videoId = params['play'];
@@ -231,13 +249,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
       //     this.playPause();
       // }
     })
-    if ('mediaSession' in navigator) {
-      navigator.mediaSession.setActionHandler('play', () => {this.play(); this.cdr.detectChanges();});
-      navigator.mediaSession.setActionHandler('pause', () => {this.pause(); this.cdr.detectChanges();});
-      navigator.mediaSession.setActionHandler('previoustrack', () => {this.prev(); this.cdr.detectChanges();});
-      navigator.mediaSession.setActionHandler('nexttrack', () => {this.next(); this.cdr.detectChanges();});
-      navigator.mediaSession.setActionHandler('seekto', details => this.seekTo(details.seekTime!));
-    }
+   this.setMediaController();
 
     this.media.addEventListener('ended', () => {
       this.isClickUp = true;
@@ -252,6 +264,16 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
         }
       }, 0);
     });
+  }
+
+  setMediaController() {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('play', () => {this.play(); this.cdr.detectChanges();});
+      navigator.mediaSession.setActionHandler('pause', () => {this.pause(); this.cdr.detectChanges();});
+      navigator.mediaSession.setActionHandler('previoustrack', () => {this.prev(); this.cdr.detectChanges();});
+      navigator.mediaSession.setActionHandler('nexttrack', () => {this.next(); this.cdr.detectChanges();});
+      navigator.mediaSession.setActionHandler('seekto', details => this.seekTo(details.seekTime!));
+    }
   }
 
   ngAfterViewInit() {
@@ -388,6 +410,16 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
           this.recTracksBlock.nativeElement.scrollLeft = 0;
         }
       })
+  }
+
+  async openSheetAddToPlaylists() {
+    await Haptics.impact({ style: ImpactStyle.Medium })
+    const bottomSheetRef = this._bottomSheetAddToPlaylists.open(AddTrackInPlaylistsComponent, {
+      panelClass: "bottom-sheet",
+      data: this.audio_info,
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(() => { });
   }
 
   async getImageColor() {
@@ -659,10 +691,12 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   openMobilePlayer() {
-    if (innerWidth < 500 && !this.isOpenedMobilePlayer) {
-      this.playerController.setIsOpenedPlayer(true);
-      this.isOpenedMobilePlayer = true;
-      this.isOpenedMobilePlayerAnim = true;
+    if (this.audio_info.videoId !== '') {
+      if (innerWidth < 500 && !this.isOpenedMobilePlayer) {
+        this.playerController.setIsOpenedPlayer(true);
+        this.isOpenedMobilePlayer = true;
+        this.isOpenedMobilePlayerAnim = true;
+      }
     }
   }
 

@@ -62,50 +62,6 @@
   </div>
   @if (innerWidth > 850) {
     <div style="width: 95%; text-align: end">
-      <button (click)="isOpenedViewAll3 = !isOpenedViewAll3; listen_again_block3.style.height = isOpenedViewAll3 ? 'unset' : '212px'" mat-button>View all</button>
-    </div>
-  }
-  <div #listen_again_block3 class="listen_again_block">
-    @if (newTrackListLoaded) {
-      @for (track of newReleasesList; track $index) {
-        <div (click)="setTrack(track.videoId, $index, newReleasesList)" class="track_block">
-          <div class="img_block">
-            <div
-              [style.opacity]="trackPlayId === track.videoId ? '1' : '0'"
-              [style.background-image]="trackPlayId === track.videoId ?
-                'linear-gradient(to left top, rgb(97 97 97), rgb(171 171 171 / 18%), rgba(0, 73, 229, 0), transparent)' :
-                'linear-gradient(to top left, rgb(3, 46, 141), rgb(3, 46, 141, 0.7), rgba(0, 73, 229, 0), transparent)'"
-              class="cover_not_playing_item">
-              @if (isPlaying) {
-                <img style="width: 36px; height: 36px; margin: 10px" class="playing_icon" src="assets/images/icons/music_play.gif" alt="playing icon">
-              } @else {
-                <img src="assets/images/icons/play_circle_icon.png" alt="play icon">
-              }
-            </div>
-            <div
-              [style.opacity]="trackPlayId !== track.videoId ? '1' : '0'"
-              class="cover_not_playing_item">
-              <img src="assets/images/icons/play_circle_icon.png" alt="play icon">
-            </div>
-            <img [src]="track.image" alt="">
-          </div>
-          <h3>{{ track.title.length > 60 ? track.title.slice(0, 60) + '...' : track.title }}</h3>
-          <span>{{ track.author.name.length > 23 ? track.author.name.slice(0, 23) + '...' : track.author.name }}</span>
-        </div>
-      }
-    } @else {
-      @for (num of loadArray; track $index) {
-        <div class="track_block">
-          <div style="width: 150px; height: 150px; background-color: #2a2a2a; border-radius: 6px"></div>
-          <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
-          <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
-        </div>
-      }
-    }
-  </div>
-  <h2 class="title_playlists">New Releases</h2>
-  @if (innerWidth > 850) {
-    <div style="width: 95%; text-align: end">
       <button (click)="isOpenedViewAll2 = !isOpenedViewAll2; listen_again_block2.style.height = isOpenedViewAll2 ? 'unset' : '212px'" mat-button>View all</button>
     </div>
   }
@@ -148,6 +104,50 @@
     }
   </div>
   <h2 class="title_playlists">Armenian New Collections</h2>
+  @if (innerWidth > 850) {
+    <div style="width: 95%; text-align: end">
+      <button (click)="isOpenedViewAll3 = !isOpenedViewAll3; listen_again_block3.style.height = isOpenedViewAll3 ? 'unset' : '212px'" mat-button>View all</button>
+    </div>
+  }
+  <div #listen_again_block3 class="listen_again_block">
+    @if (newTrackListLoaded) {
+      @for (track of newReleasesList; track $index) {
+        <div (click)="setTrack(track.videoId, $index, newReleasesList)" class="track_block">
+          <div class="img_block">
+            <div
+              [style.opacity]="trackPlayId === track.videoId ? '1' : '0'"
+              [style.background-image]="trackPlayId === track.videoId ?
+                'linear-gradient(to left top, rgb(97 97 97), rgb(171 171 171 / 18%), rgba(0, 73, 229, 0), transparent)' :
+                'linear-gradient(to top left, rgb(3, 46, 141), rgb(3, 46, 141, 0.7), rgba(0, 73, 229, 0), transparent)'"
+              class="cover_not_playing_item">
+              @if (isPlaying) {
+                <img style="width: 36px; height: 36px; margin: 10px" class="playing_icon" src="assets/images/icons/music_play.gif" alt="playing icon">
+              } @else {
+                <img src="assets/images/icons/play_circle_icon.png" alt="play icon">
+              }
+            </div>
+            <div
+              [style.opacity]="trackPlayId !== track.videoId ? '1' : '0'"
+              class="cover_not_playing_item">
+              <img src="assets/images/icons/play_circle_icon.png" alt="play icon">
+            </div>
+            <img [src]="track.image" alt="">
+          </div>
+          <h3>{{ track.title.length > 60 ? track.title.slice(0, 60) + '...' : track.title }}</h3>
+          <span>{{ track.author.name.length > 23 ? track.author.name.slice(0, 23) + '...' : track.author.name }}</span>
+        </div>
+      }
+    } @else {
+      @for (num of loadArray; track $index) {
+        <div class="track_block">
+          <div style="width: 150px; height: 150px; background-color: #2a2a2a; border-radius: 6px"></div>
+          <div style="width: 100px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 7px"></div>
+          <div style="width: 70px; height: 14px; background-color: #2a2a2a; border-radius: 5px; margin-top: 5px"></div>
+        </div>
+      }
+    }
+  </div>
+  <h2 class="title_playlists">New Releases</h2>
   @if (historyList?.length !== 0) {
     @if (innerWidth > 850) {
       <div style="width: 95%; text-align: end">
@@ -193,8 +193,8 @@
       }
     </div>
     <div style="display: flex; align-items: center; margin-top: 20px">
-      <img style="width: 20px; height: 20px; margin-left: 20px" src="assets/images/icons/headphone.svg" alt="headphone icon">
-      <h2 style="margin-top: 3px; margin-left: 10px" class="title_playlists">Listen again</h2>
+<!--      <img style="width: 20px; height: 20px; margin-left: 20px" src="assets/images/icons/headphone.svg" alt="headphone icon">-->
+      <h2 style="margin-top: 3px; margin-left: 20px" class="title_playlists">Listen again</h2>
     </div>
   }
 </div>

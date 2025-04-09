@@ -1,16 +1,17 @@
 <div class="main_block">
-  @if (innerWidth < 850) {
-    <h1>{{ title }}</h1>
-  }
-  <div
-    [style.margin-top]="innerWidth < 850 ? '50px' : '20px'"
-    style="display: flex; align-items: center; justify-content: space-between;">
-    <h2>Chats</h2>
-    @if (place !== 'pc-component') {
-      <button
-        (click)="createNewChat()"
-        class="create_chat_btn"><mat-icon style="color: #0070f3; width: 31px; height: 31px; font-size: 31px">add</mat-icon></button>
-    }
+  <div class="header">
+    <button routerLink="/home/library" class="close_ai_btn">
+      <mat-icon style="margin-right: 10px">close</mat-icon>
+      Close Dynamics Ai
+    </button>
+    <div class="list_block">
+      <h2>Chats</h2>
+      @if (place !== 'pc-component') {
+        <button
+          (click)="createNewChat()"
+          class="create_chat_btn"><mat-icon style="color: #0070f3; width: 31px; height: 31px; font-size: 31px">add</mat-icon></button>
+      }
+    </div>
   </div>
   @if (chats) {
     <div class="chats_block">
@@ -18,10 +19,15 @@
         @if ($index !== 0 && $index !== chats.length) {
           <div class="line"></div>
         }
-        <div (click)="router.navigate(
+        <div style="position: relative">
+          <button class="chat_more_button" (click)="openSheetChatMore(item._id)" mat-icon-button>
+            <mat-icon style="color: white">more_vert</mat-icon>
+          </button>
+          <div (click)="router.navigate(
         [place === 'pc-component' ? 'home/dynamics-ai-pc/chat/' : 'home/dynamics-ai/chat/', item._id])" class="chat">
-          <h3>{{ item.chat.length !== 0 ? item.chat[0].content : 'Empty chat' }}</h3>
-          <p>{{ item.chat.length !== 0 ? item.chat[1].content : 'Click here for messaging' }}</p>
+            <h3>{{ item.chat.length !== 0 ? item.chat[0].content.length > 30 ? item.chat[0].content.slice(0, 30) + '...' : item.chat[0].content : 'Empty chat' }}</h3>
+            <p>{{ item.chat.length !== 0 ? item.chat[1].content.length > 50 ? item.chat[1].content.slice(0, 50) + '...' : item.chat[1].content : 'Click here for messaging' }}</p>
+          </div>
         </div>
       }
     </div>

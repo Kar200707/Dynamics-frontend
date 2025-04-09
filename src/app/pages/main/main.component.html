@@ -12,12 +12,12 @@
         ? '0'
         : (innerWidth > 850
           ? '10px'
-          : 'calc(env(safe-area-inset-bottom) +' + ' ' + (55 - keyboardHeight) + 'px)'),
+          : 'calc(env(safe-area-inset-bottom) +' + ' ' + ((isNative ? 47 : 55) - keyboardHeight) + 'px)'),
     }"
     style="position: absolute; width: 100%; z-index: 5; transition: .3s "></app-player>
     @if (innerWidth < 850) {
       <app-mobile-nav-panel
-        [style.display]="this.routePath.slice(0, 23) === '/home/dynamics-ai/chat/' ? 'none' : 'unset'"
+        [style.display]="this.routePath.slice(0, 14) === '/home/dynamics' ? 'none' : 'unset'"
         [style.bottom]="'-' + keyboardHeight + 'px'"
         style="
           position: absolute;

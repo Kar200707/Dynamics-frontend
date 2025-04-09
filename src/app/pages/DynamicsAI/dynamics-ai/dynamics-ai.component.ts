@@ -1,19 +1,26 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import { RequestService } from "../../../services/request.service";
 import { environment } from "../../../../environment/environment";
 import { ResizeHeightDirective } from "../../../directives/resize-height.directive";
 import {Router, RouterLink} from "@angular/router";
 import { ChatsCacheService } from "../../../services/chats-cache.service";
 import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {Haptics, ImpactStyle} from "@capacitor/haptics";
+import {MatBottomSheet} from "@angular/material/bottom-sheet";
+import {MoreChatComponent} from "../../../components/bottom-sheets/more-chat/more-chat.component";
+import {ChatModel} from "../../../../models/chat.model";
+import {ChatParentModel} from "../../../../models/chat-parent.model";
 
 @Component({
   selector: 'app-dynamics-ai',
   standalone: true,
-  imports: [
-    ResizeHeightDirective,
-    RouterLink,
-    MatIcon
-  ],
+    imports: [
+        ResizeHeightDirective,
+        RouterLink,
+        MatIcon,
+        MatIconButton
+    ],
   templateUrl: './dynamics-ai.component.html',
   styleUrl: './dynamics-ai.component.css'
 })
@@ -22,6 +29,7 @@ export class DynamicsAiComponent implements OnInit {
   title: string = "Dynamics Ai";
   @Input('place') place!: string;
   chats: any[] = [];
+  private _bottomSheetChatMore = inject(MatBottomSheet);
 
   constructor(
     public router: Router,
@@ -44,6 +52,11 @@ export class DynamicsAiComponent implements OnInit {
   private updateChatsFromServer() {
     this.reqService.post<any>(environment.getAiChat, { token: this.token })
       .subscribe(data => {
+        data.chats.forEach((chatParent: ChatParentModel) => {
+          if (chatParent.chat.length === 0) {
+            this.deleteChat(chatParent._id);
+          }
+        })
         if (data.chats && data.chats.length > 0) {
           this.chats = data.chats.reverse();
           if (this.place === 'pc-component') {
@@ -59,6 +72,21 @@ export class DynamicsAiComponent implements OnInit {
       .subscribe(data => {
         this.router.navigate([this.place === 'pc-component' ? 'home/dynamics-ai-pc/chat/' : 'home/dynamics-ai/chat/', data.chatId]);
       });
+  }
+
+  deleteChat(chatId: string) {
+    this.reqService.post<any>(environment.deleteChat + chatId, { token: this.token })
+      .subscribe(data => {});
+  }
+
+  async openSheetChatMore(chatId: string) {
+    await Haptics.impact({ style: ImpactStyle.Medium })
+    const bottomSheetRef = this._bottomSheetChatMore.open(MoreChatComponent, {
+      panelClass: "bottom-sheet",
+      data: chatId,
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(() => { this.updateChatsFromServer() });
   }
 
   protected readonly innerWidth = innerWidth;

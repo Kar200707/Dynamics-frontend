@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {PcNavPanelComponent} from "../../components/pc-nav-panel/pc-nav-panel.component";
 import {NewsBlockComponent} from "../../components/news-block/news-block.component";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
@@ -15,8 +15,6 @@ import {RequestService} from "../../services/request.service";
 import {Keyboard} from "@capacitor/keyboard";
 import {Capacitor} from "@capacitor/core";
 import {NgStyle} from "@angular/common";
-import {animate, style, transition, trigger} from "@angular/animations";
-import {slideInAnimation} from "../../services/route.anim";
 
 @Component({
   selector: 'app-main',
@@ -47,9 +45,9 @@ export class MainComponent implements OnInit {
   navPanelTimeOff: boolean = true;
   isOpenedPlayer: boolean = false;
   keyboardHeight: number = 0;
+  isNative: boolean = false;
 
   constructor(
-    private reqServ: RequestService,
     private playerController: PlayerControllerService,
     private router: Router) {
     this.router.events.subscribe(event => {
@@ -83,6 +81,7 @@ export class MainComponent implements OnInit {
         this.keyboardHeight = 0;
       });
     }
+    this.isNative = Capacitor.isNativePlatform();
   }
 
   prepareRoute(outlet: RouterOutlet) {

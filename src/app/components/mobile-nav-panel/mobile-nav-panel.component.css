@@ -4,8 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 10px;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+  border-top: 1px solid rgb(58 58 58);
 }
 
 .main_block > .nav_box {

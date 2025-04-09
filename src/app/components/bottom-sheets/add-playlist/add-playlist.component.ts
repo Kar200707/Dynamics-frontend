@@ -259,7 +259,6 @@ export class AddPlaylistComponent implements OnInit {
       this.selectedTracks.push(trackData);
       await Haptics.notification({ type: NotificationType.Success });
     }
-    console.log(this.selectedTracks);
   }
 
   protected readonly innerWidth = innerWidth;

@@ -1,4 +1,5 @@
-export const host = 'https://dynamics-backend-production.up.railway.app/';
+export const host = 'https://api-dyanmics.up.railway.app/';
+// export const host = 'http://192.168.1.245:8080/';
 
 export const environment = {
   signIn: host + 'auth/login',

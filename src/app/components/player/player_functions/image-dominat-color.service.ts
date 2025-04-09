@@ -4,18 +4,16 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ImageDominantColorService {
-  constructor() {}
-
   async getDominantColors(imageUrl: string): Promise<string[]> {
     try {
       const image = await this.loadImage(imageUrl);
-      const colors = this.getMostVibrantAndSecondColor(image);
+      const colors = this.getBalancedColors(image);
       return colors.map(
         (color) => `rgb(${color.r}, ${color.g}, ${color.b})`
       );
     } catch (error) {
       console.error('Error extracting dominant colors:', error);
-      return ['rgb(0, 0, 0)', 'rgb(0, 0, 0)'];
+      return ['rgb(80, 80, 80)', 'rgb(100, 100, 100)'];
     }
   }
 
@@ -29,7 +27,7 @@ export class ImageDominantColorService {
     });
   }
 
-  private getMostVibrantAndSecondColor(imgEl: HTMLImageElement) {
+  private getBalancedColors(imgEl: HTMLImageElement) {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     if (!context) throw new Error('Canvas not supported');
@@ -38,58 +36,43 @@ export class ImageDominantColorService {
     canvas.height = imgEl.naturalHeight || imgEl.height;
     context.drawImage(imgEl, 0, 0, canvas.width, canvas.height);
 
-    try {
-      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-      return this.findMostVibrantAndSecondColor(imageData.data);
-    } catch (e) {
-      throw new Error('Unable to access image data, possible cross-origin issue');
-    }
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    return this.findBalancedColors(imageData.data);
   }
 
-  private findMostVibrantAndSecondColor(data: Uint8ClampedArray) {
-    let maxSaturation = 0;
-    let vibrantColor = { r: 0, g: 0, b: 0 };
-    let secondColor = { r: 0, g: 0, b: 0 };
+  private findBalancedColors(data: Uint8ClampedArray) {
+    let selectedColor = { r: 120, g: 120, b: 120 };
+    let maxScore = 0;
 
-    // Массив цветов с насыщенностью и яркостью
-    const colors: Array<{ r: number; g: number; b: number; s: number; l: number }> = [];
+    const colors: Array<{ r: number; g: number; b: number; s: number; l: number; h: number }> = [];
 
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
-      const { s, l } = this.rgbToHsl(r, g, b);
+      const a = data[i + 3];
 
-      // Добавляем цвета с нужными параметрами
-      if (l > 0.3 && l < 0.7 && s > 0.3) {
-        colors.push({ r, g, b, s, l });
-      }
+      if (a < 150) continue;
 
-      // Ищем самый насыщенный цвет
-      if (s > maxSaturation && l > 0.3 && l < 0.6) {
-        maxSaturation = s;
-        vibrantColor = { r, g, b };
+      const { h, s, l } = this.rgbToHsl(r, g, b);
+
+      if (s >= 0.25 && s <= 0.6 && l >= 0.3 && l <= 0.65) {
+        const score = s * 0.7 + (1 - Math.abs(0.5 - l)) * 0.3;
+        colors.push({ r, g, b, s, l, h });
+
+        if (score > maxScore) {
+          maxScore = score;
+          selectedColor = { r, g, b };
+        }
       }
     }
 
-    // Корректируем второй цвет с небольшим отличием в оттенке
-    const vibrantHsl = this.rgbToHsl(vibrantColor.r, vibrantColor.g, vibrantColor.b);
+    const { h, s, l } = this.rgbToHsl(selectedColor.r, selectedColor.g, selectedColor.b);
+    const adjustedH = (h + 0.06) % 1;
+    const adjustedL = Math.min(0.65, Math.max(0.35, l + 0.05));
+    const secondColor = this.hslToRgb(adjustedH, s, adjustedL);
 
-    // Изменяем оттенок второго цвета на небольшой угол
-    const adjustedHsl = {
-      h: (vibrantHsl.h + 0.02) % 1, // Увеличиваем оттенок на 5% (можно изменить для большей разницы)
-      s: vibrantHsl.s, // Оставляем насыщенность без изменений
-      l: vibrantHsl.l, // Яркость оставляем без изменений
-    };
-
-    const adjustedRgb = this.hslToRgb(adjustedHsl.h, adjustedHsl.s, adjustedHsl.l);
-    secondColor = {
-      r: adjustedRgb.r,
-      g: adjustedRgb.g,
-      b: adjustedRgb.b,
-    };
-
-    return [vibrantColor, secondColor];
+    return [selectedColor, secondColor];
   }
 
   private rgbToHsl(r: number, g: number, b: number) {
@@ -119,7 +102,7 @@ export class ImageDominantColorService {
     let r: number, g: number, b: number;
 
     if (s === 0) {
-      r = g = b = l; // Achromatic
+      r = g = b = l;
     } else {
       const hue2rgb = (p: number, q: number, t: number) => {
         if (t < 0) t += 1;

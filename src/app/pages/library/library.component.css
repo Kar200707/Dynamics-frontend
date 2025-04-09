@@ -90,15 +90,19 @@
   font-family: "Nunito", sans-serif;
 }
 
-.favorites > div > p {
+.favorites > div > p,
+.playlist > div > div > span {
   color: #b5b5b5;
+  font-size: 14px;
   font-family: "Nunito", sans-serif;
 }
 
 .favorites > img {
   width: 70px;
   height: 70px;
-  border-radius: 8px;
+  border-radius: 10px;
+  padding: 8px 5px;
+  background-color: #1b1b1b;
 }
 
 .account_info_block {
@@ -159,7 +163,7 @@ button[mat-button].routerLink {
 .add_playlist_block > button {
   width: 70px;
   height: 70px;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: #1b1b1b;
   display: flex;
   align-items: center;
@@ -204,8 +208,7 @@ button[mat-button].routerLink {
   align-items: center;
 }
 
-.playlist > div > div > h3,
-.playlist > div > div > span {
+.playlist > div > div > h3 {
   color: white;
 }
 
@@ -213,7 +216,7 @@ button[mat-button].routerLink {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 10px;
   width: 70px;
 }
 
@@ -226,4 +229,25 @@ button[mat-button].routerLink {
   height: 35px;
   object-fit: cover;
   display: block;
+}
+
+.playlist_load {
+  display: flex;
+  margin-top: 15px;
+  align-items: center;
+}
+
+.playlist_load > .image {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  background-color: #1a1a1a;
+}
+
+.text {
+  width: 150px;
+  height: 16px;
+  border-radius: 5px;
+  background-color: #1a1a1a;
+  margin-left: 10px;
 }

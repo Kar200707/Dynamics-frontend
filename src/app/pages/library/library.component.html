@@ -15,14 +15,13 @@
   <div #scrollContainer (scroll)="onScroll()" class="scroll_box">
     <div class="list_block">
       <div routerLink="/home/folder/track-favorites" class="favorites">
-        <img src="assets/images/favorites.png">
+        <img src="assets/images/icons/bookmark.png">
         <div style="margin-left: 15px">
-          <h3>Favorites</h3>
-          <p>{{ favoritePlayListLength != 0 ? favoritePlayListLength : '' }} {{ favoritePlayListLength > 0 ? 'songs' : 'song' }}</p>
+          <h3>Favorite songs</h3>
+          <p>Playlist - {{ favoritePlayListLength != 0 ? favoritePlayListLength : '' }} {{ favoritePlayListLength > 0 ? 'songs' : 'song' }}</p>
         </div>
       </div>
     </div>
-    <span style="margin-top: 20px; font-size: 15px; color: #9c9c9c; font-weight: normal; display: block">Playlists</span>
     @if (playlists) {
       @for (playlist of playlists; track $index) {
         <div
@@ -59,7 +58,7 @@
                   </div>
                   <img
                     style="height: 70px"
-                    [src]="playlist.tracks[1].image">
+                    [src]="playlist.tracks[2].image">
                 }
               </div>
               @if (playlist.tracks?.length > 3) {
@@ -85,6 +84,17 @@
           <button (click)="openSheetPlaylistMore(playlist._id)" mat-icon-button>
             <mat-icon style="color: white">more_vert</mat-icon>
           </button>
+        </div>
+      }
+    }
+    @if (!isLoadedPlaylists) {
+      @for (num of playlistsLoadArr; track $index) {
+        <div class="playlist_load">
+          <div class="image"></div>
+          <div>
+            <div class="text"></div>
+            <div style="width: 100px; margin-top: 6px" class="text"></div>
+          </div>
         </div>
       }
     }

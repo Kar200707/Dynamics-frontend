@@ -37,6 +37,7 @@
     "@capacitor/share": "^6.0.2",
     "@capacitor/splash-screen": "^6.0.2",
     "@capacitor/status-bar": "6.0.1",
+    "@distube/ytdl-core": "^4.16.6",
     "@ionic/angular": "^8.4.3",
     "@ionic/core": "^8.3.1",
     "@jofr/capacitor-media-session": "^4.0.0",

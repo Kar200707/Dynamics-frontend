@@ -48,6 +48,15 @@ export class LibraryComponent implements OnInit {
   role!: string;
   avatar!: string;
   playlists!: any[];
+  isLoadedPlaylists: boolean = false;
+  playlistsLoadArr: number[] = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
   holdTimeout: any;
   private _bottomSheetPlaylistAdd = inject(MatBottomSheet);
   private _bottomSheetAccount = inject(MatBottomSheet);
@@ -116,6 +125,7 @@ export class LibraryComponent implements OnInit {
   }
 
   getPlaylists() {
+    console.log(this.playlists)
     this.requestService.post<any>(environment.playlistGet, { token: this.token })
     .subscribe(data => {
       this.playlists = data.playlists.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
@@ -123,6 +133,7 @@ export class LibraryComponent implements OnInit {
         playlist.tracks = playlist.tracks
           .sort((trackA: any, trackB: any) => new Date(trackB.addedAt).getTime() - new Date(trackA.addedAt).getTime());
       });
+      this.isLoadedPlaylists = true;
     })
   }
 

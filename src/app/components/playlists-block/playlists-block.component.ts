@@ -152,7 +152,7 @@ export class PlaylistsBlockComponent implements OnInit {
         if (this.token) {
           const currentYear = new Date().getFullYear();
           this.requestService.post<any[]>(environment.searchTracksList,
-            { access_token: this.token, searchText: `Armenian Songs ${currentYear}` })
+            { access_token: this.token, searchText: `new armenian tracks` })
             .subscribe(async list => {
               this.newCollectionsListLoaded = true;
               await Haptics.impact({ style: ImpactStyle.Light });

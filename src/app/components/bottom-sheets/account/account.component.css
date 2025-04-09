@@ -5,7 +5,7 @@
 }
 
 .account_info_block {
-  padding: 20px;
+  padding: 10px 16px 16px 16px;
   width: 100%;
   border-radius: 15px;
 }
@@ -17,27 +17,29 @@
   display: block;
 }
 
+.account_info_block > div > div {
+  margin-top: 10px;
+}
+
 .account_info_block > div > div > h3,
 .account_info_block > div > div > span,
 .account_info_block > div > div > p {
   color: white;
-  margin-left: 10px;
   font-family: "Nunito", sans-serif;
 }
 
 .account_info_block > button {
-  background-color: #ff4e50;
-  color: white;
+  background-color: rgba(255, 42, 47, 0.09);
+  color: #ff2a2f;
   border-radius: 10px;
   margin-top: 30px;
-  padding: 10px 20px;
-  width: 100%;
+  /*padding: 10px 20px;*/
   font-size: 16px;
   transition: background-color 0.3s ease;
 }
 
 .account_info_block > button:hover {
-  background-color: #ff2a2f;
+  background-color: rgba(255, 42, 47, 0.09);
 }
 
 .account_info_block > button.mat-button {
@@ -49,7 +51,7 @@
   display: flex;
   align-items: center;
   margin-top: 20px;
-  background-color: #111111;
+  background-color: #b7b7b70a;
   padding: 10px;
   border-radius: 15px;
 }

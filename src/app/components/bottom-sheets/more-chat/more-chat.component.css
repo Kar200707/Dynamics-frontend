@@ -1,0 +1,28 @@
+.main_div {
+  width: 100%;
+  padding: 20px 16px 100px 16px;
+}
+
+.delete_chat_button {
+  background-image: linear-gradient(to left, #ff3434, #ff2525);
+  border-radius: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ffffff42;
+  color: white;
+  padding: 16px 20px;
+  width: 100%;
+  font-size: 19px;
+  outline: none;
+  font-family: "Nunito", sans-serif;
+  transition: scale 0.3s;
+}
+
+.delete_chat_button:active {
+  scale: .96;
+}
+
+.delete_chat_button > mat-icon {
+  color: white;
+}

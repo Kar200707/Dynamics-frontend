@@ -1,7 +1,19 @@
-<div class="main_block">
+<div
+  [style.padding-bottom]="isNative ? 'env(safe-area-inset-bottom)' : '10px'"
+  [style.padding-top]="isNative ? '8px' : '6px'"
+  class="main_block">
   <div class="nav_box">
     <div (click)="setRouteActive('home')" routerLink="/home">
-      <img src="assets/images/icons/home-white.svg" alt="home">
+      <img
+        [style.display]="routePath === 'home' ? 'none' : 'unset'"
+        height="24"
+        width="24"
+        ngSrc="assets/images/icons/home-filled.svg" alt="search">
+      <img
+        [style.display]="routePath !== 'home' ? 'none' : 'unset'"
+        height="24"
+        width="24"
+        ngSrc="assets/images/icons/home-white.svg" alt="search">
       <span>Home</span>
     </div>
     <div (click)="setRouteActive('search')" routerLink="/home/search">
@@ -9,7 +21,7 @@
         [style.display]="routePath === 'search' ? 'none' : 'unset'"
         height="24"
         width="24"
-        ngSrc="assets/images/icons/search.png" alt="search">
+        ngSrc="assets/images/icons/search.svg" alt="search">
       <img
         [style.display]="routePath !== 'search' ? 'none' : 'unset'"
         height="24"

@@ -1,0 +1,72 @@
+<div class="main_div">
+  <div class="track_info_block">
+    <img [src]="audioInfo.image">
+    <div class="track_text_info">
+      <h4>{{ audioInfo.title }}</h4>
+      <p>{{ audioInfo.author.name }}</p>
+    </div>
+  </div>
+  <h4 style="color: white; margin-top: 13px">Add To</h4>
+ <div class="scroll_box">
+   @if (playlists) {
+     @for (playlist of playlists; track $index) {
+       <div
+         (click)="addTrack(playlist)"
+         class="playlist">
+         <div style="width: 100%;">
+           <div class="images_row">
+             <div>
+               @if (playlist.tracks?.length === 1) {
+                 <img
+                   style="width: 70px; height: 70px"
+                   [src]="playlist.tracks[0].image">
+               } @else if (playlist.tracks?.length === 2) {
+                 <img
+                   style="height: 70px"
+                   [src]="playlist.tracks[0].image">
+                 <img
+                   style="height: 70px"
+                   [src]="playlist.tracks[1].image">
+               } @else if (playlist.tracks?.length === 3) {
+                 <div>
+                   <img
+                     height="35px"
+                     width="35px"
+                     style="object-fit: cover; display: block"
+                     [src]="playlist.tracks[0].image">
+                   <img
+                     height="35px"
+                     width="35px"
+                     style="object-fit: cover; display: block"
+                     [src]="playlist.tracks[1].image">
+                 </div>
+                 <img
+                   style="height: 70px"
+                   [src]="playlist.tracks[2].image">
+               }
+             </div>
+             @if (playlist.tracks?.length > 3) {
+               <div>
+                 <img
+                   [src]="playlist.tracks[0].image">
+                 <img
+                   [src]="playlist.tracks[1].image">
+               </div>
+               <div>
+                 <img
+                   [src]="playlist.tracks[2].image">
+                 <img
+                   [src]="playlist.tracks[3].image">
+               </div>
+             }
+           </div>
+           <div style="margin-left: 15px;">
+             <h3>{{ playlist.playlistName }}</h3>
+             <span>Playlist - {{ playlist.tracks?.length }} {{ playlist.tracks?.length > 0 ? 'songs' : 'song' }}</span>
+           </div>
+         </div>
+       </div>
+     }
+   }
+ </div>
+</div>

@@ -13,11 +13,14 @@
     </div>
   }
   <div
-    [style.background-color]="place === 'pc-component' ? 'transparent' : '#111111'"
     class="chat_header">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-top: env(safe-area-inset-top);">
-      <button mat-icon-button>
-        <mat-icon style="color: white" [routerLink]="place === 'pc-component' ? '/home' : '/home/dynamics-ai'">arrow_back_ios</mat-icon>
+      <button class="create_chat_btn" style="margin-left: 5px" [routerLink]="place === 'pc-component' ? '/home' : '/home/dynamics-ai'">
+        <div class="list_box">
+          <div style="margin-top: 0"></div>
+          <div style="width: 55%"></div>
+<!--          <div style="width: 40%"></div>-->
+        </div>
       </button>
       <div class="select_box">
         <select (change)="modelSelectOnChange($event)" class="model_select">
@@ -30,12 +33,14 @@
         <mat-icon>keyboard_arrow_down</mat-icon>
       </div>
       <div style="display: flex; align-items: center">
-        <button
-          (click)="clickDeleteChatButton()"
-          class="create_chat_btn"><mat-icon style="color: #ff6e6e; width: 25px; height: 25px; font-size: 25px; margin-bottom: 1px">delete</mat-icon></button>
+<!--        <button-->
+<!--          (click)="clickDeleteChatButton()"-->
+<!--          class="create_chat_btn"><mat-icon style="color: #ff6e6e; width: 25px; height: 25px; font-size: 25px; margin-bottom: 1px">delete</mat-icon></button>-->
         <button
           (click)="createNewChat()"
-          class="create_chat_btn"><mat-icon style="color: #a6a6a6; width: 31px; height: 31px; font-size: 31px">add</mat-icon></button>
+          class="create_chat_btn">
+          <div class="plus_box"></div>
+        </button>
       </div>
     </div>
   </div>

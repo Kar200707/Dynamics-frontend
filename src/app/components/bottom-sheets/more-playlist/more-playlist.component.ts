@@ -6,6 +6,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {Haptics, NotificationType} from "@capacitor/haptics";
+import localforage from "localforage";
 
 @Component({
   selector: 'app-more-playlist',
@@ -27,13 +28,13 @@ export class MorePlaylistComponent implements OnInit {
   playlistId?: string;
   token: string | null = localStorage.getItem('token');
   playlist?: any;
-  selectedPlaylistItemsforDelete: any[] = [];
+  selectedPlaylistItemsForDelete: any[] = [];
   selectedPlaylistItems: any[] = [];
   isOpenedEditPlaylistName: boolean = false;
 
   constructor(
     private requestService: RequestService,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {  }
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: string) {  }
 
   ngOnInit() {
     this.playlistId = this.data;
@@ -50,11 +51,11 @@ export class MorePlaylistComponent implements OnInit {
     if (trackIndex === -1) {
       trackData.addedAt = Date.now();
       this.selectedPlaylistItems.push(trackData);
-      this.selectedPlaylistItemsforDelete = this.playlist.tracks.filter((item: any) => item.videoId !== trackData.videoId);
+      this.selectedPlaylistItemsForDelete = this.playlist.tracks.filter((item: any) => item.videoId !== trackData.videoId);
       await Haptics.notification({ type: NotificationType.Success });
     } else {
       this.selectedPlaylistItems.splice(trackIndex, 1);
-      this.selectedPlaylistItemsforDelete.push(trackData);
+      this.selectedPlaylistItemsForDelete.push(trackData);
     }
   }
 
@@ -64,13 +65,14 @@ export class MorePlaylistComponent implements OnInit {
 
   delete() {
     this.requestService.post<any>(environment.playlistDelete + this.playlistId, { token: this.token })
-    .subscribe(() => {
+    .subscribe(async () => {
+      await localforage.removeItem('folder' + this.playlistId);
       this.closeSheet();
     })
   }
 
   update() {
-    this.requestService.put<any>(environment.playlistUpdate + this.playlistId, { token: this.token, tracks: this.selectedPlaylistItemsforDelete })
+    this.requestService.put<any>(environment.playlistUpdate + this.playlistId, { token: this.token, tracks: this.selectedPlaylistItemsForDelete })
       .subscribe(() => {
         this.closeSheet();
       })

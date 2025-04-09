@@ -6,6 +6,8 @@ import {MatIcon} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {ResizeHeightDirective} from "../../../directives/resize-height.directive";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
+import {Keyboard} from "@capacitor/keyboard";
+import {NgClass, NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-dynamics-ai-chat',
@@ -15,7 +17,9 @@ import {Haptics, ImpactStyle} from "@capacitor/haptics";
     MatIconButton,
     RouterLink,
     ResizeHeightDirective,
-    MatButton
+    MatButton,
+    NgForOf,
+    NgClass
   ],
   templateUrl: './dynamics-ai-chat.component.html',
   styleUrl: './dynamics-ai-chat.component.css'
@@ -31,7 +35,7 @@ export class DynamicsAiChatComponent implements OnInit {
   confirm: boolean = false;
   aiMessageLoading: boolean = false;
   isRequestError: boolean = false;
-  aiModel: string = 'gpt-4o-mini';
+  aiModel: string = 'deepseek-v3';
   aiModels: string[] = [];
   message: string = '';
   textCopied: boolean = false;
@@ -53,6 +57,9 @@ export class DynamicsAiChatComponent implements OnInit {
 
   async ngOnInit() {
     this.getAiModels();
+    await Keyboard.addListener('keyboardWillShow', () => {
+      this.scrollToBottom();
+    });
   }
 
   modelSelectOnChange(e: Event) {
@@ -103,6 +110,7 @@ export class DynamicsAiChatComponent implements OnInit {
 
     return result;
   }
+
   copy(text: string, index: number) {
     navigator.clipboard.writeText(text).then(() => {
       console.log('Text successfully copied to clipboard');

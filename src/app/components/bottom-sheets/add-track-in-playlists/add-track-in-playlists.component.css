@@ -1,0 +1,92 @@
+.main_div {
+  padding: 15px;
+}
+
+* {
+ font-family: Nunito, sans-serif;
+}
+
+.track_info_block {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgb(255 255 255 / 14%);
+  padding-bottom: 10px;
+}
+
+.track_info_block > img {
+  width: 50px;
+  height: 50px;
+  display: block;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.track_text_info {
+  margin-left: 10px;
+}
+
+.track_text_info > h4, .track_text_info > p {
+  color: #c4c4c4;
+  font-weight: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.track_text_info > h4 {
+  color: #ffffff;
+}
+
+.playlist {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: .2s scale;
+}
+
+.playlist:active {
+  scale: 0.96;
+}
+
+.playlist > div {
+  display: flex;
+  align-items: center;
+}
+
+.playlist > div > div > h3,
+.playlist > div > div > span {
+  color: white;
+}
+
+.images_row {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 8px;
+  width: 70px;
+}
+
+.images_row > div {
+  display: flex;
+}
+
+.images_row > div > img {
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
+  display: block;
+}
+
+.scroll_box {
+  width: 100%;
+  overflow-y: scroll;
+  height: 50vh;
+}
+
+.scroll_box::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+  display: none;
+}

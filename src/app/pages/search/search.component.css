@@ -107,6 +107,12 @@ input[type="search"] {
   border: none;
 }
 
+.search-btn > img {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
 .clear-btn {
   display: none;
 }

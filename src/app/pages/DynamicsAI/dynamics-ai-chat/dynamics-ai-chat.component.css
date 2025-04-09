@@ -1,8 +1,8 @@
 .chat_header {
-  background-color: #111111;
-  padding: 10px;
+  padding: 5px 10px;
   width: 100%;
   position: relative;
+  background-color: #181818;
   border-radius: 0 0 30px 30px;
 }
 
@@ -31,7 +31,7 @@ pre::-webkit-scrollbar {
 .message {
   padding: 10px;
   background-color: #888888;
-  border-radius: 13px;
+  border-radius: 14px 14px 7px;
 }
 
 .text_pre {
@@ -40,13 +40,14 @@ pre::-webkit-scrollbar {
   word-wrap: break-word;
   color: white;
   padding: 10px;
+  font-size: 18px;
   font-family: "Nunito", sans-serif;
 }
 
 .code-block {
   background-color: #1a1a1a;
   margin-bottom: 10px;
-  border-radius: 8px;
+  border-radius: 15px;
   margin-top: 20px;
 }
 
@@ -56,7 +57,7 @@ pre::-webkit-scrollbar {
   justify-content: space-between;
   background-color: #2a2a2a;
   padding: 5px 10px;
-  border-radius: 8px 8px 0 0;
+  border-radius: 13px 13px 0 0;
 }
 
 .code_type > span {
@@ -95,6 +96,7 @@ pre::-webkit-scrollbar {
 
 .message > p {
   color: white;
+  font-size: 18px;
 }
 
 .text-block {
@@ -285,15 +287,16 @@ pre::-moz-selection {
 
 .select_box {
   position: absolute;
-  left: 50%;
+  left: 55%;
   transform: translate(calc(-50% - 10px));
   top: calc(env(safe-area-inset-top) + 0);
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .model_select {
-  width: 100%;
+  width: 45%;
   appearance: none;
   -webkit-appearance: none;
   text-align: center;
@@ -312,4 +315,49 @@ pre::-moz-selection {
   pointer-events: none;
   font-size: 25px;
   color: #ffffff;
+}
+
+.plus_box {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.plus_box:before {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+.plus_box:after {
+  content: "";
+  display: block;
+  width: 3px;
+  position: absolute;
+  height: 20px;
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+.list_box {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.list_box > div {
+  width: 85%;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 4px;
+  margin-top: 5px;
 }

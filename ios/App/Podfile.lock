@@ -78,22 +78,22 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@justicointeractive/capacitor-car-audio"
 
 SPEC CHECKSUMS:
-  Capacitor: 1f3c7b9802d958cd8c4eb63895fff85dff2e1eea
-  CapacitorActionSheet: 653276dc474be8914db13293a987915f16148d00
-  CapacitorApp: 0bc633b4eae40a1f32cd2834788fad3bc42da6a1
-  CapacitorBrowser: cba79e25007fbe9bdac8c0568060b21abbb8f453
-  CapacitorCommunityBluetoothLe: d6fc1f6f8d6f0ef722c0817a7533ce35d42dc4f9
+  Capacitor: 05d35014f4425b0740fc8776481f6a369ad071bf
+  CapacitorActionSheet: d1655abbbd3a57b86a7868269e8114848b5dac3e
+  CapacitorApp: f51c08c64df914fc934239fd1b3fc809d62a02f6
+  CapacitorBrowser: b468ac2db928e594b4d319727f3874743f9bcf96
+  CapacitorCommunityBluetoothLe: 0d4d197e0d0eadb84d4c3a6683768088253419d9
   CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
-  CapacitorHaptics: fe689ade56ef20ec9b041a753c6da70c5d8ec9a9
-  CapacitorKeyboard: 460c6f9ec5e52c84f2742d5ce2e67bbc7ab0ebb0
-  CapacitorShare: 7af6ca761ce62030e8e9fbd2eb82416f5ceced38
-  CapacitorSplashScreen: 68893659d77b5f82d753b3a70475082845e3039c
-  CapacitorStatusBar: b81d4fb5d4e0064c712018071b3ab4b810b39a63
+  CapacitorHaptics: 05d33e20e394b1977dfd2a00a2621e04098164c1
+  CapacitorKeyboard: e89189ad398b815b6ff7e52271f0fb4f911a0a0a
+  CapacitorShare: d2a742baec21c8f3b92b361a2fbd2401cdd8288e
+  CapacitorSplashScreen: fd8bf1bf9081d9aa8817b7cd37d740d1bdaf2fb2
+  CapacitorStatusBar: 9ed7f06318fd436917072a9bf60fda56d12c8bdb
   CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
-  JusticointeractiveCapacitorCarAudio: f975f25d02129313a197311dc795cf497979a9bb
+  JusticointeractiveCapacitorCarAudio: f13ac66d8d22bccab90b26f564680198e8381e8c
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
   SVGKit: 1ad7513f8c74d9652f94ed64ddecda1a23864dea
 
 PODFILE CHECKSUM: 8909758913cf3902e76e65546867133e25b15b37
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

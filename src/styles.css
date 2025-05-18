@@ -13,6 +13,11 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+button, .no-zoom {
+  touch-action: manipulation;
+}
+
+
 image {
   pointer-events: none;
 }
@@ -26,8 +31,12 @@ app-library {
 }
 
 button {
-  font-family: "Nunito", sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   transition: .25s cubic-bezier(0,-0.4,0,1.20);
+}
+
+* {
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 app-main {
@@ -41,7 +50,7 @@ button:active {
 html, body { height: 100%; }
 body {
   margin: 0;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   background-color: black;
   overflow: hidden;
   touch-action: pan-x pan-y;

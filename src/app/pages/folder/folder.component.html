@@ -6,7 +6,7 @@
       @if (trackList && trackList.length !== 0) {
         <div class="search_play_block">
           <h1 #titleElement>{{ title }}</h1>
-          <div (click)="setTrack(trackList[0].videoId, 0)" class="play_list">
+          <div (click)="setTrack(trackList[0].videoId, 0, title)" class="play_list">
             @if (listIsPlay) {
               <img class="music_playGIF" src="assets/images/icons/music_play.gif">
             } @else {
@@ -17,8 +17,8 @@
       }
       <div class="header_block">
         <div class="back_button_block">
-          <button>
-            <mat-icon routerLink="/home/library">arrow_back_ios</mat-icon>
+          <button (click)="goBack()">
+            <mat-icon>arrow_back_ios</mat-icon>
           </button>
         </div>
       </div>
@@ -32,8 +32,8 @@
             <input
               #searchInput
               (input)="onSearch(searchInput.value)"
-              type="text" placeholder="Search in {{ title }}" class="search">
-            <img src="assets/images/icons/search.svg">
+              type="text" placeholder="Find in tracks" class="search">
+            <img style="opacity: .6" src="assets/images/icons/search.svg">
           </div>
           @if (trackList && trackList.length !== 0) {
             <span>{{ trackList.length }} {{ trackList.length === 1 ? 'track' : 'tracks' }}</span>
@@ -65,7 +65,7 @@
              <div
                [style.background-color]="track.videoId === trackPlayId ? 'rgb(0 0 0 / 83%)' : '#1a1a1a'"
                class="track_box_layer">
-               <div (click)="setTrack(track.videoId, $index)" style="display: flex; align-items: center; width: 100%">
+               <div (click)="setTrack(track.videoId, $index, title)" style="display: flex; align-items: center; width: 100%">
                  <div class="track_image">
                    <div>
                      <div [style.background-color]="track.videoId === trackPlayId ? 'unset' : 'rgb(0 0 0 / 30%)'">

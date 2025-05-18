@@ -31,13 +31,13 @@ export class MobileNavPanelComponent implements OnInit {
 
       switch (currentRoutePath) {
         case '/home':
-        case '/home/folder':
+        case '/folder':
           this.routePath = 'home';
           break;
-        case '/home/library':
+        case '/library':
           this.routePath = 'library';
           break;
-        case '/home/search':
+        case '/search':
           this.routePath = 'search';
           break;
         default:

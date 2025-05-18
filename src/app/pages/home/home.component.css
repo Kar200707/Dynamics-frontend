@@ -1,6 +1,7 @@
 .main-block {
   background-color: #0a0a0a;
   position: relative;
+  padding-top: 7px;
 }
 
 .scroll_box {
@@ -18,6 +19,8 @@
   z-index: 5;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.82), transparent);
 }
+
+
 
 .scroll_box::-webkit-scrollbar { height: 0; display: none; }
 
@@ -100,12 +103,22 @@ app-timer-bottom-sheet {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: calc(env(safe-area-inset-top) + 10px) 20px 10px 20px;
-  align-items: center;
-  position: fixed;
-  z-index: 3;
-  top: 0;
+  padding: calc(env(safe-area-inset-top) + 20px) 20px 10px 20px;
   background-color: #0a0a0a;
+  align-items: center;
+}
+
+@media screen and (max-width: 850px) {
+  .top_block {
+    align-items: center;
+    position: fixed;
+    z-index: 3;
+    top: 0;
+  }
+
+  .main-block {
+    padding-top: 0;
+  }
 }
 
 .top_block > div > svg {
@@ -138,7 +151,6 @@ app-pc-nav-panel {
     margin-right: 15px;
     width: 100%;
     padding: 1px 10px 0 10px;
-    font-family: "Nunito", sans-serif;
     border: none;
     outline: none;
     color: white;
@@ -150,8 +162,8 @@ app-pc-nav-panel {
   .top_block {
     padding: 5px 15px 5px 5px;
     background-color: #0f0f0f;
-    border-radius: 10px;
-    margin: 10px 0 7px 0;
+    margin: 0 15px 7px 15px;
+    width: unset;
   }
 
   .playlists_block_layout {
@@ -164,7 +176,6 @@ app-pc-nav-panel {
   .nav_block_layout {
     width: 20%;
     background-color: #0f0f0f;
-    border-radius: 10px;
     margin-right: 7px;
     overflow-y: scroll;
   }
@@ -177,10 +188,18 @@ app-pc-nav-panel {
     width: 0;
   }
 
+  .nav_block_layout,
   app-playlists-block {
-    background-color: #0f0f0f;
+    border-radius: 20px;
+  }
+
+  .top_block {
+    border-radius: 15px;
+  }
+
+  app-playlists-block {
+    /*background-color: #0f0f0f;*/
     width: 80%;
-    border-radius: 10px;
     overflow-y: scroll;
   }
 
@@ -193,7 +212,7 @@ app-pc-nav-panel {
 .account_info_block > span,
 .account_info_block > p {
   color: white;
-  font-family: "Nunito", sans-serif;
+
 }
 
 .account_info_block > button {
@@ -231,4 +250,16 @@ app-pc-nav-panel {
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.router-wrapper {
+  width: 80%;
+  height: calc(100vh - 50px);
+  overflow-y: scroll;
+}
+
+.router-wrapper::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }

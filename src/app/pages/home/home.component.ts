@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {NewsBlockComponent} from "../../components/news-block/news-block.component";
 import {PlaylistsBlockComponent} from "../../components/playlists-block/playlists-block.component";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
 import {NgIf, NgOptimizedImage} from "@angular/common";
-import {Router, RouterLink} from "@angular/router";
+import {Router, RouterLink, RouterOutlet} from "@angular/router";
 import {PcNavPanelComponent} from "../../components/pc-nav-panel/pc-nav-panel.component";
 import {RequestService} from "../../services/request.service";
 import {SearchComponent} from "../search/search.component";
@@ -12,6 +12,10 @@ import {AudioCacheService} from "../../services/audio-cache.service";
 import {environment} from "../../../environment/environment";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
+import {Haptics, ImpactStyle} from "@capacitor/haptics";
+import {AccountComponent} from "../../components/bottom-sheets/account/account.component";
+import {MatBottomSheet} from "@angular/material/bottom-sheet";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-home',
@@ -26,7 +30,8 @@ import {MatIcon} from "@angular/material/icon";
     SearchComponent,
     MatButton,
     MatIcon,
-    NgIf
+    NgIf,
+    RouterOutlet
   ],
   providers: [
     RequestService,
@@ -36,9 +41,9 @@ import {MatIcon} from "@angular/material/icon";
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
+  private _bottomSheetAccount = inject(MatBottomSheet);
   token: string | null = localStorage.getItem('token');
   account: any;
-  isOpenedAccountInfoBlock: boolean = false;
   role!: string;
   avatar!: string;
 
@@ -81,8 +86,18 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  toggleAccountInfoBlock() {
-    this.isOpenedAccountInfoBlock = !this.isOpenedAccountInfoBlock;
+  async toggleAccountInfoBlock() {
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Medium});
+    }
+    const bottomSheetRef = this._bottomSheetAccount.open(AccountComponent, {
+      panelClass: "bottom-sheet",
+      data: this.account
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(() => {});
   }
 
   async logout() {

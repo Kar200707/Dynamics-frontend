@@ -162,3 +162,41 @@
   width: 38px;
   height: 38px;
 }
+
+.nav_box {
+  width: 300px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.nav_box > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.nav_box > div > span {
+  color: white;
+  font-family: "Nunito", sans-serif;
+  display: block;
+}
+
+.nav_box > div > img,
+.nav_box > div > svg {
+  width: 30px;
+  height: 30px;
+  transition: .1s;
+  margin: 0 10px;
+}
+
+.nav_box > div > img:active,
+.nav_box > div > svg:active {
+  scale: 0.9;
+}
+
+.nav_box > div + div > img {
+  width: 25px;
+  height: 25px;
+}

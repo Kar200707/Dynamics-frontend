@@ -14,6 +14,7 @@ import {SearchComponent} from "../../../pages/search/search.component";
 import {MatIcon} from "@angular/material/icon";
 import {debounceTime, Subject, switchMap} from "rxjs";
 import {SearchListModel} from "../../../../models/search_list.model";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-add-playlist',
@@ -73,12 +74,16 @@ export class AddPlaylistComponent implements OnInit {
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {
     this.searchSubject.pipe(
       debounceTime(750),
-      switchMap((value: string) => this.reqServ.post<SearchListModel[]>(environment.searchTracksList, { searchText: value }))
-    ).subscribe(async (data: SearchListModel[]) => {
-      this.search = data;
+      switchMap((value: string) => this.reqServ.post<{ videos: SearchListModel[] }>(environment.searchTracksList, { searchText: value }))
+    ).subscribe(async data => {
+      this.search = data.videos;
       this.isOpenedSearchResultsBlock = !!data && this.searchText !== '';
       this.isLoaded = true;
-      await Haptics.impact({ style: ImpactStyle.Light });
+      const platform = Capacitor.getPlatform();
+
+      if (platform !== 'web') {
+        await Haptics.impact({style: ImpactStyle.Light});
+      }
     });
   }
 
@@ -108,7 +113,11 @@ export class AddPlaylistComponent implements OnInit {
         const timeDifference = (currentTime.getTime() - lastUpdateTime.getTime()) / (1000 * 60);
 
         if (timeDifference >= 10) {
-          await Haptics.impact({ style: ImpactStyle.Heavy });
+          const platform = Capacitor.getPlatform();
+
+          if (platform !== 'web') {
+            await Haptics.impact({style: ImpactStyle.Heavy});
+          }
           await localforage.removeItem("historyList");
           await localforage.removeItem("newReleasesList");
           await localforage.removeItem("newCollectionsList");
@@ -161,13 +170,17 @@ export class AddPlaylistComponent implements OnInit {
         this.newTrackListLoaded = true;
       } else {
         if (this.token) {
-          this.requestService.post<any[]>(environment.searchTracksList, { access_token: this.token, searchText: 'new music releases lang:am' })
+          this.requestService.post<{ videos: any[] }>(environment.searchTracksList, { access_token: this.token, searchText: 'new music releases lang:am' })
             .subscribe(async list => {
               this.newTrackListLoaded = true;
-              await Haptics.impact({ style: ImpactStyle.Light });
-              this.newReleasesList = list;
+              const platform = Capacitor.getPlatform();
+
+              if (platform !== 'web') {
+                await Haptics.impact({style: ImpactStyle.Light});
+              }
+              this.newReleasesList = list.videos;
               this.cdr.detectChanges();
-              await localforage.setItem('newReleasesList', JSON.stringify(list));
+              await localforage.setItem('newReleasesList', JSON.stringify(list.videos));
             }, () => { this.newTrackListLoaded = false; });
         }
       }
@@ -187,14 +200,18 @@ export class AddPlaylistComponent implements OnInit {
       } else {
         if (this.token) {
           const currentYear = new Date().getFullYear();
-          this.requestService.post<any[]>(environment.searchTracksList,
+          this.requestService.post<{ videos: any[] }>(environment.searchTracksList,
             { access_token: this.token, searchText: `Armenian Songs ${currentYear}` })
             .subscribe(async list => {
               this.newCollectionsListLoaded = true;
-              await Haptics.impact({ style: ImpactStyle.Light });
-              this.newCollectionsList = list;
+              const platform = Capacitor.getPlatform();
+
+              if (platform !== 'web') {
+                await Haptics.impact({style: ImpactStyle.Light});
+              }
+              this.newCollectionsList = list.videos;
               this.cdr.detectChanges();
-              await localforage.setItem('newCollectionsList', JSON.stringify(list));
+              await localforage.setItem('newCollectionsList', JSON.stringify(list.videos));
             }, () => { this.newCollectionsListLoaded = false; });
         }
       }
@@ -216,7 +233,11 @@ export class AddPlaylistComponent implements OnInit {
           this.requestService.post<any[]>(environment.getPlayHistory, { access_token: this.token })
             .subscribe(async list => {
               this.trackListLoaded = true;
-              await Haptics.impact({ style: ImpactStyle.Light });
+              const platform = Capacitor.getPlatform();
+
+              if (platform !== 'web') {
+                await Haptics.impact({style: ImpactStyle.Light});
+              }
               const sortedTrackList = list.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
               this.historyList = sortedTrackList;
               this.cdr.detectChanges();

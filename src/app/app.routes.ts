@@ -5,24 +5,45 @@
   export const routes: Routes = [
     {
       path: '',
-      redirectTo: '/home',
+      redirectTo: '/home/playlists',
       pathMatch: 'full'
     },
     {
       title: 'Dynamics',
-      path: 'home',
+      path: '',
       canActivate: [mainPageGuard],
       loadComponent: () => import('./pages/main/main.component').then(x => (x.MainComponent)),
       children: [
         {
           title: 'Dynamics Home',
-          path: '',
-          data: { animation: 'HomePage' },
+          path: 'home',
           loadComponent: () => import('./pages/home/home.component').then(x => (x.HomeComponent)),
+          children: [
+            {
+              title: 'Home',
+              loadComponent: () => import('./components/playlists-block/playlists-block.component').then(x => (x.PlaylistsBlockComponent)),
+              path: "playlists"
+            },
+            {
+              title: 'Library',
+              loadComponent: () => import('./pages/library/library.component').then(x => (x.LibraryComponent)),
+              path: "library"
+            },
+            {
+              title: 'Search',
+              loadComponent: () => import('./pages/search/search.component').then(x => (x.SearchComponent)),
+              path: "search"
+            },
+            {
+              title: 'Folder',
+              loadComponent: () => import('./pages/folder/folder.component').then(x => (x.FolderComponent)),
+              path: "folder/:id"
+            }
+          ]
         },
         {
-          title: 'Dynamics Home',
-          path: 'track/:id',
+          title: 'Home',
+          path: 'home/track/:id',
           data: { animation: 'HomePage' },
           loadComponent: () => import('./pages/home/home.component').then(x => (x.HomeComponent)),
         },
@@ -64,7 +85,7 @@
           loadComponent: () => import('./pages/categories/categories.component').then(x => (x.CategoriesComponent)),
         },
         {
-          title: 'Dynamics Favorites',
+          title: 'Folder',
           path: 'folder/:id',
           loadComponent: () => import('./pages/folder/folder.component').then(x => (x.FolderComponent)),
         },

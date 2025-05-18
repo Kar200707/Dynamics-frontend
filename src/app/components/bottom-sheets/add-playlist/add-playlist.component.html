@@ -22,7 +22,7 @@
     <p style="color: #b9b9b9; margin-left: 20px; font-weight: lighter; margin-top: 15px">selected tracks {{ selectedTracks.length }}</p>
     <div class="search_block">
       <div class="search_box">
-        <input (input)="searchTrackList(searchInput.value)" #searchInput placeholder="Search Tracks..." class="search">
+        <input (input)="searchTrackList(searchInput.value)" #searchInput type="search" placeholder="Search Tracks..." class="search">
         <button class="search-btn" (click)="searchInput.focus()" mat-icon-button>
           <mat-icon>search</mat-icon>
         </button>

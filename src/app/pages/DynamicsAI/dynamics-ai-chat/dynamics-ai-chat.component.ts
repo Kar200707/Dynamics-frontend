@@ -174,7 +174,7 @@ export class DynamicsAiChatComponent implements OnInit {
       this.reqService.post<any>(environment.createAiChat, { token: this.token })
         .subscribe(data => {
           this.aiMessageLoading = false;
-          this.router.navigate([this.place === 'pc-component' ? 'home/dynamics-ai-pc/chat/' : 'home/dynamics-ai/chat/', data.chatId]).then(() => {
+          this.router.navigate([this.place === 'pc-component' ? 'dynamics-ai-pc/chat/' : 'dynamics-ai/chat/', data.chatId]).then(() => {
             this.getChat();
             this.getAiModels();
           });

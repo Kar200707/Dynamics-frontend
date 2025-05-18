@@ -2,12 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
 import {PlayerControllerService} from "../../services/player-controller.service";
 import {HttpClientModule} from "@angular/common/http";
-import {RouterLink} from "@angular/router";
+import {NavigationEnd, Router, RouterLink} from "@angular/router";
 import {RequestService} from "../../services/request.service";
 import localforage from "localforage";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {environment} from "../../../environment/environment";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
+import {filter} from "rxjs";
+import {NgOptimizedImage} from "@angular/common";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-pc-nav-panel',
@@ -16,7 +19,8 @@ import {ResizeHeightDirective} from "../../directives/resize-height.directive";
     MatIcon,
     HttpClientModule,
     RouterLink,
-    ResizeHeightDirective
+    ResizeHeightDirective,
+    NgOptimizedImage
   ],
   templateUrl: './pc-nav-panel.component.html',
   styleUrl: './pc-nav-panel.component.css'
@@ -26,6 +30,7 @@ export class PcNavPanelComponent implements OnInit {
   trackPlayId!: string;
   token: string | null = localStorage.getItem('token');
   listIsPlay:boolean = false;
+  routePath: string = 'home';
   loadArray = [
     1,
     2,
@@ -37,6 +42,7 @@ export class PcNavPanelComponent implements OnInit {
   ]
 
   constructor(
+    private router: Router,
     private requestService: RequestService,
     private playerController: PlayerControllerService) {
     this.playerController.trackId$.subscribe(id => {
@@ -49,13 +55,36 @@ export class PcNavPanelComponent implements OnInit {
     this.playerController.addFavorite$.subscribe(async track => {
       await this.getFavoriteTracksList();
     })
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const currentRoutePath = event.urlAfterRedirects.split('?')[0];
+
+      switch (currentRoutePath) {
+        case '/home/playlists':
+          this.routePath = 'home';
+          break;
+        case '/home/library':
+          this.routePath = 'library';
+          break;
+        case '/home/search':
+          this.routePath = 'search';
+          break;
+        default:
+          this.routePath = '';
+      }
+    });
   }
 
   async getFavoriteTracksList() {
     if (innerWidth > 850) {
       const cachedHistoryList = await localforage.getItem('favoritesTracksList');
       if (!cachedHistoryList) {
-        await Haptics.impact({ style: ImpactStyle.Heavy });
+        const platform = Capacitor.getPlatform();
+
+        if (platform !== 'web') {
+          await Haptics.impact({style: ImpactStyle.Light});
+        }
       }
       try {
         if (cachedHistoryList) {
@@ -72,7 +101,11 @@ export class PcNavPanelComponent implements OnInit {
             const sortedTrackList = tracksList.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
             this.trackList = sortedTrackList;
             await localforage.setItem('favoritesTracksList', JSON.stringify(sortedTrackList));
-            await Haptics.impact({ style: ImpactStyle.Light });
+            const platform = Capacitor.getPlatform();
+
+            if (platform !== 'web') {
+              await Haptics.impact({style: ImpactStyle.Light});
+            }
           }
         });
       } catch (e) {
@@ -87,6 +120,6 @@ export class PcNavPanelComponent implements OnInit {
     this.trackPlayId = id;
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
-    this.playerController.setList(this.trackList);
+    this.playerController.setList(this.trackList, "Favorites");
   }
 }

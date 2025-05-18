@@ -16,7 +16,7 @@
         ngSrc="assets/images/icons/home-white.svg" alt="search">
       <span>Home</span>
     </div>
-    <div (click)="setRouteActive('search')" routerLink="/home/search">
+    <div (click)="setRouteActive('search')" routerLink="/search">
       <img
         [style.display]="routePath === 'search' ? 'none' : 'unset'"
         height="24"
@@ -29,7 +29,7 @@
         ngSrc="assets/images/icons/search-filled.svg" alt="search">
       <span style="margin-top: 2px">Search</span>
     </div>
-    <div (click)="setRouteActive('library')" routerLink="/home/library">
+    <div (click)="setRouteActive('library')" routerLink="/library">
       <svg
         [style.display]="routePath === 'library' ? 'none' : 'unset'"
         style="outline: none;"
@@ -42,7 +42,7 @@
       <img
         [style.display]="routePath !== 'library' ? 'none' : 'unset'"
         style="width: 22px; height: 22px;"
-        routerLink="/home/library" src="assets/images/icons/libary-filled.svg" alt="library">
+        routerLink="/library" src="assets/images/icons/libary-filled.svg" alt="library">
       <span>Library</span>
     </div>
   </div>

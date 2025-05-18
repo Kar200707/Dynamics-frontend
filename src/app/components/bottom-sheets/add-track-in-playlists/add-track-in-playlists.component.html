@@ -6,7 +6,7 @@
       <p>{{ audioInfo.author.name }}</p>
     </div>
   </div>
-  <h4 style="color: white; margin-top: 13px">Add To</h4>
+  <p style="color: rgba(255,255,255,0.7); margin-top: 13px; font-size: 14px">Add To</p>
  <div class="scroll_box">
    @if (playlists) {
      @for (playlist of playlists; track $index) {
@@ -61,7 +61,7 @@
              }
            </div>
            <div style="margin-left: 15px;">
-             <h3>{{ playlist.playlistName }}</h3>
+             <p>{{ playlist.playlistName }}</p>
              <span>Playlist - {{ playlist.tracks?.length }} {{ playlist.tracks?.length > 0 ? 'songs' : 'song' }}</span>
            </div>
          </div>

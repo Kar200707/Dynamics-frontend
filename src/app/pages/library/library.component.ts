@@ -15,6 +15,7 @@ import {ResizeHeightDirective} from "../../directives/resize-height.directive";
 import {AccountComponent} from "../../components/bottom-sheets/account/account.component";
 import {MorePlaylistComponent} from "../../components/bottom-sheets/more-playlist/more-playlist.component";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-library',
@@ -39,8 +40,6 @@ import {Haptics, ImpactStyle} from "@capacitor/haptics";
   styleUrl: './library.component.css'
 })
 export class LibraryComponent implements OnInit {
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
-  @ViewChild('titleElement') titleElement!: ElementRef;
   favoritePlayListLength: number = 0;
   account: any;
   token: string | null = localStorage.getItem('token');
@@ -49,6 +48,9 @@ export class LibraryComponent implements OnInit {
   avatar!: string;
   playlists!: any[];
   isLoadedPlaylists: boolean = false;
+  searchQuery: string = '';
+  isOpenedSearchPlaylists: boolean = false;
+  filteredPlaylistList?: any[];
   playlistsLoadArr: number[] = [
     1,
     2,
@@ -61,6 +63,7 @@ export class LibraryComponent implements OnInit {
   private _bottomSheetPlaylistAdd = inject(MatBottomSheet);
   private _bottomSheetAccount = inject(MatBottomSheet);
   private _bottomSheetPlaylistMore = inject(MatBottomSheet);
+  isMobile: boolean = innerWidth < 850;
 
   constructor(
     private renderer: Renderer2,
@@ -113,7 +116,11 @@ export class LibraryComponent implements OnInit {
   }
 
   async openBottomSheet() {
-    await Haptics.impact({ style: ImpactStyle.Medium })
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Medium});
+    }
     const bottomSheetRef = this._bottomSheetPlaylistAdd.open(AddPlaylistComponent, {
       panelClass: "bottom-sheet",
       data: {
@@ -127,7 +134,6 @@ export class LibraryComponent implements OnInit {
   }
 
   getPlaylists() {
-    console.log(this.playlists)
     this.requestService.post<any>(environment.playlistGet, { token: this.token })
     .subscribe(data => {
       this.playlists = data.playlists.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
@@ -189,7 +195,11 @@ export class LibraryComponent implements OnInit {
   }
 
   async openSheetPlaylistMore(playlistId: string) {
-    await Haptics.impact({ style: ImpactStyle.Medium })
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Medium});
+    }
     const bottomSheetRef = this._bottomSheetPlaylistMore.open(MorePlaylistComponent, {
       panelClass: "bottom-sheet",
       data: playlistId,
@@ -199,7 +209,11 @@ export class LibraryComponent implements OnInit {
   }
 
   async toggleAccountInfoBlock() {
-    await Haptics.impact({ style: ImpactStyle.Medium })
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Medium});
+    }
     const bottomSheetRef = this._bottomSheetAccount.open(AccountComponent, {
       panelClass: "bottom-sheet",
       data: this.account
@@ -209,12 +223,14 @@ export class LibraryComponent implements OnInit {
     this.isOpenedAccountInfoBlock = !this.isOpenedAccountInfoBlock;
   }
 
-  onScroll() {
-    const scrollTop = this.scrollContainer.nativeElement.scrollTop;
-    if (scrollTop > 10) {
-      this.renderer.setStyle(this.titleElement.nativeElement, 'transform', 'translate(0, 0)');
-    } else {
-      this.renderer.setStyle(this.titleElement.nativeElement, 'transform', 'translate(-40px, 60px)');
-    }
+  onSearch(query: string) {
+    this.searchQuery = query.toLowerCase().trim();
+    if (!this.playlists) return;
+
+    this.filteredPlaylistList = this.playlists.filter((track: any) =>
+      track.playlistName.toLowerCase().includes(this.searchQuery)
+    );
   }
+
+  protected readonly innerWidth = innerWidth;
 }

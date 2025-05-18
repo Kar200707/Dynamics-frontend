@@ -1,15 +1,17 @@
 <div class="main_div">
   <div class="account_info_block" (click)="$event.stopPropagation()">
-    <div>
-      <img #avatarImg (error)="avatarImg.src = 'assets/images/dark-person.png'" [src]="account.avatar">
+    @if (account) {
       <div>
-        <h3>{{ account.name }}</h3>
-        <p>{{ account.email }}</p>
+        <img #avatarImg (error)="avatarImg.src = 'assets/images/dark-person.png'" [src]="account.avatar">
+        <div>
+          <h3>{{ account.name }}</h3>
+          <p>{{ account.email }}</p>
+        </div>
       </div>
-    </div>
-    <span>{{ account.bio }}</span>
+      <span>{{ account.bio }}</span>
+    }
     <div class="list_block">
-      <div routerLink="/home/dynamics-ai" (click)="closeSheet()" style="margin-top: 20px" class="dynamics_ai">
+      <div routerLink="/dynamics-ai" (click)="closeSheet()" style="margin-top: 20px" class="dynamics_ai">
         <img src="assets/images/icon-384x384.svg">
         <div style="margin-left: 5px">
           <h3>Dynamic Ai</h3>
@@ -17,10 +19,12 @@
       </div>
     </div>
     <button mat-button color="warn" (click)="logout()">Logout <mat-icon>logout</mat-icon></button>
-    @if (account.role === 'admin') {
-      <button style="margin-left: 10px" mat-button routerLink="/admin">
-        Admin <mat-icon>shield_person</mat-icon>
-      </button>
-    }
+<!--    @if (account.role) {-->
+<!--      @if (account.role === 'admin') {-->
+<!--        <button style="margin-left: 10px" mat-button routerLink="/admin">-->
+<!--          Admin <mat-icon>shield_person</mat-icon>-->
+<!--        </button>-->
+<!--      }-->
+<!--    }-->
   </div>
 </div>

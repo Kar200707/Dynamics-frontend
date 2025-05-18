@@ -1,7 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.dynamics.app"
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  namespace "com.dynamics.app"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.dynamics.app"

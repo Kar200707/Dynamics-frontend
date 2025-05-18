@@ -2,14 +2,13 @@
   [style.padding]="place === 'home' ? '0' : '20px'"
   class="main_block">
   <div
-    [style.margin]="place === 'home' ? '0' : '15px 0 0 0'"
     [style.position]="place === 'home' ? 'relative' : 'unset'" class="search_block">
     <div
       [style.margin-bottom]="place === 'home' ? '0' : '20px'"
       style="width: 100%; display: flex; align-items: center;">
       @if (place !== 'home') {
-        <button class="back_button">
-          <mat-icon style="color: white" routerLink="/home">arrow_back_ios</mat-icon>
+        <button (click)="routeBack()" class="back_button">
+          <mat-icon style="color: white">arrow_back_ios</mat-icon>
         </button>
       }
       <div class="search_cover_block">
@@ -39,6 +38,14 @@
         style="width: 100%">
         @if (searchInput.value !== '') {
           <div class="search_history_block">
+            @if (channels.length !== 0 && isLoaded) {
+              @for (channel of channels; track channel) {
+                <button class="history_block">
+                  <img class="track_image" style="border-radius: 50%" [src]="channel.image">
+                  <h3 class="title">{{ channel.name.length > 50 ? channel.name.slice(0, 50) : channel.name }}</h3>
+                </button>
+              }
+            }
             @for (item of search; track item) {
               <button (click)="setTrack(item.videoId, $index)" class="history_block">
                 <img class="track_image" [src]="item.image">

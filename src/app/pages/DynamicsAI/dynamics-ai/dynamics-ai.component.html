@@ -1,6 +1,6 @@
 <div class="main_block">
   <div class="header">
-    <button routerLink="/home/library" class="close_ai_btn">
+    <button routerLink="/library" class="close_ai_btn">
       <mat-icon style="margin-right: 10px">close</mat-icon>
       Close Dynamics Ai
     </button>
@@ -24,7 +24,7 @@
             <mat-icon style="color: white">more_vert</mat-icon>
           </button>
           <div (click)="router.navigate(
-        [place === 'pc-component' ? 'home/dynamics-ai-pc/chat/' : 'home/dynamics-ai/chat/', item._id])" class="chat">
+        [place === 'pc-component' ? 'dynamics-ai-pc/chat/' : 'dynamics-ai/chat/', item._id])" class="chat">
             <h3>{{ item.chat.length !== 0 ? item.chat[0].content.length > 30 ? item.chat[0].content.slice(0, 30) + '...' : item.chat[0].content : 'Empty chat' }}</h3>
             <p>{{ item.chat.length !== 0 ? item.chat[1].content.length > 50 ? item.chat[1].content.slice(0, 50) + '...' : item.chat[1].content : 'Click here for messaging' }}</p>
           </div>

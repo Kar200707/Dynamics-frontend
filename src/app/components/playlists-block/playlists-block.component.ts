@@ -8,9 +8,10 @@ import {environment, host} from "../../../environment/environment";
 import {MatIcon} from "@angular/material/icon";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {AudioCacheService} from "../../services/audio-cache.service";
 import {ImageDominantColorService} from "../player/player_functions/image-dominat-color.service";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-playlists-block',
@@ -20,7 +21,8 @@ import {ImageDominantColorService} from "../player/player_functions/image-domina
     HttpClientModule,
     MatIcon,
     LoaderIosComponent,
-    MatButton
+    MatButton,
+    MatIconButton
   ],
   providers: [
     RequestService,
@@ -33,18 +35,26 @@ export class PlaylistsBlockComponent implements OnInit {
   account: any;
   token: string | null = localStorage.getItem('token');
   historyList?: any[];
-  devices: any[] = [];
-  newReleasesList?: any[];
-  newCollectionsList?: any[];
+  newReleasesList?: any[] = [];
+  newCollectionsList?: any[] = [];
+  podcastsList?: any[] = [];
   isPlaying: boolean = false;
   trackListLoaded: boolean = false;
   trackPlayId: string = '';
   newTrackListLoaded: boolean = false;
   newCollectionsListLoaded: boolean = false;
+  isAllSort: boolean = true;
+  playlists!: any[];
+  isMusicSort: boolean = false;
+  isPodcastsSort: boolean = false;
+  podcastsListLoaded: boolean = false;
+  isLoadedPlaylists: boolean = false;
   isOpenedViewAll1:boolean = false;
   isOpenedViewAll2:boolean = false;
   isOpenedViewAll3:boolean = false;
-  typesListDictionary: number[] = [1, 2, 3];
+  isOpenedViewAll4:boolean = false;
+  miniPlaylistsArr: number[] = [0, 1]
+  isMobile: boolean = innerWidth < 850;
   loadArray: number[] = [
     1,
     2,
@@ -66,46 +76,67 @@ export class PlaylistsBlockComponent implements OnInit {
     private playerController: PlayerControllerService) {}
 
   async ngOnInit() {
+    this.getPlaylistsInCache();
+    this.getPlaylists();
     this.loadAccount();
-    await this.loadHistoryList();
-    await this.loadNewReleasesList();
-    await this.loadNewCollectionsList();
+    await this.loadList(
+      'historyList',
+      { access_token: this.token },
+      environment.getPlayHistory,
+      (list) => this.historyList = list,
+      (v) => this.trackListLoaded = v,
+      true
+    );
+
+    await this.loadList(
+      'newReleasesList',
+      { access_token: this.token, searchText: 'новые кальянный рэп music new' },
+      environment.searchTracksList,
+      (list) => this.newReleasesList = list,
+      (v) => this.newTrackListLoaded = v
+    );
+
+    await this.loadList(
+      'podcastsList',
+      { access_token: this.token, searchText: 'Hayeren Podcast' },
+      environment.searchTracksList,
+      (list) => this.podcastsList = list,
+      (v) => this.podcastsListLoaded = v
+    );
+
+    await this.loadList(
+      'newCollectionsList',
+      { access_token: this.token, searchText: 'new Armenian Official Artists Music' },
+      environment.searchTracksList,
+      (list) => this.newCollectionsList = list,
+      (v) => this.newCollectionsListLoaded = v
+    );
+
+    this.playerController.trackId$.subscribe(async id => {
+      this.trackPlayId = id;
+    });
+    this.playerController.actPlayer$.subscribe(act => this.isPlaying = act === 'play');
 
     let lastUpdateTime = new Date();
-
-    this.playerController.trackId$.subscribe(id => {
-      this.trackPlayId = id;
-    })
-
-    this.playerController.actPlayer$.subscribe(act => {
-      if (act === 'pause') {
-        this.isPlaying = false;
-      }
-      if (act === 'play') {
-        this.isPlaying = true;
-      }
-    })
-
     document.addEventListener('visibilitychange', async () => {
       if (document.visibilityState === 'visible') {
         const currentTime = new Date();
-        const timeDifference = (currentTime.getTime() - lastUpdateTime.getTime()) / (1000 * 60);
+        const timeDiff = (currentTime.getTime() - lastUpdateTime.getTime()) / (1000 * 60);
+        if (timeDiff >= 10) {
+          const platform = Capacitor.getPlatform();
+          if (platform !== 'web') await Haptics.impact({ style: ImpactStyle.Heavy });
 
-        if (timeDifference >= 10) {
-          await Haptics.impact({ style: ImpactStyle.Heavy });
-          await localforage.removeItem("historyList");
-          await localforage.removeItem("newReleasesList");
-          await localforage.removeItem("newCollectionsList");
+          await localforage.removeItem('historyList');
+          await localforage.removeItem('newReleasesList');
+          await localforage.removeItem('podcastsList');
+          await localforage.removeItem('newCollectionsList');
 
           this.trackListLoaded = false;
           this.newTrackListLoaded = false;
           this.newCollectionsListLoaded = false;
           this.cdr.detectChanges();
 
-          await this.loadHistoryList();
-          await this.loadNewReleasesList();
-          await this.loadNewCollectionsList();
-
+          await this.ngOnInit();
           lastUpdateTime = new Date();
         }
       }
@@ -116,81 +147,79 @@ export class PlaylistsBlockComponent implements OnInit {
    return await this.imgColorService.getDominantColors(host + 'media/cropImage?url=' + trackImage);
   }
 
-  async loadNewReleasesList() {
-    try {
-      const cachedHistoryList = await localforage.getItem('newReleasesList');
+  getPlaylists() {
+    this.requestService.post<any>(environment.playlistGet, { token: this.token })
+      .subscribe(data => {
+        this.playlists = data.playlists.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+        this.playlists.forEach((playlist: any) => {
+          playlist.tracks = playlist.tracks
+            .sort((trackA: any, trackB: any) => new Date(trackB.addedAt).getTime() - new Date(trackA.addedAt).getTime());
+        });
+        this.isLoadedPlaylists = true;
+      })
+  }
 
-      if (cachedHistoryList) {
-        this.newReleasesList = JSON.parse(cachedHistoryList as string);
-        this.newTrackListLoaded = true;
-      } else {
-        if (this.token) {
-          this.requestService.post<any[]>(environment.searchTracksList, { access_token: this.token, searchText: 'new music releases lang:am' })
-            .subscribe(async list => {
-              this.newTrackListLoaded = true;
-              await Haptics.impact({ style: ImpactStyle.Light });
-              this.newReleasesList = list;
-              this.cdr.detectChanges();
-              await localforage.setItem('newReleasesList', JSON.stringify(list));
-            }, () => { this.newTrackListLoaded = false; });
-        }
+  async getPlaylistsInCache() {
+    const keys = await localforage.keys();
+
+    const folderKeys = keys.filter(key => key.startsWith("folder"));
+
+    const folders = await Promise.all(folderKeys.map(async key => {
+      const data = await localforage.getItem(key);
+      if (data && typeof data === 'string') {
+        return JSON.parse(data);
       }
-    } catch (e) {
-      console.error('Error loading new releases list from cache:', e);
-      this.newTrackListLoaded = false;
+      return data;
+    }));
+    if (folders.length > 0) {
+      this.playlists = folders.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+      this.isLoadedPlaylists = true;
     }
   }
 
-  async loadNewCollectionsList() {
+  private async loadList<T>(
+    cacheKey: string,
+    requestPayload: any,
+    requestUrl: string,
+    listSetter: (list: T[]) => void,
+    flagSetter: (value: boolean) => void,
+    sortByDate: boolean = false
+  ): Promise<void> {
     try {
-      const cachedHistoryList = await localforage.getItem('newCollectionsList');
+      const cachedList = await localforage.getItem(cacheKey);
+      if (cachedList) {
+        listSetter(JSON.parse(cachedList as string));
+        flagSetter(true);
+      } else if (this.token) {
+        this.requestService.post<{ videos: T[] | any }>(requestUrl, requestPayload)
+          .subscribe(async (response) => {
+            let result = response.videos;
 
-      if (cachedHistoryList) {
-        this.newCollectionsList = JSON.parse(cachedHistoryList as string);
-        this.newCollectionsListLoaded = true;
-      } else {
-        if (this.token) {
-          const currentYear = new Date().getFullYear();
-          this.requestService.post<any[]>(environment.searchTracksList,
-            { access_token: this.token, searchText: `new armenian tracks` })
-            .subscribe(async list => {
-              this.newCollectionsListLoaded = true;
+            if (!response.videos) {
+              result = response;
+            }
+
+            if (sortByDate) {
+              result = result.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+            }
+
+            listSetter(result);
+            flagSetter(true);
+
+            const platform = Capacitor.getPlatform();
+            if (platform !== 'web') {
               await Haptics.impact({ style: ImpactStyle.Light });
-              this.newCollectionsList = list;
-              this.cdr.detectChanges();
-              await localforage.setItem('newCollectionsList', JSON.stringify(list));
-            }, () => { this.newCollectionsListLoaded = false; });
-        }
-      }
-    } catch (e) {
-      console.error('Error loading new collections list from cache:', e);
-      this.newCollectionsListLoaded = false;
-    }
-  }
+            }
 
-  async loadHistoryList() {
-    try {
-      const cachedHistoryList = await localforage.getItem('historyList');
-
-      if (cachedHistoryList) {
-        this.historyList = JSON.parse(cachedHistoryList as string);
-        this.trackListLoaded = true;
-      } else {
-        if (this.token) {
-          this.requestService.post<any[]>(environment.getPlayHistory, { access_token: this.token })
-            .subscribe(async list => {
-              this.trackListLoaded = true;
-              await Haptics.impact({ style: ImpactStyle.Light });
-              const sortedTrackList = list.sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
-              this.historyList = sortedTrackList;
-              this.cdr.detectChanges();
-              await localforage.setItem('historyList', JSON.stringify(sortedTrackList));
-            }, () => { this.trackListLoaded = false; });
-        }
+            this.cdr.detectChanges();
+            await localforage.setItem(cacheKey, JSON.stringify(result));
+          }, () => {
+            flagSetter(false);
+          });
       }
-    } catch (e) {
-      console.error('Error loading history list from cache:', e);
-      this.trackListLoaded = false;
+    } catch (error) {
+      console.error(`Error loading ${cacheKey} list:`, error);
+      flagSetter(false);
     }
   }
 
@@ -215,12 +244,14 @@ export class PlaylistsBlockComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  setTrack(id: string, index: number, list: any) {
+  setTrack(id: string, index: number, list: any, listName: string) {
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
-    this.playerController.setList(list as any[]);
+    this.playerController.setList(list as any[], listName);
   }
 
   protected readonly innerWidth = innerWidth;
   protected readonly console = console;
+  protected readonly Haptics = Haptics;
+  protected readonly ImpactStyle = ImpactStyle;
 }

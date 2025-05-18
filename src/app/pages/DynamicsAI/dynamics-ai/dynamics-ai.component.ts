@@ -11,6 +11,7 @@ import {MatBottomSheet} from "@angular/material/bottom-sheet";
 import {MoreChatComponent} from "../../../components/bottom-sheets/more-chat/more-chat.component";
 import {ChatModel} from "../../../../models/chat.model";
 import {ChatParentModel} from "../../../../models/chat-parent.model";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-dynamics-ai',
@@ -70,7 +71,7 @@ export class DynamicsAiComponent implements OnInit {
   createNewChat() {
     this.reqService.post<any>(environment.createAiChat, { token: this.token })
       .subscribe(data => {
-        this.router.navigate([this.place === 'pc-component' ? 'home/dynamics-ai-pc/chat/' : 'home/dynamics-ai/chat/', data.chatId]);
+        this.router.navigate([this.place === 'pc-component' ? 'dynamics-ai-pc/chat/' : 'dynamics-ai/chat/', data.chatId]);
       });
   }
 
@@ -80,7 +81,11 @@ export class DynamicsAiComponent implements OnInit {
   }
 
   async openSheetChatMore(chatId: string) {
-    await Haptics.impact({ style: ImpactStyle.Medium })
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Medium});
+    }
     const bottomSheetRef = this._bottomSheetChatMore.open(MoreChatComponent, {
       panelClass: "bottom-sheet",
       data: chatId,

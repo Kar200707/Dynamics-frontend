@@ -12,7 +12,7 @@
   margin-top: 5px;
   width: 100%;
   padding-bottom: calc(100px + env(safe-area-inset-bottom));
-  padding-top: 35px;
+  padding-top: 15px;
 }
 
 .scroll_box::-webkit-scrollbar {
@@ -36,21 +36,18 @@
 
 .account_block > div > h2 {
   color: white;
-  font-family: "Nunito", sans-serif;
-  transform: translate(-40px, 60px);
-  transition: transform 0.3s ease-in-out;
   font-size: 25px;
 }
 
 .account {
-  width: 70px;
-  height: 70px;
-  background-color: #1b1b1b;
+  width: 60px;
+  height: 60px;
+  /*background-color: #1b1b1b;*/
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);*/
   transition: .2s scale;
 }
 
@@ -59,10 +56,37 @@
 }
 
 .account > img {
-  width: 55px;
-  height: 55px;
+  width: 45px;
+  height: 45px;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.search_block {
+  position: relative;
+  width: calc(100% - 70px);
+  transition: .25s width cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.search_block > img {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 11px;
+  right: 10px;
+}
+
+.search {
+  width: 100%;
+  background-color: #1a1b1f;
+  padding: 8px 13px;
+  border-radius: 13px;
+  border: none;
+  font-size: 17px;
+  outline: none;
+
+  color: white;
+  padding-right: 40px;
 }
 
 .list_block {
@@ -85,24 +109,28 @@
   align-items: center;
 }
 
-.favorites > div > h3 {
+.favorites > div > p,
+.playlist > div > div > p {
   color: white;
-  font-family: "Nunito", sans-serif;
+  font-weight: normal;
+  font-size: 16px;
+
 }
 
-.favorites > div > p,
+.favorites > div > span,
 .playlist > div > div > span {
-  color: #b5b5b5;
+  color: #ffffff;
   font-size: 14px;
-  font-family: "Nunito", sans-serif;
+  margin-top: 3px;
+  display: block;
+  opacity: .7;
 }
 
 .favorites > img {
-  width: 70px;
-  height: 70px;
-  border-radius: 10px;
-  padding: 8px 5px;
-  background-color: #1b1b1b;
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  padding: 2px 0;
 }
 
 .account_info_block {
@@ -134,7 +162,7 @@
 .account_info_block > span,
 .account_info_block > p {
   color: white;
-  font-family: "Nunito", sans-serif;
+
 }
 
 .account_info_block > button {
@@ -161,12 +189,13 @@ button[mat-button].routerLink {
 }
 
 .add_playlist_block > button {
-  width: 70px;
-  height: 70px;
-  border-radius: 10px;
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
   background-color: #1b1b1b;
   display: flex;
   align-items: center;
+  border: none;
   justify-content: center;
 }
 
@@ -187,8 +216,9 @@ button[mat-button].routerLink {
   content: "+";
   color: white;
   font-weight: lighter;
-  font-size: 45px;
-  margin-bottom: 5px;
+  font-size: 40px;
+  margin-bottom: 15px;
+  opacity: .7;
 }
 
 .playlist {
@@ -208,16 +238,12 @@ button[mat-button].routerLink {
   align-items: center;
 }
 
-.playlist > div > div > h3 {
-  color: white;
-}
-
 .images_row {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 10px;
-  width: 70px;
+  border-radius: 6px;
+  width: 60px;
 }
 
 .images_row > div {
@@ -225,8 +251,8 @@ button[mat-button].routerLink {
 }
 
 .images_row > div > img {
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   object-fit: cover;
   display: block;
 }
@@ -238,8 +264,8 @@ button[mat-button].routerLink {
 }
 
 .playlist_load > .image {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   border-radius: 10px;
   background-color: #1a1a1a;
 }
@@ -250,4 +276,31 @@ button[mat-button].routerLink {
   border-radius: 5px;
   background-color: #1a1a1a;
   margin-left: 10px;
+}
+
+.header_add {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: #1a1b1f;
+  padding: 4px;
+  border-radius: 13px;
+  transition: .2s scale;
+  margin-right: 10px;
+}
+
+.header_add > img {
+  width: 21px;
+  height: 21px;
+  display: block;
+}
+
+.header_add:active {
+  scale: 0.96;
+}
+
+.header_add > mat-icon {
+  font-size: 33px;
+  width: 33px;
+  height: 33px;
+  display: block;
+  transition: .2s rotate;
 }

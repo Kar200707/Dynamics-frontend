@@ -25,7 +25,7 @@
 .account_info_block > div > div > span,
 .account_info_block > div > div > p {
   color: white;
-  font-family: "Nunito", sans-serif;
+
 }
 
 .account_info_block > button {
@@ -59,7 +59,7 @@
 .dynamics_ai > div > h3 {
   font-weight: bold;
   font-size: 22px;
-  font-family: "Nunito", sans-serif;
+
   background: linear-gradient(90deg, #001ee5, #246dff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

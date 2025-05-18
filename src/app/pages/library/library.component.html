@@ -1,61 +1,77 @@
 <div class="main_block">
   <div class="account_block">
     <div>
-      <button mat-icon-button>
-        <mat-icon style="color: white" routerLink="/home">arrow_back_ios</mat-icon>
-      </button>
-      <h2 #titleElement>Your Library</h2>
+      <h2>Your Library</h2>
     </div>
-    <div (click)="toggleAccountInfoBlock()" class="account">
-      @if (avatar) { <img [src]="avatar"> }
-    </div>
+    @if (innerWidth < 850) {
+      <div (click)="toggleAccountInfoBlock()" class="account">
+        @if (avatar) { <img [src]="avatar"> }
+      </div>
+    }
   </div>
-  <div #scrollContainer (scroll)="onScroll()" class="scroll_box">
+  <div class="scroll_box">
+    <div
+      style="display: flex; align-items: center;">
+      <div (click)="isOpenedSearchPlaylists ? isOpenedSearchPlaylists = false : openBottomSheet()" class="header_add">
+        <mat-icon
+          [style.rotate]="isOpenedSearchPlaylists ? '45deg' : '0deg'">add</mat-icon>
+      </div>
+      <div
+        [style.width]="isOpenedSearchPlaylists ? '100%' : '40px'"
+        (click)="isOpenedSearchPlaylists = true" class="search_block">
+        <input
+          [style.padding-right]="isOpenedSearchPlaylists ? '40px' : '27px'"
+          #searchInput
+          (input)="onSearch(searchInput.value)"
+          type="text" placeholder="Find in playlists" class="search">
+        <img style="opacity: .6" src="assets/images/icons/search.svg">
+      </div>
+    </div>
     <div class="list_block">
-      <div routerLink="/home/folder/track-favorites" class="favorites">
+      <div [routerLink]="(isMobile ? '/folder/track-favorites' : '/home/folder/track-favorites')" class="favorites">
         <img src="assets/images/icons/bookmark.png">
         <div style="margin-left: 15px">
-          <h3>Favorite songs</h3>
-          <p>Playlist - {{ favoritePlayListLength != 0 ? favoritePlayListLength : '' }} {{ favoritePlayListLength > 0 ? 'songs' : 'song' }}</p>
+          <p>Favorite songs</p>
+          <span>Playlist - {{ favoritePlayListLength != 0 ? favoritePlayListLength : '' }} {{ favoritePlayListLength > 0 ? 'songs' : 'song' }}</span>
         </div>
       </div>
     </div>
     @if (playlists) {
-      @for (playlist of playlists; track $index) {
+      @for (playlist of searchQuery !== '' ? filteredPlaylistList : playlists; track $index) {
         <div
           (touchstart)="startHolding(playlist._id)"
           (touchend)="stopHolding()"
           (touchcancel)="stopHolding()"
           class="playlist">
-          <div style="width: 100%;" [routerLink]="'/home/folder/' + playlist._id" >
+          <div style="width: 100%;" [routerLink]="(isMobile ? '/folder/' : '/home/folder/') + playlist._id" >
             <div class="images_row">
               <div>
                 @if (playlist.tracks?.length === 1) {
                   <img
-                    style="width: 70px; height: 70px"
+                    style="width: 65px; height: 65px"
                     [src]="playlist.tracks[0].image">
                 } @else if (playlist.tracks?.length === 2) {
                   <img
-                    style="height: 70px"
+                    style="height: 65px"
                     [src]="playlist.tracks[0].image">
                    <img
-                     style="height: 70px"
+                     style="height: 65px"
                      [src]="playlist.tracks[1].image">
                 } @else if (playlist.tracks?.length === 3) {
                   <div>
                     <img
-                      height="35px"
-                      width="35px"
+                      height="30px"
+                      width="30px"
                       style="object-fit: cover; display: block"
                       [src]="playlist.tracks[0].image">
                     <img
-                      height="35px"
-                      width="35px"
+                      height="30px"
+                      width="30px"
                       style="object-fit: cover; display: block"
                       [src]="playlist.tracks[1].image">
                   </div>
                   <img
-                    style="height: 70px"
+                    style="height: 65px"
                     [src]="playlist.tracks[2].image">
                 }
               </div>
@@ -75,11 +91,11 @@
               }
             </div>
             <div style="margin-left: 15px;">
-              <h3>{{ playlist.playlistName }}</h3>
+              <p>{{ playlist.playlistName }}</p>
               <span>Playlist - {{ playlist.tracks?.length }} {{ playlist.tracks?.length > 0 ? 'songs' : 'song' }}</span>
             </div>
           </div>
-          <button (click)="openSheetPlaylistMore(playlist._id)" mat-icon-button>
+          <button style="opacity: .7" (click)="openSheetPlaylistMore(playlist._id)" mat-icon-button>
             <mat-icon style="color: white">more_vert</mat-icon>
           </button>
         </div>
@@ -97,7 +113,7 @@
       }
     }
     <div (click)="openBottomSheet()" class="add_playlist_block">
-      <button mat-button></button>
+      <button></button>
       <p style="color: white; margin-left: 15px">Create New Playlist</p>
     </div>
   </div>

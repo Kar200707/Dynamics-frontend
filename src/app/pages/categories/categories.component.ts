@@ -9,6 +9,7 @@ import {environment} from "../../../environment/environment";
 import {HttpClientModule} from "@angular/common/http";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-categories',
@@ -109,15 +110,23 @@ export class CategoriesComponent implements OnInit {
       { access_token: this.token, searchText: `${this.categoryForReq} 3 minutes` }
     ).subscribe(async tracksList => {
       this.trackList = tracksList;
-      await Haptics.impact({ style: ImpactStyle.Light });
+      const platform = Capacitor.getPlatform();
+
+      if (platform !== 'web') {
+        await Haptics.impact({style: ImpactStyle.Light});
+      }
     })
-    await Haptics.impact({ style: ImpactStyle.Heavy });
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Heavy});
+    }
   }
 
   setTrack(id: string, index: number) {
     this.trackPlayId = id;
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
-    this.playerController.setList(this.trackList);
+    this.playerController.setList(this.trackList, '');
   }
 }

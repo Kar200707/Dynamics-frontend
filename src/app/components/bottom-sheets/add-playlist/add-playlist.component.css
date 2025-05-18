@@ -32,7 +32,7 @@
 
 .playlist_block_cover > p {
   color: white;
-  font-family: "Nunito", sans-serif;
+
   margin-top: 5px;
 }
 
@@ -81,7 +81,7 @@
 }
 
 h2 {
-  font-family: "Nunito", sans-serif;
+
   color: white;
   font-weight: 400;
   font-size: 20px;
@@ -186,7 +186,7 @@ h2 {
   display: -webkit-box;
   font-weight: lighter;
   font-size: 0.7rem;
-  font-family: "Nunito", sans-serif;
+
   color: white;
   text-align: start;
   margin-top: 5px;
@@ -197,7 +197,7 @@ h2 {
   width: 100%;
   overflow: hidden;
   display: -webkit-box;
-  font-family: "Nunito", sans-serif;
+
   font-weight: lighter;
   font-size: 0.8rem;
   color: #919191;
@@ -231,12 +231,16 @@ h2 {
 
 .search {
   padding: 10px 15px;
-  border-radius: 5px;
+  border-radius: 10px;
   border: none;
   color: white;
   outline: none;
   background-color: #0c0c0c;
   width: 100%;
+}
+
+.search::-webkit-search-cancel-button {
+  display: none;
 }
 
 .float_button {

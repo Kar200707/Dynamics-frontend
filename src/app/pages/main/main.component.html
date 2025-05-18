@@ -4,7 +4,8 @@
 <!--  </div>-->
 <!--  <ion-router-outlet></ion-router-outlet>-->
   <app-player
-    [style.display]="this.routePath.slice(0, 14) === '/home/dynamics' ? 'none' : 'unset'"
+    [style.z-index]="'99'"
+    [style.display]="this.routePath.slice(0, 9) === '/dynamics' ? 'none' : 'unset'"
     [style.width]="innerWidth > 850 ? 'calc(80% - 4px)' : '100%'"
     [style.right]="innerWidth > 850 ? '0' : 'unset'"
     [ngStyle]="{
@@ -17,7 +18,7 @@
     style="position: absolute; width: 100%; z-index: 5; transition: .3s "></app-player>
     @if (innerWidth < 850) {
       <app-mobile-nav-panel
-        [style.display]="this.routePath.slice(0, 14) === '/home/dynamics' ? 'none' : 'unset'"
+        [style.display]="this.routePath.slice(0, 9) === '/dynamics' ? 'none' : 'unset'"
         [style.bottom]="'-' + keyboardHeight + 'px'"
         style="
           position: absolute;

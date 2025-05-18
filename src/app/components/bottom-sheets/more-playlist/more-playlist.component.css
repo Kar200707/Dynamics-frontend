@@ -6,7 +6,7 @@
 h1 {
   color: white;
   font-size: 20px;
-  font-family: "Nunito", sans-serif;
+  font-weight: 300;
 }
 
 .tracks_list_block {
@@ -44,10 +44,12 @@ h1 {
 
 .track > div > div > h4 {
   color: white;
+  font-weight: 300;
 }
 
 .track > div > div > p {
-  color: #adadad;
+  color: #ffffff;
+  opacity: .7;
 }
 
 .track > div > div > h4,
@@ -59,7 +61,7 @@ h1 {
   text-overflow: ellipsis;
   white-space: normal;
   font-size: 13px;
-  font-family: "Nunito", sans-serif;
+
 }
 
 .tracks_count_block {

@@ -100,6 +100,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   currentTime: string = '--:--';
   endOfTrack: string = '--:--';
   isNextCalled: boolean = false;
+  playlistName: string = '';
   audio_recommended_list: any = [0];
   seekCircleShow: boolean = false;
   seekCircleTimeOut: any;
@@ -152,7 +153,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
     })
 
     document.addEventListener('touchmove', (event: TouchEvent) => {
-      if (this.scrollTop === 0) {
+      if (this.scrollTop === 0 && innerWidth < 850) {
         if (this.touchStart && this.mainBlock.nativeElement && this.isOpenedMobilePlayer && this.moveLimit > 4 || this.moveLimit < -4) {
           const touch = event.touches[0];
           const currentY = touch.clientY;
@@ -177,18 +178,6 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
       }
     })
 
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     let routePath:string = event.urlAfterRedirects.split('/')[1];
-    //
-    //     if (routePath != 'home') {
-    //       console.log('hello')
-    //       this.isOpenedMobilePlayer = false;
-    //       this.isOpenedMobilePlayerAnim = false;
-    //     }
-    //   }
-    // });
-
     this.playerController.backgroundUrl$.subscribe(bgUrl => {
       if (bgUrl) {
         this.backgroundImage = bgUrl;
@@ -203,25 +192,26 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
     playerController.trackIndex$.subscribe(index => {
       this.trackIndex = index;
     })
-    this.playerController.playerInfo$.subscribe((list) => {
-        if (list?.[this.trackIndex]) {
-          if (this.audio_info.videoId !== list[this.trackIndex].videoId) {
-            if (list && this.media) {
-              this.type = 'audio';
-              this.trackList = list;
-              this.audio_info = list[this.trackIndex];
-              updateMediaSessionMetadata(this.audio_info, titleService);
-              this.load();
-              this.getPlayerInfo();
-            }
-          } else {
-            if (list) {
-              this.trackList = list;
-            }
-            this.openMobilePlayer();
-            this.play();
+    this.playerController.playerInfo$.subscribe((item) => {
+      if (item?.list?.[this.trackIndex]) {
+        this.playlistName = item.name;
+        if (this.audio_info.videoId !== item.list[this.trackIndex].videoId) {
+          if (item.list && this.media) {
+            this.type = 'audio';
+            this.trackList = item.list;
+            this.audio_info = item.list[this.trackIndex];
+            updateMediaSessionMetadata(this.audio_info, titleService);
+            this.load();
+            this.getPlayerInfo();
           }
+        } else {
+          if (item.list) {
+            this.trackList = item.list;
+          }
+          this.openMobilePlayer();
+          this.play();
         }
+      }
     });
   }
 
@@ -294,14 +284,14 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   updateRouteParam(id: string) {
-    this.route.queryParams.subscribe(params => {
-      if (!params['play'] || params['play'] !== this.audio_info.videoId) {
-        this.router.navigate([], {
-          queryParams: { play: id },
-          queryParamsHandling: 'merge',
-        });
-      }
-    });
+    // this.route.queryParams.subscribe(params => {
+    //   if (!params['play'] || params['play'] !== this.audio_info.videoId) {
+    //     this.router.navigate([], {
+    //       queryParams: { play: id },
+    //       queryParamsHandling: 'merge',
+    //     });
+    //   }
+    // });
   }
 
   getFormattedInt(int: number, text: string): string {
@@ -413,7 +403,11 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   async openSheetAddToPlaylists() {
-    await Haptics.impact({ style: ImpactStyle.Medium })
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Medium});
+    }
     const bottomSheetRef = this._bottomSheetAddToPlaylists.open(AddTrackInPlaylistsComponent, {
       panelClass: "bottom-sheet",
       data: this.audio_info,
@@ -426,7 +420,6 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
     const colorsArray: string[] = await this.imgDominatColorService.getDominantColors(host + 'media/cropImage?url=' + this.audio_info.image);
     this.playerImageDominatColor = colorsArray[0];
     this.playerImageDominatColor2 = colorsArray[1];
-    console.log(colorsArray[1]);
     this.cdr.detectChanges();
   }
 
@@ -444,75 +437,77 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   async load() {
-    // clearInterval(this.hapticInterval);
     this.playerImageDominatColor = 'rgb(36 36 36)';
     this.playerImageDominatColor2 = 'rgb(36 36 36)';
     this.cdr.detectChanges();
+
     this.pause();
     this.isLoaded = false;
     this.media.currentTime = 0;
-    // this.hapticInterval = setInterval(() => {
-    //   triggerHaptic();
-    // }, 600)
 
-    // this.requestService.post<any>(environment.getAuthorIdByVideoId + this.audio_info.videoId, { })
-    //   .subscribe(data => {
-    //     this.authorId = data.authorId;
-    //   })
     this.updateSeekBarOpenPlayer();
     this.updateSeekBar();
 
-    const cachedAudio = await this.audioCacheService.get(this.audio_info.videoId);
     setTimeout(() => this.getImageColor(), 0);
+
+    const cachedAudio = await this.audioCacheService.get(this.audio_info.videoId);
 
     if (cachedAudio && this.type === 'audio') {
       this.media.src = URL.createObjectURL(cachedAudio);
       this.media.load();
-      this.media.addEventListener('error', e => {
+      this.media.addEventListener('error', () => {
         this.audioCacheService.remove(this.audio_info.videoId);
-        this.info = 'Audio Listening Error 2';
-        this.infoTopBlockIsOpened = true;
-        this.playerController.addFavoriteTrack(this.audio_info);
-        setTimeout(() => {
-          this.info = '';
-          this.infoTopBlockIsOpened = false;}, 4000)
-      })
-      this.requestService.post<any>(environment.setPlayHistory, {
-        access_token: this.token,
-        trackId: this.audio_info.videoId
-      }).subscribe()
-      // await Haptics.impact({ style: ImpactStyle.Light });
+        this.showError('Audio Listening Error 2');
+      });
+      this.sendToHistory();
     } else {
-      const query: string = `?type=${this.type}&quality=highestaudio`
-
-      this.media.src = environment.getStream + this.audio_info.videoId + query;
-
-      this.media.load();
-
-      if (Capacitor.isNativePlatform()) {
-
-        CarAudio.setRoot({
-          url: this.media.src
-        }).then(() => {
-          console.log('CarPlay interface is ready for audio');
-        }).catch((error) => {
-          console.error('Error setting CarPlay root:', error);
+      this.requestService.get<any>(
+        `https://api.vidfly.ai/api/media/youtube/download?url=https://www.youtube.com/watch?v=${this.audio_info.videoId}`
+      ).subscribe((info) => {
+        const items = info.data.items;
+        const audioItems = items.filter((item: any) => item.type === "video_with_audio");
+        const bestAudio = audioItems.reduce((prev: any, curr: any) => {
+          const prevRate = parseInt(prev.label.match(/\d+/)?.[0] || '0');
+          const currRate = parseInt(curr.label.match(/\d+/)?.[0] || '0');
+          return currRate > prevRate ? curr : prev;
         });
-      }
-      this.media.addEventListener('error', e => {
-        this.info = 'Audio Listening Error 1';
-        this.infoTopBlockIsOpened = true;
-        this.playerController.addFavoriteTrack(this.audio_info);
-        setTimeout(() => {
-          this.info = '';
-          this.infoTopBlockIsOpened = false;}, 4000)
-      })
-      // await Haptics.impact({ style: ImpactStyle.Light });
-      this.fetchAndCacheAudio(this.audio_info.videoId, this.media.duration);
+
+        if (bestAudio && bestAudio.url) {
+          this.media.src = bestAudio.url;
+          this.media.load();
+          this.media.oncanplay = null;
+
+          this.media.oncanplay = () => {
+            if (this.isLoaded) {
+              this.media.play().catch(err => {
+                console.warn('play() failed:', err);
+              });
+            }
+          };
+
+          // this.fetchAndCacheAudio(this.audio_info.videoId, 0);
+
+          // CarPlay
+          if (Capacitor.isNativePlatform()) {
+            CarAudio.setRoot({ url: this.media.src })
+              .then(() => console.log('CarPlay ready'))
+              .catch(err => console.error('CarPlay error', err));
+          }
+        } else {
+          this.showError('Audio not found');
+        }
+      });
+
+      this.media.addEventListener('error', () => {
+        this.showError('Audio Listening Error 1');
+      });
+
+      this.sendToHistory();
     }
 
     this.getIsFavorite(this.audio_info.videoId);
-    this.media.onerror = (e) => {
+
+    this.media.onerror = () => {
       this.isLoaded = false;
     }
 
@@ -522,34 +517,51 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
       this.setMetaTags();
       this.isLoaded = true;
       this.currentTime = '00:00';
-      if (!isNaN(this.media.duration) && !isNaN(this.media.currentTime)) {
+
+      if (!isNaN(this.media.duration)) {
         this.endOfTrack = this.formatTime(this.media.duration - this.media.currentTime);
       }
+
       this.play();
-      // clearInterval(this.hapticInterval);
     });
+
     this.media.addEventListener('timeupdate', () => {
-      if (!isNaN(this.media.duration) && !isNaN(this.media.currentTime)) {
-        this.updateSeekBar();
-        this.updateSeekBarOpenPlayer();
-
+      if (!isNaN(this.media.duration)) {
         const remainingTime = this.media.duration - this.media.currentTime;
-
         this.currentTime = this.formatTime(this.media.currentTime);
         this.endOfTrack = this.formatTime(remainingTime);
-
+        this.updateSeekBar();
+        this.updateSeekBarOpenPlayer();
       } else {
         this.currentTime = '--:--';
         this.endOfTrack = '--:--';
       }
     });
-    this.playerController.setBackground(this.audio_info.image);
 
+    this.playerController.setBackground(this.audio_info.image);
     this.audio_info.duration = {
-        seconds: 0,
-        timestamp: '--:--'
-    }
+      seconds: 0,
+      timestamp: '--:--'
+    };
   }
+
+  private showError(message: string) {
+    this.info = message;
+    this.infoTopBlockIsOpened = true;
+    this.playerController.addFavoriteTrack(this.audio_info);
+    setTimeout(() => {
+      this.info = '';
+      this.infoTopBlockIsOpened = false;
+    }, 4000);
+  }
+
+  private sendToHistory() {
+    this.requestService.post<any>(environment.setPlayHistory, {
+      access_token: this.token,
+      trackId: this.audio_info.videoId
+    }).subscribe();
+  }
+
 
   play() {
     if (this.isLoaded) {
@@ -572,7 +584,11 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   async playPause() {
-    await Haptics.impact({ style: ImpactStyle.Light });
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Light});
+    }
     if (this.isLoaded) {
       if (this.isPlaying) {
         this.pause();
@@ -615,7 +631,13 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
         const newTime = (progress + this.startProgress - this.startProgress) * this.media.duration;
 
         this.media.currentTime = Math.max(0, Math.min(newTime, this.media.duration));
-        setTimeout(() => Haptics.impact({ style: ImpactStyle.Light }), 0);
+        setTimeout(async () => {
+          const platform = Capacitor.getPlatform();
+
+          if (platform !== 'web') {
+            await Haptics.impact({style: ImpactStyle.Light});
+          }
+        }, 0);
         this.updateSeekBarOpenPlayer();
       }
     }
@@ -692,7 +714,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
 
   openMobilePlayer() {
     if (this.audio_info.videoId !== '') {
-      if (innerWidth < 500 && !this.isOpenedMobilePlayer) {
+      if (!this.isOpenedMobilePlayer) {
         this.playerController.setIsOpenedPlayer(true);
         this.isOpenedMobilePlayer = true;
         this.isOpenedMobilePlayerAnim = true;
@@ -704,26 +726,31 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
     setTimeout(() => {
       this.isOpenedTimerBottomSheet = false;
       this.playerController.setIsOpenedPlayer(false);
-      if (innerWidth < 500) {
-        this.isOpenedMobilePlayer = false;
-        setTimeout(() => {
-          this.isOpenedMobilePlayerAnim = false;
-        }, 50)
-      }
+      this.isOpenedMobilePlayer = false;
+      setTimeout(() => {
+        this.isOpenedMobilePlayerAnim = false;}, 50)
     })
   }
 
   async replayOnOff() {
     this.replay = !this.replay;
     if (this.replay) {
-      await Haptics.impact({ style: ImpactStyle.Heavy });
+      const platform = Capacitor.getPlatform();
+
+      if (platform !== 'web') {
+        await Haptics.impact({style: ImpactStyle.Heavy});
+      }
     }
   }
 
   async setFavorite() {
     if (this.isLoaded) {
       if (!this.isSetFavorite) {
-        await Haptics.impact({ style: ImpactStyle.Heavy });
+        const platform = Capacitor.getPlatform();
+
+        if (platform !== 'web') {
+          await Haptics.impact({style: ImpactStyle.Heavy});
+        }
         this.isSetFavorite = true;
         this.requestService.post<any>(environment.addFavorite, { access_token: this.token, trackId: this.audio_info.videoId })
           .subscribe(() => {
@@ -775,7 +802,11 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   async share() {
-    await Haptics.impact({ style: ImpactStyle.Heavy });
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Heavy});
+    }
     this.setMetaTags();
     const shareData = {
       title: 'Dynamics ' + this.audio_info.title,
@@ -793,13 +824,17 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   async openTimerBottomSheet() {
-    await Haptics.impact({ style: ImpactStyle.Heavy });
+    const platform = Capacitor.getPlatform();
+
+    if (platform !== 'web') {
+      await Haptics.impact({style: ImpactStyle.Heavy});
+    }
     this.isOpenedTimerBottomSheet = !this.isOpenedTimerBottomSheet;
   }
 
   async fetchAndCacheAudio(audioId: string, duration: number) {
     try {
-      const response = await fetch(environment.getStream + audioId + '?type=audio&quality=highestaudio');
+      const response = await fetch(`${host}youtube-base/get-stream/${audioId}?type=audio&quality=highestaudio`);
 
       if (!response.ok) {
         return;
@@ -832,7 +867,7 @@ export class PlayerComponent implements OnDestroy, OnInit, AfterViewInit {
   setTrack(id: string, index: number, list: any) {
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
-    this.playerController.setList(list as any[]);
+    this.playerController.setList(list as any[], "");
   }
 
   protected readonly innerHeight = innerHeight;

@@ -68,9 +68,13 @@ export class ImageDominantColorService {
     }
 
     const { h, s, l } = this.rgbToHsl(selectedColor.r, selectedColor.g, selectedColor.b);
+
+    // Корректируем оттенок и яркость, чтобы цвета не были слишком яркими или слишком темными
     const adjustedH = (h + 0.06) % 1;
     const adjustedL = Math.min(0.65, Math.max(0.35, l + 0.05));
-    const secondColor = this.hslToRgb(adjustedH, s, adjustedL);
+    const adjustedS = Math.min(0.6, Math.max(0.25, s)); // Умеренная насыщенность
+
+    const secondColor = this.hslToRgb(adjustedH, adjustedS, adjustedL);
 
     return [selectedColor, secondColor];
   }

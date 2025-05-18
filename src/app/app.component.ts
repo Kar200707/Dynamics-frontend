@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
     this.setupDeepLinkListener();
     await localforage.removeItem("historyList");
     await localforage.removeItem("newReleasesList");
+    await localforage.removeItem("podcastsList");
     await localforage.removeItem("newCollectionsList");
     document.addEventListener('DOMContentLoaded', this.setSafeAreaInsets);
     const safeAreaInsetTop = window.innerHeight - document.documentElement.clientHeight;

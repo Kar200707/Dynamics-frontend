@@ -4,7 +4,7 @@
   (touchmove)="onTouchMove($event)"
   (touchend)="onTouchEnd($event); main_block.style.transition = '.23s cubic-bezier(0.6, 0.03, 0.2, 1)'"
   [style.padding]="!isOpenedMobilePlayer ? innerWidth > 850 ? '10px 11px' : '15px 8px' : '0'"
-  [style.height]="isOpenedMobilePlayer ? '100vh' : '100px'"
+  [style.height]="isOpenedMobilePlayer ? '100vh' : '90px'"
   #main_block
   class="main_block">
   @if (isOpenedMobilePlayer) {
@@ -17,12 +17,12 @@
     [style.border-radius]="isOpenedMobilePlayer ? '25px 25px 0 0' : '20px'" class="layer">
     @if (isOpenedMobilePlayer) {
       <div class="animation">
-        <div [style.background-color]="playerImageDominatColor2" style="width: 120%; height: 60vh; background-color: rgb(36 36 36); position: absolute; border-radius: 50%; bottom: -30vh; left: -10%"></div>
+        <div [style.background-color]="playerImageDominatColor" style="width: 120%; height: 60vh; background-color: rgb(36 36 36); position: absolute; border-radius: 50%; bottom: -30vh; left: -10%"></div>
       </div>
     }
     <div
-      [style.background-image]="isOpenedMobilePlayer ? 'linear-gradient(to bottom, rgb(47 47 47 / 20%), rgb(0 0 0 / 77%))' : 'unset'"
-      [style.background-color]="!isOpenedMobilePlayer ? 'rgb(25 25 25 / 50%)' : 'unset'"
+      [style.background-image]="isOpenedMobilePlayer ? 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6))' : 'unset'"
+      [style.background-color]="!isOpenedMobilePlayer ? 'rgba(25,25,25,0.2)' : 'unset'"
       [style.padding]="isOpenedMobilePlayer ? '0' : '0 8px'"
       class="layer_2">
       <div
@@ -31,7 +31,7 @@
         class="slider_bar">
         <div *ngIf="innerWidth < 850" style="background-color: transparent;" class="track">
           <div *ngIf="!isLoaded && audio_info.title != '--'" class="slider_loader"></div>
-          <div #seekBarProgress style="height: 2px; background-color: white; background-image: unset" class="swapper"></div>
+          <div #seekBarProgress style="height: 2px; background-color: #ffffff94; background-image: unset" class="swapper"></div>
         </div>
       </div>
         <div
@@ -43,8 +43,8 @@
               <img #image_track [style.display]="audio_info.image != '' ? 'block' : 'none'" [src]="audio_info.image" alt="track image">
             </div>
             <div class="track_name_artist_box">
-              <h2 style="font-size: 15px" class="track_name">{{ audio_info.title }}</h2>
-              <h4 class="track_artist">{{ audio_info.author.name }}</h4>
+              <h2 style="font-size: 13px; -webkit-line-clamp: 1" class="track_name">{{ audio_info.title }}</h2>
+              <h4 style="margin-top: 4px; font-size: 12px" class="track_artist">{{ audio_info.author.name }}</h4>
             </div>
           </div>
           <div class="player_controller_box">
@@ -61,7 +61,7 @@
                   (mouseup)="play()"
                   (input)="seekTrack(rangeInput.value)">
                 <span
-                  [style.width]="innerWidth > 850 ? '55px' : '40px'"
+                  [style.width]="innerWidth > 850 ? '85px' : '40px'"
                   style="margin-left: 25px">- {{ endOfTrack }}</span>
               </div>
               <div class="track_controller">
@@ -103,6 +103,10 @@
           <div class="top_bar">
             <img (click)="closeMobilePlayer()" src="assets/images/icons/down-arrow.svg">
             <div class="line"></div>
+            <div class="playlist_name_box">
+              <p>playing now</p>
+              <span class="playlist_name">{{ playlistName }}</span>
+            </div>
             <div style="display: flex; align-items: center">
               <button style="margin-right: 10px; display: none" (click)="setAudioOrVideo()" mat-icon-button>
                 @if (type !== 'audio') {
@@ -128,6 +132,7 @@
                       [style.background-color]="type === 'video' ? '#0f0f0f' : 'unset'"
                       [style.width]="type === 'video' ? '100%' : '330px'"
                       [style.height]="type === 'video' ? '174px' : '330px'"
+                      [style.filter]="!isLoaded && audio_info.title != '--' ? 'blur(3px)' : 'blur(0px)'"
                       class="open_player_track_img_block">
                       @if (type === 'audio') {
                         <img
@@ -137,12 +142,12 @@
                       }
                       <video [style.display]="type === 'video' ? 'block' : 'none'" #videoElement></video>
                     </div>
-                    <div style="height: 100px">
+                    <div style="height: 100px; display: flex; flex-direction: column; justify-content: end;">
                       <h2
-                        style="margin-top: 14px; font-size: 23px;"
+                        style="font-size: 20px;"
                         class="track_name">{{ audio_info.title }}</h2>
                       <h4
-                        style="font-size: 16px; font-weight: lighter"
+                        style="margin-top: 5px; font-size: 16px;"
                         class="track_artist">{{ audio_info.author.name }}</h4>
                     </div>
                   </div>
@@ -173,7 +178,7 @@
                 (touchend)="isLoaded ? this.play() : false;
                 moveLimit = 0;
                 seekBarProgressOpenPlayer.style.transition = '.2s linear';
-                seekBarProgressOpenPlayer.style.backgroundColor = 'hsla(0, 0%, 100%, .65)';
+                seekBarProgressOpenPlayer.style.backgroundColor = 'hsla(0, 0%, 100%, .5)';
                 seekCircleShow = false;
                 seekBarContainerOpenPlayer.style.overflow = 'hidden';"
                 (touchstart)="isClickUp = false;
@@ -186,7 +191,7 @@
                 (touchmove)="!isClickUp ? seekMoveOpenPlayer($event, 'touch') : false; $event.preventDefault(); this.pause();"
                 (mousemove)="!isClickUp ? seekMoveOpenPlayer($event, 'mouse') : false"
                 class="slider_box_open_player">
-                <div *ngIf="!isLoaded && audio_info.title != '--'" style="height: 6px; border-radius: 10px" class="slider_loader"></div>
+                <div *ngIf="!isLoaded && audio_info.title != '--'" style="height: 5px; border-radius: 10px" class="slider_loader"></div>
                 <div
                   [style.display]="isLoaded ? 'block' : 'none'"
                   #seekBarContainerOpenPlayer
@@ -231,8 +236,8 @@
                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 20px">
                  @if (views !== 0 && views) {
                    <div class="views">
+                     <img src="assets/images/icons/headphone.svg" style="margin-right: 7px" alt="headphone icon">
                      <span>{{ getFormattedInt(views, 'listeners') }}</span>
-                     <img src="assets/images/icons/headphone.svg" alt="headphone icon">
                    </div>
                  }
                  @if (likes !== 0 && likes) {
@@ -285,7 +290,7 @@
         </div>
     </div>
   </div>
-  @if (isOpenedMobilePlayer) {
+  @if (isOpenedMobilePlayer && description) {
     <div class="bottom_nav_layer_gradient"></div>
   }
 </div>

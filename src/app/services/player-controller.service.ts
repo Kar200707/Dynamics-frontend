@@ -26,8 +26,8 @@ export class PlayerControllerService {
 
   constructor() {}
 
-  setList (list: any[]) {
-    this.playerInfo.next(list);
+  setList (list: any[], listName: string) {
+    this.playerInfo.next({ name: listName, list });
   }
 
   setTrackId(trackId: string) {

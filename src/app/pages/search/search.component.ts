@@ -13,6 +13,8 @@ import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {Keyboard} from "@capacitor/keyboard";
 import {Capacitor} from "@capacitor/core";
+import {Channel2Model} from "../../../models/channel2.model";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-search',
@@ -38,6 +40,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   token: string | null = localStorage.getItem('token');
   isLoaded: boolean = false;
   search: SearchListModel[] = [];
+  channels: any[] = [];
   searchHistory:any = [];
   isOpenedKeyBoard: boolean = false;
   isClickedSearchResBlock: boolean = false;
@@ -68,15 +71,29 @@ export class SearchComponent implements OnInit, AfterViewInit {
   ]
 
   constructor(
+    private location: Location,
     private playerController: PlayerControllerService,
     private reqServ: RequestService) {
     this.searchSubject.pipe(
       debounceTime(350),
-      switchMap((value: string) => this.reqServ.post<SearchListModel[]>(environment.searchTracksList, { searchText: value }))
-    ).subscribe(async (data: SearchListModel[]) => {
-      this.search = data;
+      switchMap((value: string) => this.reqServ.post<{ videos: SearchListModel[], channels: any[] }>(environment.searchTracksList, { searchText: value }))
+    ).subscribe(async (data: { videos: SearchListModel[], channels: Channel2Model[] }) => {
+      this.search = data.videos;
+      const seenNames = new Set();
+      this.channels = data.channels.filter(channel => {
+        if (seenNames.has(channel.name)) {
+          return false;
+        }
+        seenNames.add(channel.name);
+        return true;
+      });
+      console.log(this.channels)
       this.isLoaded = true;
-      await Haptics.impact({ style: ImpactStyle.Light });
+      const platform = Capacitor.getPlatform();
+
+      if (platform !== 'web') {
+        await Haptics.impact({style: ImpactStyle.Light});
+      }
     });
   }
 
@@ -100,6 +117,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.isOpenedKeyBoard = false;
       });
     }
+  }
+
+  routeBack() {
+    this.location.back();
   }
 
   handleBlur(): void {
@@ -162,6 +183,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
       .subscribe(() => {})
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
-    this.playerController.setList(this.search);
+    this.playerController.setList(this.search, "");
   }
 }

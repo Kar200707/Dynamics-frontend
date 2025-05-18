@@ -8,11 +8,12 @@ import {RequestService} from "../../services/request.service";
 import {HttpClientModule} from "@angular/common/http";
 import {LoaderIosComponent} from "../../loaders/loader-ios/loader-ios.component";
 import {environment, host} from "../../../environment/environment";
-import {NgIf} from "@angular/common";
+import {Location, NgIf} from "@angular/common";
 import {ResizeHeightDirective} from "../../directives/resize-height.directive";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {CdkListbox} from "@angular/cdk/listbox";
 import {ImageDominantColorService} from "../../components/player/player_functions/image-dominat-color.service";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-folder',
@@ -42,6 +43,7 @@ export class FolderComponent implements OnInit {
   trackImageBackgroundColor: string = 'rgb(51,51,51)';
   filteredTrackList?: any[];
   searchQuery: string = '';
+  isMobile: boolean = innerWidth < 850;
   folderId?: string;
   isFavoriteFolder: boolean = false;
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -57,6 +59,7 @@ export class FolderComponent implements OnInit {
   ]
 
   constructor(
+    private location: Location,
     private route: ActivatedRoute,
     private router: Router,
     private renderer: Renderer2,
@@ -83,6 +86,10 @@ export class FolderComponent implements OnInit {
     })
   }
 
+  goBack(): void {
+    this.location.back();
+  }
+
   checkUrl() {
     if (this.router.url.includes('folder/track-favorites')) {
       this.title = "Favorites";
@@ -93,7 +100,11 @@ export class FolderComponent implements OnInit {
   async getFolderItems() {
     const cachedHistoryList = await localforage.getItem('folder' + this.folderId);
     if (!cachedHistoryList) {
-      await Haptics.impact({ style: ImpactStyle.Heavy });
+      const platform = Capacitor.getPlatform();
+
+      if (platform !== 'web') {
+        await Haptics.impact({style: ImpactStyle.Heavy});
+      }
     }
     try {
       if (cachedHistoryList) {
@@ -132,7 +143,11 @@ export class FolderComponent implements OnInit {
           })
           await localforage.setItem('folder' + this.folderId, JSON.stringify(data.playlist));
           if (!cachedHistoryList) {
-            await Haptics.impact({ style: ImpactStyle.Light });
+            const platform = Capacitor.getPlatform();
+
+            if (platform !== 'web') {
+              await Haptics.impact({style: ImpactStyle.Light});
+            }
           }
         }
       });
@@ -145,7 +160,7 @@ export class FolderComponent implements OnInit {
   onScroll() {
     const scrollTop = this.scrollContainer.nativeElement.scrollTop;
     if (scrollTop > 35) {
-      this.renderer.setStyle(this.titleElement.nativeElement, 'transform', 'translate(30px, -40px)');
+      this.renderer.setStyle(this.titleElement.nativeElement, 'transform', 'translate(30px, -45px)');
     } else {
       this.renderer.setStyle(this.titleElement.nativeElement, 'transform', 'translate(0, 0)');
     }
@@ -161,16 +176,14 @@ export class FolderComponent implements OnInit {
     );
   }
 
-  formatTime(seconds: number): string {
-    const minutes: number = Math.floor(seconds / 60);
-    const secs: number = Math.floor(seconds % 60);
-    return `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-  }
-
   async getFavoriteTracksList() {
     const cachedHistoryList = await localforage.getItem('favoritesTracksList');
     if (!cachedHistoryList) {
-      await Haptics.impact({ style: ImpactStyle.Heavy });
+      const platform = Capacitor.getPlatform();
+
+      if (platform !== 'web') {
+        await Haptics.impact({style: ImpactStyle.Heavy});
+      }
     }
     try {
       if (cachedHistoryList) {
@@ -199,7 +212,6 @@ export class FolderComponent implements OnInit {
           this.playerController.trackId$.subscribe(id => {
             this.trackList.forEach(async (track: any) => {
               if (track.videoId === id) {
-                console.log(track.videoId);
                 const colorsArray:string[] = await this.imgColorService.getDominantColors(host + 'media/cropImage?url=' + track.image);
                 this.trackImageBackgroundColor = colorsArray[0];
               }
@@ -208,7 +220,11 @@ export class FolderComponent implements OnInit {
           })
           await localforage.setItem('favoritesTracksList', JSON.stringify(sortedTrackList));
           if (!cachedHistoryList) {
-            await Haptics.impact({ style: ImpactStyle.Light });
+            const platform = Capacitor.getPlatform();
+
+            if (platform !== 'web') {
+              await Haptics.impact({style: ImpactStyle.Light});
+            }
           }
         }
       });
@@ -235,11 +251,11 @@ export class FolderComponent implements OnInit {
     })
   }
 
-  setTrack(id: string, index: number) {
+  setTrack(id: string, index: number, listName: string) {
     this.listIsPlay = true;
     this.trackPlayId = id;
     this.playerController.setTrackId(id);
     this.playerController.setTrackIndex(index);
-    this.playerController.setList(this.trackList);
+    this.playerController.setList(this.trackList, listName);
   }
 }

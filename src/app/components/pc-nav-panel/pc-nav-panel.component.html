@@ -1,26 +1,48 @@
 <div class="main-block">
   <div class="layer">
-    <div>
-      <div style="display: flex; align-items: center; justify-content: start; margin-left: 7px">
-        <img  class="nav_icon" title="Home" style="height: 30px; width: 30px; margin-left: -3px" src="../../../assets/images/icons/home-white.svg">
-        <span style="color: white; margin-left: 20px">Home</span>
+    <div class="nav_box">
+      <div routerLink="/home/playlists">
+        <img
+          [style.display]="routePath === 'home' ? 'none' : 'unset'"
+          height="24"
+          width="24"
+          ngSrc="assets/images/icons/home-filled.svg" alt="search">
+        <img
+          [style.display]="routePath !== 'home' ? 'none' : 'unset'"
+          height="24"
+          width="24"
+          ngSrc="assets/images/icons/home-white.svg" alt="search">
+        <span>Home</span>
       </div>
-      <div style="display: flex; align-items: center; margin-top: 12px">
+      <div routerLink="/home/search">
+        <img
+          style="margin: 0 12px"
+          [style.display]="routePath === 'search' ? 'none' : 'unset'"
+          height="24"
+          width="24"
+          ngSrc="assets/images/icons/search.svg" alt="search">
+        <img
+          style="margin: 0 12px"
+          [style.display]="routePath !== 'search' ? 'none' : 'unset'"
+          height="24"
+          width="24"
+          ngSrc="assets/images/icons/search-filled.svg" alt="search">
+        <span style="margin-top: 2px">Search</span>
+      </div>
+      <div routerLink="/home/library">
         <svg
-          style="outline: none; width: 27px; height: 27px; margin-left: 6px"
+          [style.display]="routePath === 'library' ? 'none' : 'unset'"
+          style="outline: none;"
           data-encore-id="icon"
           role="img"
           fill="white"
           aria-hidden="true"
           viewBox="0 0 24 24">
           <path d="M14.5 2.134a1 1 0 0 1 1 0l6 3.464a1 1 0 0 1 .5.866V21a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1V3a1 1 0 0 1 .5-.866zM16 4.732V20h4V7.041l-4-2.309zM3 22a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1zm6 0a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1z"></path></svg>
-        <span style="color: white; margin-left: 20px">Library</span>
-      </div>
-      <div routerLink="/home/dynamics-ai-pc/chat" class="dynamics_ai">
-        <img src="assets/images/icon-384x384.svg">
-        <div style="margin-left: 5px">
-          <span style="color: white; margin-left: 10px">Dynamics Ai</span>
-        </div>
+        <img
+          [style.display]="routePath !== 'library' ? 'none' : 'unset'"
+          style="width: 30px; height: 30px;" src="assets/images/icons/libary-filled.svg" alt="library">
+        <span>Library</span>
       </div>
     </div>
     <div appResizeHeight [size]="284" class="favorites_block">

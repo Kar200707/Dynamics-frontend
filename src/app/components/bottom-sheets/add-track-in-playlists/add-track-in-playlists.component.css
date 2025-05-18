@@ -55,9 +55,13 @@
   align-items: center;
 }
 
-.playlist > div > div > h3,
-.playlist > div > div > span {
+.playlist > div > div > p {
   color: white;
+}
+
+.playlist > div > div > span {
+  color: #b5b5b5;
+  font-size: 14px;
 }
 
 .images_row {

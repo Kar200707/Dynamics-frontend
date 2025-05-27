@@ -12,7 +12,6 @@
   margin-top: 5px;
   width: 100%;
   padding-bottom: calc(100px + env(safe-area-inset-bottom));
-  padding-top: 15px;
 }
 
 .scroll_box::-webkit-scrollbar {
@@ -24,9 +23,12 @@
 .account_block {
   width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   margin-top: env(safe-area-inset-top);
+  padding-bottom: 6px;
+  position: relative;
 }
 
 .account_block > div {
@@ -34,14 +36,21 @@
   align-items: center;
 }
 
-.account_block > div > h2 {
+.search_add_box {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 1px;
+  transition: .25s;
+  z-index: 50;
+}
+
+.account_block > div > div > h2 {
   color: white;
-  font-size: 25px;
+  font-size: 23px;
 }
 
 .account {
-  width: 60px;
-  height: 60px;
   /*background-color: #1b1b1b;*/
   display: flex;
   align-items: center;
@@ -49,6 +58,7 @@
   border-radius: 50%;
   /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);*/
   transition: .2s scale;
+  margin-right: 15px;
 }
 
 .account:active {
@@ -56,8 +66,8 @@
 }
 
 .account > img {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
 }
@@ -127,8 +137,8 @@
 }
 
 .favorites > img {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 6px;
   padding: 2px 0;
 }
@@ -189,8 +199,8 @@ button[mat-button].routerLink {
 }
 
 .add_playlist_block > button {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 6px;
   background-color: #1b1b1b;
   display: flex;
@@ -243,7 +253,7 @@ button[mat-button].routerLink {
   flex-direction: column;
   overflow: hidden;
   border-radius: 6px;
-  width: 60px;
+  width: 64px;
 }
 
 .images_row > div {
@@ -251,8 +261,8 @@ button[mat-button].routerLink {
 }
 
 .images_row > div > img {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   object-fit: cover;
   display: block;
 }

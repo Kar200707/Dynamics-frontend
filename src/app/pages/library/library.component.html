@@ -1,17 +1,19 @@
 <div class="main_block">
   <div class="account_block">
     <div>
-      <h2>Your Library</h2>
-    </div>
-    @if (innerWidth < 850) {
-      <div (click)="toggleAccountInfoBlock()" class="account">
-        @if (avatar) { <img [src]="avatar"> }
+      @if (innerWidth < 850) {
+        <div (click)="toggleAccountInfoBlock()" class="account">
+          @if (avatar) { <img [src]="avatar"> }
+        </div>
+      }
+      <div>
+        <h2>Your Library</h2>
       </div>
-    }
-  </div>
-  <div class="scroll_box">
+    </div>
     <div
-      style="display: flex; align-items: center;">
+      [style.width]="isOpenedSearchPlaylists ? '100%' : 'unset'"
+      [style.left]="!isOpenedSearchPlaylists ? 'calc(100% - 90px)' : '0'"
+      class="search_add_box">
       <div (click)="isOpenedSearchPlaylists ? isOpenedSearchPlaylists = false : openBottomSheet()" class="header_add">
         <mat-icon
           [style.rotate]="isOpenedSearchPlaylists ? '45deg' : '0deg'">add</mat-icon>
@@ -27,6 +29,8 @@
         <img style="opacity: .6" src="assets/images/icons/search.svg">
       </div>
     </div>
+  </div>
+  <div class="scroll_box">
     <div class="list_block">
       <div [routerLink]="(isMobile ? '/folder/track-favorites' : '/home/folder/track-favorites')" class="favorites">
         <img src="assets/images/icons/bookmark.png">
@@ -48,30 +52,30 @@
               <div>
                 @if (playlist.tracks?.length === 1) {
                   <img
-                    style="width: 65px; height: 65px"
+                    style="width: 67px; height: 67px"
                     [src]="playlist.tracks[0].image">
                 } @else if (playlist.tracks?.length === 2) {
                   <img
-                    style="height: 65px"
+                    style="height: 67px"
                     [src]="playlist.tracks[0].image">
                    <img
-                     style="height: 65px"
+                     style="height: 67px"
                      [src]="playlist.tracks[1].image">
                 } @else if (playlist.tracks?.length === 3) {
                   <div>
                     <img
-                      height="30px"
-                      width="30px"
+                      height="32px"
+                      width="32px"
                       style="object-fit: cover; display: block"
                       [src]="playlist.tracks[0].image">
                     <img
-                      height="30px"
-                      width="30px"
+                      height="32px"
+                      width="32px"
                       style="object-fit: cover; display: block"
                       [src]="playlist.tracks[1].image">
                   </div>
                   <img
-                    style="height: 65px"
+                    style="height: 67px"
                     [src]="playlist.tracks[2].image">
                 }
               </div>

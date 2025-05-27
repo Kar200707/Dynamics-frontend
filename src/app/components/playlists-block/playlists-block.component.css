@@ -363,7 +363,7 @@ h2 {
   }
 
   .favorite_tracks_block {
-    width: 100%;
+    width: 40%;
   }
 }
 
@@ -450,7 +450,7 @@ h2 {
 .sort_block {
   display: flex;
   align-items: center;
-  margin: 20px 0 0 20px;
+  margin: 15px 0 0 20px;
 }
 
 .sort_block > button {
@@ -473,7 +473,6 @@ h2 {
   flex-direction: column;
   margin-top: 15px;
   padding: 0 20px;
-  width: 40%;
 }
 
 .favorite_tracks_block > div {

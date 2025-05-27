@@ -130,7 +130,10 @@
     <div #listen_again_block1 class="listen_again_block">
       @if (trackListLoaded) {
         @for (track of historyList; track $index) {
-          <div (click)="setTrack(track.videoId, $index, historyList, 'Listen Again')" class="track_block">
+          <div
+              [style.margin-bottom]="innerWidth > 850 ? '15px' : 'unset'"
+              (click)="setTrack(track.videoId, $index, historyList, 'Listen Again')"
+               class="track_block">
             <div class="img_block">
               <div
                 [style.opacity]="trackPlayId === track.videoId ? '1' : '0'"
@@ -224,7 +227,10 @@
     <div #listen_again_block3 class="listen_again_block">
       @if (newTrackListLoaded) {
         @for (track of newReleasesList; track $index) {
-          <div (click)="setTrack(track.videoId, $index, newReleasesList, 'New Releases')" class="track_block">
+          <div
+              [style.margin-bottom]="innerWidth > 850 ? '15px' : 'unset'"
+              (click)="setTrack(track.videoId, $index, newReleasesList, 'New Releases')"
+               class="track_block">
             <div class="img_block">
               <div
                 [style.opacity]="trackPlayId === track.videoId ? '1' : '0'"
@@ -268,7 +274,10 @@
     <div [style.margin-bottom]="innerWidth < 850 ? !isPodcastsSort && !isAllSort ? '150px' : 'unset' : 'unset'" #listen_again_block2 class="listen_again_block">
       @if (newCollectionsListLoaded) {
         @for (track of newCollectionsList; track $index) {
-          <div (click)="setTrack(track.videoId, $index, newCollectionsList, 'New Collections')" class="track_block">
+          <div
+            (click)="setTrack(track.videoId, $index, newCollectionsList, 'New Collections')"
+            [style.margin-bottom]="innerWidth > 850 ? '15px' : 'unset'"
+            class="track_block">
             <div class="img_block">
               <div
                 [style.opacity]="trackPlayId === track.videoId ? '1' : '0'"

@@ -50,12 +50,12 @@
   /* media */
 
 .favorites_block {
-  margin-top: 50px;
-  background-color: #1a1a1a;
+  margin-top: 40px;
+  /*background-color: #1a1a1a;*/
   border-radius: 8px;
   width: 100%;
   overflow-y: scroll;
-  padding: 10px;
+  /*padding: 10px;*/
   position: relative;
 }
 
@@ -83,7 +83,7 @@
 .track_box {
   width: 100%;
   margin-bottom: 1px;
-  background-color: #1a1a1a;
+  /*background-color: #1a1a1a;*/
   border-radius: 7px;
   display: flex;
   transition: .3s background-color;
@@ -102,7 +102,7 @@
   height: 50px;
   object-fit: cover;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px;
 }
 
 .music_playGIF {
@@ -133,6 +133,7 @@
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   font-weight: 300;
+  font-size: 15px;
 }
 
 .track_info_box > span {
@@ -141,6 +142,7 @@
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
+  font-size: 14px;
 }
 
 .track_duration {

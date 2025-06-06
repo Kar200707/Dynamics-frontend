@@ -6,8 +6,8 @@
   <app-player
     [style.z-index]="'99'"
     [style.display]="this.routePath.slice(0, 9) === '/dynamics' ? 'none' : 'unset'"
-    [style.width]="innerWidth > 850 ? 'calc(80% - 4px)' : '100%'"
-    [style.right]="innerWidth > 850 ? '0' : 'unset'"
+    [style.width]="innerWidth > 850 ? 'calc(80% - 35px)' : '100%'"
+    [style.right]="innerWidth > 850 ? !isOpenedPlayer ? '20px' : '0'  : 'unset'"
     [ngStyle]="{
       bottom: isOpenedPlayer
         ? '0'

@@ -232,7 +232,13 @@ app-timer-bottom-sheet {
 }
 
 .next {
-  margin-left: 0;
+  margin-left: 15px;
+}
+
+@media screen and (max-width: 850px) {
+  .next {
+    margin-left: 0;
+  }
 }
 
 .prev > img, .next > img {

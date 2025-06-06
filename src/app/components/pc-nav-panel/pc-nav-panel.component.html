@@ -46,7 +46,7 @@
       </div>
     </div>
     <div appResizeHeight [size]="284" class="favorites_block">
-      <div style="display: flex; align-items: center">
+      <div style="display: flex; align-items: center; margin-bottom: 13px">
         <mat-icon style="color: #007CE9">favorite</mat-icon>
         <h4 style="margin-left: 7px">Favorite tracks</h4>
       </div>
@@ -70,8 +70,7 @@
       @for (track of trackList; track $index) {
         <div class="track_block">
           <div
-            [style.outline]="track.videoId === trackPlayId ? 'rgb(255 255 255 / 39%) solid 1px' : 'none'"
-            [style.background-color]="track.videoId === trackPlayId ? 'rgb(96 96 96 / 45%)' : '#1a1a1a'"
+            [style.background-color]="track.videoId === trackPlayId ? '#1a1a1a' : 'unset'"
             class="track_box">
             <div (click)="setTrack(track.videoId, $index)" style="display: flex; align-items: center; width: 100%">
               <div class="track_image">

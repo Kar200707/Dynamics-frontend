@@ -7,7 +7,7 @@
   "messagingSenderId": "579519724486",
   "measurementId": "G-JFBR1H09B6",
   "hosting": {
-    "public": "/dist/dynamics/browser",
+    "public": "dist/dynamics/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
